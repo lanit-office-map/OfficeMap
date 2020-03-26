@@ -15,6 +15,6 @@ namespace OfficeService.Repositories.Interfaces
       IUpdate<OfficeRequest>
     {
 
-        DbOffice GetDbReport(OfficeFilter filter);
+        DbOffice GetDbOffice(OfficeFilter filter);
     }
 }
