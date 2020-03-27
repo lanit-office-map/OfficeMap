@@ -1,4 +1,4 @@
-﻿using UserService.Models;
+using UserService.Models;
 using UserService.Repositories.Filters;
 
 namespace UserService.Repositories.Interfaces

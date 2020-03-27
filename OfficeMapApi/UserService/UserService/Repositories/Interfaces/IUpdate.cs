@@ -1,4 +1,4 @@
-﻿namespace UserService.Repositories.Interfaces
+namespace UserService.Repositories.Interfaces
 {
     /// <summary>
     ///  Represents an interface available for updating entity.
@@ -30,4 +30,3 @@
         TEntity Update(TEntity entity, out TOutEntity output);
     }
 }
-
