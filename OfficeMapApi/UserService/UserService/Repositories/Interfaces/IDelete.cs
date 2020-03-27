@@ -1,4 +1,4 @@
-﻿namespace UserService.Repositories.Interfaces
+namespace UserService.Repositories.Interfaces
 {
     /// <summary>
     ///  Represents an interface available for deleting an entity.
