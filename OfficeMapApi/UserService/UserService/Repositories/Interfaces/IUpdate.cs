@@ -27,6 +27,6 @@ namespace UserService.Repositories.Interfaces
         /// </summary>
         /// <param name="entity">Entity.</param>
         /// <param name="output">Output.</param>
-        TEntity Update(TEntity entity, out TOutEntity output);
+        TEntity Update(TEntity entity, TOutEntity output);
     }
 }

@@ -1,5 +1,5 @@
-using UserService.Models;
 using UserService.Repositories.Filters;
+using UserServiceApi.Database.Entities;
 
 namespace UserService.Repositories.Interfaces
 {
@@ -7,16 +7,10 @@ namespace UserService.Repositories.Interfaces
     /// User repository interface.
     /// </summary>
     public interface IUserRepository : 
-        ICreate<UserRequest>,
-        IGet<User, UserFilter>,
-        IUpdate<UserRequest>,
-        IDelete<User>
-    {
-        /// <summary>
-        /// Get DB user model.
-        /// </summary>
-        object GetDbUser(UserFilter filter);
-
-        //object нужно будет заменить на DbUser
-    }
+        ICreate<DbUser>,
+        IGet<DbUser, UserFilter>,
+        IUpdate<DbUser>,
+        IDelete<DbUser>,
+        IFind<DbUser, UserFilter>
+    { }
 }
