@@ -73,25 +73,25 @@ namespace UserService.Repositories
 
             bool userChanged = false;
 
-            dbUser.Employee.FirstName = CompareAndEqualize(
+            userChanged = UpdateProperty(
                 dbUser.Employee.FirstName,
                 entity.Employee.FirstName,
-                ref userChanged);
+                () => dbUser.Employee.FirstName = entity.Employee.FirstName);
 
-            dbUser.Employee.SecondName = CompareAndEqualize(
+            userChanged = UpdateProperty(
                 dbUser.Employee.SecondName,
                 entity.Employee.SecondName,
-                ref userChanged);
+                () => dbUser.Employee.SecondName = entity.Employee.SecondName);
 
-            dbUser.Employee.Mail = CompareAndEqualize(
+            userChanged = UpdateProperty(
                 dbUser.Employee.Mail,
                 entity.Employee.Mail,
-                ref userChanged);
+                () => dbUser.Employee.Mail = entity.Employee.Mail);
 
-            dbUser.Employee.Login = CompareAndEqualize(
+            userChanged = UpdateProperty(
                 dbUser.Employee.Login,
                 entity.Employee.Login,
-                ref userChanged);
+                () => dbUser.Employee.Login = entity.Employee.Login);
 
             if (userChanged)
             {
@@ -119,20 +119,20 @@ namespace UserService.Repositories
 
         }
 
-        private string CompareAndEqualize(
+        private bool UpdateProperty(
             string dbUserProperty,
             string entityProperty,
-            ref bool userChanged)
+            Action propertyUpdating)
         {
             if (!string.Equals(dbUserProperty, entityProperty)
                 && !string.IsNullOrEmpty(entityProperty))
             {
-                userChanged = true;
-                return entityProperty;
+                propertyUpdating.Invoke();
+                return true;
             }
             else
             {
-                return dbUserProperty;
+                return false;
             }
         }
     }
