@@ -10,6 +10,6 @@
         /// Create a new entity.
         /// </summary>
         /// <param name="entity">New entity.</param>
-        void Create(TEntity entity);
+        TEntity Create(TEntity entity);
     }
 }
