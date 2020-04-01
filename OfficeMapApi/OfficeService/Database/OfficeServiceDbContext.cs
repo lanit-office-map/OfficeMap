@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Metadata;
 
 namespace OfficeService.Database.Entities
 {
-    public partial class OfficeServiceDbContext : DbContext
+    public partial class OfficeServiceDbContext : 
     {
         public OfficeServiceDbContext()
         {
