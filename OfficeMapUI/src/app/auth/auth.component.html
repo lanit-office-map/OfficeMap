@@ -1,16 +1,26 @@
 <html>
-<head></head>
+<head>
+  <title></title>
+</head>
 
 <body>
 <link rel="stylesheet" href="auth.component.scss">
 
-<h1>Log in</h1>
-
 <div>
-  <input [(ngModel)]="username" placeholder="Username"/>
+  <img src="logo-lanit-tercom.png" alt="lanit-tercom" width="549" height="240.5">
 </div>
 <div>
+  <img src="user-icon.png" alt="user" width="300" height="300">
+</div>
+<div>
+  <label>
+  <input [(ngModel)]="username" placeholder="Username"/>
+  </label>
+</div>
+<div>
+  <label>
   <input [(ngModel)]="password" placeholder="Password"/>
+  </label>
 </div>
 <div>
   <button>Log in</button>

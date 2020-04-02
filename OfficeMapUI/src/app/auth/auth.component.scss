@@ -6,6 +6,11 @@ body {
   width: 15em;
   text-align: center;
 }
+img {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
 div {
   cursor: pointer;
   position: relative;
