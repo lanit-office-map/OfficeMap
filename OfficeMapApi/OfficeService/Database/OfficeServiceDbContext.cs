@@ -71,21 +71,9 @@ namespace OfficeService.Database
 
                 entity.Property(e => e.SpaceId).ValueGeneratedNever();
 
-                entity.Property(e => e.Description)
-                    .HasMaxLength(50)
-                    .IsUnicode(false);
-
                 entity.Property(e => e.SpaceGuid)
                     .HasColumnName("SpaceGUID")
                     .HasDefaultValueSql("(newid())");
-
-                entity.Property(e => e.SpaceName)
-                    .HasMaxLength(50)
-                    .IsUnicode(false);
-
-                entity.HasOne(d => d.Map)
-                    .WithMany(p => p.Spaces)
-                    .HasForeignKey(d => d.MapId);
 
                 entity.HasOne(d => d.Office)
                     .WithMany(p => p.Spaces)
@@ -95,11 +83,6 @@ namespace OfficeService.Database
                 entity.HasOne(d => d.Parent)
                     .WithMany(p => p.InverseParent)
                     .HasForeignKey(d => d.ParentId);
-
-                entity.HasOne(d => d.Type)
-                    .WithMany(p => p.Spaces)
-                    .HasForeignKey(d => d.TypeId)
-                    .OnDelete(DeleteBehavior.SetNull);
             });
 
             OnModelCreatingPartial(modelBuilder);
