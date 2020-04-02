@@ -3,11 +3,11 @@ using System.Collections.Generic;
 
 namespace OfficeService.Database.Entities
 {
-    public partial class Offices
+    public partial class DbOffice
     {
-        public Offices()
+        public DbOffice()
         {
-            
+           Spaces = new HashSet<DbSpace>(); 
         }
 
         public int OfficeId { get; set; }
@@ -19,5 +19,7 @@ namespace OfficeService.Database.Entities
         public Guid OfficeGuid { get; set; }
         public bool Obsolete { get; set; }
 
+        public virtual ICollection<DbSpace> Spaces { get; set; }
     }
+
 }
