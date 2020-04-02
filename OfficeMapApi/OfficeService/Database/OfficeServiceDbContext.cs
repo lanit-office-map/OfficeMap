@@ -35,7 +35,7 @@ namespace OfficeService.Database
 
                 entity.HasKey(e => e.OfficeId);
 
-                entity.Property(e => e.OfficeId).ValueGeneratedNever();
+                entity.Property(e => e.OfficeId).ValueGeneratedOnAdd();
 
                 entity.Property(e => e.Building)
                     .HasMaxLength(50)
@@ -69,7 +69,7 @@ namespace OfficeService.Database
                 entity.HasKey(e => e.SpaceId)
                     .HasName("PK__Spaces");
 
-                entity.Property(e => e.SpaceId).ValueGeneratedNever();
+                entity.Property(e => e.SpaceId).ValueGeneratedOnAdd();
 
                 entity.Property(e => e.SpaceGuid)
                     .HasColumnName("SpaceGUID")
