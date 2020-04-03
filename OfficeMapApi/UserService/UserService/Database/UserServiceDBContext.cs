@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using UserServiceApi.Database.Entities;
+using UserService.Database.Entities;
 
-namespace UserServiceApi.Database
+namespace UserService.Database
 {
     public class UserServiceDBContext : IdentityDbContext<DbUser>
     {
