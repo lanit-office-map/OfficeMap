@@ -9,12 +9,12 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using UserServiceApi.Database;
-using UserServiceApi.Database.Entities;
+using UserService.Database;
+using UserService.Database.Entities;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 
-namespace UserServiceApi
+namespace UserService
 {
     public class Startup
     {

@@ -4,7 +4,7 @@ VisualStudioVersion = 16.0.29806.167
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OfficeMapApi", "OfficeMapApi\OfficeMapApi.csproj", "{5BEF600A-0148-4340-9ADF-82E72049B0F5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UserService", "UserService\UserService\UserService.csproj", "{AF6318AF-202D-4464-8060-AA3820A10BAF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UserService", "UserService\UserService\UserService.csproj", "{AF6318AF-202D-4464-8060-AA3820A10BAF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
