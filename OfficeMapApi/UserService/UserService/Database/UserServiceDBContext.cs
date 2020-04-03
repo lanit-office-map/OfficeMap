@@ -1,42 +1,26 @@
-﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+﻿using IdentityServer4.EntityFramework.Options;
+using Microsoft.AspNetCore.ApiAuthorization.IdentityServer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using UserService.Database.Entities;
 
 namespace UserService.Database
 {
-    public class UserServiceDBContext : IdentityDbContext<DbUser>
+    public class UserServiceDBContext : ApiAuthorizationDbContext<DbUser>
     {
-        public UserServiceDBContext(DbContextOptions<UserServiceDBContext> options)
-            : base(options)
+        public UserServiceDBContext(
+            DbContextOptions options,
+            IOptions<OperationalStoreOptions> operationalStoreOptions) : base(options, operationalStoreOptions)
         {
             Database.EnsureCreated();
         }
 
         public virtual DbSet<DbEmployee> Employees { get; set; }
-        public virtual DbSet<DbUser> Users { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<DbUser>(entity =>
             {
-                entity.ToTable("AspNetUsers");
-
-                entity.HasIndex(e => e.NormalizedEmail)
-                    .HasName("EmailIndex");
-
-                entity.HasIndex(e => e.NormalizedUserName)
-                    .HasName("UserNameIndex")
-                    .IsUnique()
-                    .HasFilter("([NormalizedUserName] IS NOT NULL)");
-
-                entity.Property(e => e.Email).HasMaxLength(256);
-
-                entity.Property(e => e.NormalizedEmail).HasMaxLength(256);
-
-                entity.Property(e => e.NormalizedUserName).HasMaxLength(256);
-
-                entity.Property(e => e.UserName).HasMaxLength(256);
-
                 entity.HasOne(d => d.Employee)
                     .WithMany(p => p.Users)
                     .HasForeignKey(d => d.EmployeeId)
