@@ -1,7 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -9,12 +5,12 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using UserServiceApi.Database;
-using UserServiceApi.Database.Entities;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using UserService.Database;
+using UserService.Database.Entities;
 using Microsoft.Extensions.Configuration;
+using Microsoft.AspNetCore.Authentication;
 
-namespace UserServiceApi
+namespace UserService
 {
     public class Startup
     {
@@ -30,12 +26,18 @@ namespace UserServiceApi
         public void ConfigureServices(IServiceCollection services)
         {
             var connectionString = Configuration.GetConnectionString("DefaultConnection");
-            services.AddDbContext<IdentityDbContext<DbUser>, UserServiceDBContext>(options =>
+            services.AddDbContext<UserServiceDBContext>(options =>
                 options.UseSqlServer(connectionString));
 
             services.AddIdentity<DbUser, IdentityRole>()
-              .AddEntityFrameworkStores<IdentityDbContext<DbUser>>()
+              .AddEntityFrameworkStores<UserServiceDBContext>()
               .AddDefaultTokenProviders();
+
+            services.AddIdentityServer()
+                .AddApiAuthorization<DbUser, UserServiceDBContext>();
+            
+            services.AddAuthentication()
+                .AddIdentityServerJwt();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -47,6 +49,10 @@ namespace UserServiceApi
             }
 
             app.UseRouting();
+
+            app.UseIdentityServer();
+
+            app.UseAuthentication();
 
             app.UseEndpoints(endpoints =>
             {

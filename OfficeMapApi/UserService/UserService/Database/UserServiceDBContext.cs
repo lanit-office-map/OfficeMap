@@ -1,13 +1,16 @@
-﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+﻿using IdentityServer4.EntityFramework.Options;
+using Microsoft.AspNetCore.ApiAuthorization.IdentityServer;
 using Microsoft.EntityFrameworkCore;
-using UserServiceApi.Database.Entities;
+using Microsoft.Extensions.Options;
+using UserService.Database.Entities;
 
-namespace UserServiceApi.Database
+namespace UserService.Database
 {
-    public class UserServiceDBContext : IdentityDbContext<DbUser>
+    public class UserServiceDBContext : ApiAuthorizationDbContext<DbUser>
     {
-        public UserServiceDBContext(DbContextOptions<UserServiceDBContext> options)
-            : base(options)
+        public UserServiceDBContext(
+            DbContextOptions options,
+            IOptions<OperationalStoreOptions> operationalStoreOptions) : base(options, operationalStoreOptions)
         {
             Database.EnsureCreated();
         }

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace UserServiceApi.Database.Entities
+namespace UserService.Database.Entities
 {
     public partial class DbEmployee
     {
