@@ -8,15 +8,12 @@ namespace UserService.Models
 {
     public class Employee
     {
-        public int EmployeeId { get; set; }
+        public Guid EmployeeGuid { get; set; }
         public int? ManagerId { get; set; }
         [Required]
         public string FirstName { get; set; }
         [Required]
         public string SecondName { get; set; }
         public string Mail { get; set; }
-        [Required]
-        public string Login { get; set; }
-        public virtual ICollection<Employee> InverseManager { get; set; }
     }
 }

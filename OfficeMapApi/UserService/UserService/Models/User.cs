@@ -4,6 +4,6 @@ namespace UserService.Models
 {
     public class User
     {
-        public int EmployeeId { get; set; }
+        public Employee Employee { get; set; }
     }
 }
