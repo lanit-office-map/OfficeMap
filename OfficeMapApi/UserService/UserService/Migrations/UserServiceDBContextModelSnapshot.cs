@@ -4,9 +4,9 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using UserServiceApi.Database;
+using UserService.Database;
 
-namespace UserServiceApi.Migrations
+namespace UserService.Migrations
 {
     [DbContext(typeof(UserServiceDBContext))]
     partial class UserServiceDBContextModelSnapshot : ModelSnapshot
