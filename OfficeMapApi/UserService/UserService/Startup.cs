@@ -52,8 +52,6 @@ namespace UserService
 
             app.UseIdentityServer();
 
-            app.UseAuthentication();
-
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapGet("/", async context =>
