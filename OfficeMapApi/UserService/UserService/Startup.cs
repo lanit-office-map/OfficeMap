@@ -9,6 +9,7 @@ using UserService.Database;
 using UserService.Database.Entities;
 using Microsoft.Extensions.Configuration;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 namespace UserService
 {
@@ -35,12 +36,18 @@ namespace UserService
 
             services.AddIdentityServer()
                 .AddApiAuthorization<DbUser, UserServiceDBContext>();
-            
+
             services.AddAuthentication()
                 .AddIdentityServerJwt();
 
-            services.AddAuthorization();
-        }
+            services.AddAuthorization(
+              options =>
+              {
+                options.AddPolicy("default", policy => policy.RequireAuthenticatedUser());
+              });
+
+            services.AddControllers();
+    }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -49,20 +56,17 @@ namespace UserService
             {
                 app.UseDeveloperExceptionPage();
             }
-
             app.UseRouting();
 
             app.UseIdentityServer();
 
             app.UseAuthorization();
 
-            app.UseEndpoints(endpoints =>
-            {
-                endpoints.MapGet("/", async context =>
-                {
-                    await context.Response.WriteAsync("Hello World!");
-                });
-            });
-        }
+            app.UseEndpoints(
+              endpoints =>
+              {
+                endpoints.MapControllers();
+              });
+    }
     }
 }

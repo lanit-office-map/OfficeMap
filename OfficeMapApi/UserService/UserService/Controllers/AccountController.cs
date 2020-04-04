@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace UserService.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("UserService/[controller]/[action]")]
     [ApiController]
     public class AccountController : ControllerBase
     {
