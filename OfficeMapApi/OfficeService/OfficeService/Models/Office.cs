@@ -9,7 +9,7 @@ namespace OfficeService.Models
 
 	public class Office
 	{
-        public int OfficeId { get; set; }
+        public Guid OfficeGuid{ get; set; }
         public string City { get; set; }
         public string Street { get; set; }
         public string House { get; set; }
