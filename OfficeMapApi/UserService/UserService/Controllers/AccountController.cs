@@ -4,6 +4,7 @@ using Microsoft.Extensions.Configuration;
 using System.Threading.Tasks;
 using UserService.Models;
 using UserService.Database.Entities;
+using Microsoft.AspNetCore.Authorization;
 
 namespace UserService.Controllers
 {
@@ -45,14 +46,14 @@ namespace UserService.Controllers
             return Unauthorized();
         }
 
-        [HttpPost]
+        [HttpPost, Authorize]
         public async Task<IActionResult> Logout()
         {
             await _signInManager.SignOutAsync();
             return Ok();
         }
 
-        [HttpPost]
+        [HttpPost, Authorize]
         public async Task<IActionResult> ChangePassword(ChangePasswordModel model)
         {
             if (!ModelState.IsValid)
@@ -79,7 +80,7 @@ namespace UserService.Controllers
             return BadRequest();
         }
 
-        [HttpPost]
+        [HttpPost, Authorize]
         public async Task<IActionResult> ChangeEmail(ChangeEmailModel model, [FromQuery] string token)
         {
             if (!ModelState.IsValid)
