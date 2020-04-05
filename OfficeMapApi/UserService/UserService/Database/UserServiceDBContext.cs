@@ -12,7 +12,6 @@ namespace UserService.Database
             DbContextOptions options,
             IOptions<OperationalStoreOptions> operationalStoreOptions) : base(options, operationalStoreOptions)
         {
-            Database.EnsureCreated();
         }
 
         public virtual DbSet<DbEmployee> Employees { get; set; }

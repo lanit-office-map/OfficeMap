@@ -30,9 +30,8 @@ namespace UserService
             services.AddDbContext<UserServiceDBContext>(options =>
                 options.UseSqlServer(connectionString));
 
-            services.AddIdentity<DbUser, IdentityRole>()
-              .AddEntityFrameworkStores<UserServiceDBContext>()
-              .AddDefaultTokenProviders();
+            services.AddDefaultIdentity<DbUser>()
+              .AddEntityFrameworkStores<UserServiceDBContext>();
 
             services.AddIdentityServer()
                 .AddApiAuthorization<DbUser, UserServiceDBContext>();
@@ -58,6 +57,7 @@ namespace UserService
             }
             app.UseRouting();
 
+            app.UseAuthentication();
             app.UseIdentityServer();
 
             app.UseAuthorization();

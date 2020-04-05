@@ -27,7 +27,6 @@ namespace UserService.Controllers
         }
 
         [HttpPost]
-        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Login([FromBody] LoginModel model, string returnUrl)
         {
             if (!ModelState.IsValid)
@@ -36,7 +35,7 @@ namespace UserService.Controllers
             }
 
             var result = await _signInManager.PasswordSignInAsync(
-                model.Email, model.Password, model.RememberMe, false);
+              model.Email, model.Password, model.RememberMe, false);
 
             if (result.Succeeded)
             {
