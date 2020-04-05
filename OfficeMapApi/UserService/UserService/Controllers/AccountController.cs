@@ -33,9 +33,9 @@ namespace UserService.Controllers
             {
                 return BadRequest(model);
             }
-
+            var user = await _userManager.FindByEmailAsync(model.Email);
             var result = await _signInManager.PasswordSignInAsync(
-              model.Email, model.Password, model.RememberMe, false);
+             user, model.Password, model.RememberMe, false);
 
             if (result.Succeeded)
             {
