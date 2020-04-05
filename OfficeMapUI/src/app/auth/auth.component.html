@@ -20,7 +20,7 @@
   <div class="buttonInside">
     <label>
       <input class="inputField" [type]="isVisible ? 'text' : 'password'" formControlName="password" required placeholder="Password">
-      <button class="showHideButton" (click)="showHidePassword()" style="background: url(myimage.png)">Show</button>
+      <button class="showHideButton" (click)="showHidePassword()"><img class="imageEye" [src]="isVisible ? '../../assets/eyeOff.png' : '../../assets/eyeOn.png'" alt="Eye" width="70%"></button>
     </label>
     <div class="inputError" *ngIf="isControlInvalid('password')">
       Field cannot be empty

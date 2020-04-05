@@ -20,21 +20,24 @@ body {
 ::placeholder {
   color: #B0B0B0;
 }
+:required {
+  border: 1px solid #FF0000;
+}
 .buttonInside {
   position: relative;
 }
 .showHideButton {
   position: absolute;
-  top: 10px;
+  top: 6px;
   left: 57%;
   border: none;
   height: 20px;
   width: 40px;
-  border-radius: 80%;
   outline: none;
   margin: auto;
   text-align: center;
   padding: 2px;
+  background-color: transparent;
 }
 .showHideButton:hover {
   cursor: pointer;
