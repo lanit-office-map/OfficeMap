@@ -27,7 +27,7 @@ namespace UserService.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Login([FromBody] LoginModel model, string returnUrl)
+        public async Task<IActionResult> Login([FromBody] LoginModel model)
         {
             if (!ModelState.IsValid)
             {
