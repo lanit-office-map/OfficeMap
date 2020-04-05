@@ -6,21 +6,27 @@
 <body>
 
 
-<img src="../../assets/logo-lanit-tercom.png" alt="Lanit-Tercom logo" width="30%">
-<img src="../../assets/user-icon.png" alt="User icon" width="15%">
+<img class="imageLogo" src="../../assets/logo-lanit-tercom.png" alt="Lanit-Tercom logo" width="30%">
+<img class="imageLogo" src="../../assets/user-icon.png" alt="User icon" width="15%">
 <form [formGroup]="loginForm">
   <div>
-  <label>
-    <input type="text" formControlName="username"/>
-  </label>
-</div>
-  <div>
     <label>
-      <input type="text" formControlName="password"/>
+      <input class="inputField" type="text" formControlName="username"/>
     </label>
+    <div class="inputError" *ngIf="isControlInvalid('username')">
+      Field cannot be empty
+    </div>
   </div>
   <div>
-    <button type="submit">Log in</button>
+    <label>
+      <input class="inputField" type="password" formControlName="password"/>
+    </label>
+    <div class="inputError" *ngIf="isControlInvalid('password')">
+      Field cannot be empty
+    </div>
+  </div>
+  <div>
+    <button class="submitButton" type="submit">Log in</button>
   </div>
 </form>
 

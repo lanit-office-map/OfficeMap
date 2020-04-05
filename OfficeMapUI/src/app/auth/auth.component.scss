@@ -1,9 +1,9 @@
-img {
+.imageLogo {
   display: block;
   margin: auto;
   padding: 1em;
 }
-input[type=text]{
+.inputField{
   display: block;
   width: 25%;
   padding: 10px 10px;
@@ -18,7 +18,15 @@ input[type=text]{
 ::placeholder {
   color: #B0B0B0;
 }
-button{
+.inputError{
+  display: block;
+  width: 25%;
+  margin: auto;
+  color: #FF0000;
+  font-size: 15px;
+  font-family: system-ui;
+}
+.submitButton {
   display: block;
   width: 25%;
   padding: 10px 10px;

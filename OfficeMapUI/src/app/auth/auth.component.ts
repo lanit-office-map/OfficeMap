@@ -18,8 +18,14 @@ export class AuthComponent implements OnInit {
   // Creates a form for logging in
   createLoginForm(): void {
     this.loginForm = new FormGroup({
-      username: new FormControl(null),
-      password: new FormControl(null)
+      username: new FormControl(null, Validators.required),
+      password: new FormControl(null, Validators.required)
     })
+  }
+
+  // checks if control's input is invalid
+  isControlInvalid(controlName: string): boolean {
+    const control = this.loginForm.controls[controlName];
+    return control.invalid && control.touched;
   }
 }
