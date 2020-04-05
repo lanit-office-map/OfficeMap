@@ -39,11 +39,7 @@ namespace UserService
             services.AddAuthentication()
                 .AddIdentityServerJwt();
 
-            services.AddAuthorization(
-              options =>
-              {
-                options.AddPolicy("default", policy => policy.RequireAuthenticatedUser());
-              });
+            services.AddAuthorization();
 
             services.AddControllers();
     }
