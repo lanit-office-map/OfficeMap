@@ -8,19 +8,21 @@
 
 <img src="../../assets/logo-lanit-tercom.png" alt="Lanit-Tercom logo" width="30%">
 <img src="../../assets/user-icon.png" alt="User icon" width="15%">
-<div>
+<form [formGroup]="loginForm">
+  <div>
   <label>
-  <input [(ngModel)]="username" placeholder="Username" type="text"/>
+    <input type="text" formControlName="username"/>
   </label>
 </div>
-<div>
-  <label>
-  <input [(ngModel)]="password" placeholder="Password" type="text"/>
-  </label>
-</div>
-<div>
-  <button>Log in</button>
-</div>
+  <div>
+    <label>
+      <input type="text" formControlName="password"/>
+    </label>
+  </div>
+  <div>
+    <button type="submit">Log in</button>
+  </div>
+</form>
 
 </body>
 </html>

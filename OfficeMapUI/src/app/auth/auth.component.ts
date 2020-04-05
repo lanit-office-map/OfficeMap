@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { FormControl, FormGroup, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-auth',
@@ -6,14 +7,19 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./auth.component.scss']
 })
 export class AuthComponent implements OnInit {
-  username: string;
-  password: string;
+  loginForm: FormGroup;
 
-  constructor() { }
-
-  ngOnInit(): void {
+  constructor() {
+    this.createLoginForm();
   }
 
-  onClick(): void {
+  ngOnInit(): void {  }
+
+  // Creates a form for logging in
+  createLoginForm(): void {
+    this.loginForm = new FormGroup({
+      username: new FormControl(null),
+      password: new FormControl(null)
+    })
   }
 }
