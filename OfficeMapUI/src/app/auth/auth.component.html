@@ -11,15 +11,16 @@
 <form [formGroup]="loginForm">
   <div>
     <label>
-      <input class="inputField" type="text" formControlName="username" placeholder="Username"/>
+      <input class="inputField" type="text" formControlName="username" required placeholder="Username"/>
     </label>
     <div class="inputError" *ngIf="isControlInvalid('username')">
       Field cannot be empty
     </div>
   </div>
-  <div>
+  <div class="buttonInside">
     <label>
-      <input class="inputField" type="password" formControlName="password" placeholder="Password">
+      <input class="inputField" [type]="isVisible ? 'text' : 'password'" formControlName="password" required placeholder="Password">
+      <button class="showHideButton" (click)="showHidePassword()" style="background: url(myimage.png)">Show</button>
     </label>
     <div class="inputError" *ngIf="isControlInvalid('password')">
       Field cannot be empty

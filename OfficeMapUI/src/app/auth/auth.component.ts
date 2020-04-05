@@ -8,6 +8,7 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 })
 export class AuthComponent implements OnInit {
   loginForm: FormGroup;
+  isVisible = false;
 
   constructor() {
     this.createLoginForm();
@@ -20,12 +21,17 @@ export class AuthComponent implements OnInit {
     this.loginForm = new FormGroup({
       username: new FormControl(null, Validators.required),
       password: new FormControl(null, Validators.required)
-    })
+    });
   }
 
-  // checks if control's input is invalid
+  // Checks if control's input is invalid
   isControlInvalid(controlName: string): boolean {
     const control = this.loginForm.controls[controlName];
     return control.invalid && control.touched;
+  }
+
+  // Shows/hides password
+  showHidePassword() {
+    this.isVisible = !this.isVisible;
   }
 }

@@ -1,9 +1,12 @@
+body {
+  font-family: system-ui;
+}
 .imageLogo {
   display: block;
   margin: auto;
   padding: 1em;
 }
-.inputField{
+.inputField {
   display: block;
   width: 20%;
   padding: 10px 10px;
@@ -13,18 +16,35 @@
   border-radius: 5px;
   color: #575757;
   font-size: 17px;
-  font-family: system-ui;
 }
 ::placeholder {
   color: #B0B0B0;
 }
-.inputError{
+.buttonInside {
+  position: relative;
+}
+.showHideButton {
+  position: absolute;
+  top: 10px;
+  left: 57%;
+  border: none;
+  height: 20px;
+  width: 40px;
+  border-radius: 80%;
+  outline: none;
+  margin: auto;
+  text-align: center;
+  padding: 2px;
+}
+.showHideButton:hover {
+  cursor: pointer;
+}
+.inputError {
   display: block;
   width: 20%;
   margin: auto;
   color: #FF0000;
   font-size: 15px;
-  font-family: system-ui;
 }
 .submitButton {
   display: block;
@@ -37,5 +57,4 @@
   background-color: #35ABDB;
   cursor: pointer;
   font-size: 17px;
-  font-family: system-ui;
 }
