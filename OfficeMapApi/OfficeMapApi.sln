@@ -6,6 +6,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OfficeMapApi", "OfficeMapAp
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UserService", "UserService\UserService\UserService.csproj", "{AF6318AF-202D-4464-8060-AA3820A10BAF}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OfficeService", "OfficeService\OfficeService\OfficeService.csproj", "{9B055CA8-E2B9-48F2-9A0C-137568CD4403}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -20,6 +22,10 @@ Global
 		{AF6318AF-202D-4464-8060-AA3820A10BAF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AF6318AF-202D-4464-8060-AA3820A10BAF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AF6318AF-202D-4464-8060-AA3820A10BAF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9B055CA8-E2B9-48F2-9A0C-137568CD4403}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9B055CA8-E2B9-48F2-9A0C-137568CD4403}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9B055CA8-E2B9-48F2-9A0C-137568CD4403}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9B055CA8-E2B9-48F2-9A0C-137568CD4403}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
