@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Authorization;
 namespace UserService.Controllers
 {
     [Route("UserService/[controller]/[action]")]
-    [ApiController]
+    [ApiController, Authorize]
     public class AccountController : ControllerBase
     {
         private readonly SignInManager<DbUser> _signInManager;
@@ -26,6 +26,7 @@ namespace UserService.Controllers
         }
 
         [HttpPost]
+        [AllowAnonymous]
         public async Task<IActionResult> Login([FromBody] LoginModel model)
         {
             if (!ModelState.IsValid)
@@ -44,14 +45,14 @@ namespace UserService.Controllers
             return Unauthorized();
         }
 
-        [HttpPost, Authorize]
+        [HttpPost]
         public async Task<IActionResult> Logout()
         {
             await _signInManager.SignOutAsync();
             return Ok();
         }
 
-        [HttpPost, Authorize]
+        [HttpPost]
         public async Task<IActionResult> ChangePassword(ChangePasswordModel model)
         {
             if (!ModelState.IsValid)
@@ -78,7 +79,7 @@ namespace UserService.Controllers
             return BadRequest();
         }
 
-        [HttpPost, Authorize]
+        [HttpPost]
         public async Task<IActionResult> ChangeEmail(ChangeEmailModel model, [FromQuery] string token)
         {
             if (!ModelState.IsValid)
