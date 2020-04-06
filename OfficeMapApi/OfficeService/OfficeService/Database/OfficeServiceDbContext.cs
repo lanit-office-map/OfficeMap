@@ -6,26 +6,23 @@ using OfficeService.Database.Entities;
 
 namespace OfficeService.Database
 {
-    public partial class OfficeServiceDbContext : DbContext 
+    public partial class OfficeServiceDbContext : DbContext
     {
         public OfficeServiceDbContext (DbContextOptions<OfficeServiceDbContext> options)
             : base(options)
         {
             Database.EnsureCreated();
-        }       
+        }
 
-        public virtual DbSet<DbOffice> Offices { get; set; } 
+        public virtual DbSet<DbOffice> Offices { get; set; }
         public virtual DbSet<DbSpace> Spaces { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            
-            
-            modelBuilder.Entity<DbOffice>(entity =>
-            {
-                entity.ToTable("Offices");
-
-                entity.HasKey(e => e.OfficeId);
+          modelBuilder.Entity<DbOffice>(entity =>
+          {
+            entity.ToTable("Offices", "dbo");
+            entity.HasKey(e => e.OfficeId);
 
                 entity.Property(e => e.OfficeId).ValueGeneratedOnAdd();
 
@@ -53,11 +50,11 @@ namespace OfficeService.Database
                 entity.Property(e => e.Street)
                     .HasMaxLength(50)
                     .IsUnicode(false);
-            }); 
+            });
 
             modelBuilder.Entity<DbSpace>(entity =>
             {
-                entity.ToTable("Spaces");
+                entity.ToTable("Spaces", "dbo");
                 entity.HasKey(e => e.SpaceId)
                     .HasName("PK__Spaces");
 

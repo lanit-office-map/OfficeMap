@@ -5,20 +5,41 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using OfficeService.Database;
+using OfficeService.Database.Entities;
+using OfficeService.Mappers;
+using OfficeService.Mappers.Interfaces;
+using OfficeService.Repository;
+using OfficeService.Repository.Interfaces;
+using OfficeService.Services.Interface;
 
 namespace OfficeService
 {
     public class Startup
     {
-        // This method gets called by the runtime. Use this method to add services to the container.
-        // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
-        public void ConfigureServices(IServiceCollection services)
+        public Startup(IConfiguration configuration)
         {
+            Configuration = configuration;
         }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+        public IConfiguration Configuration { get; }
+
+        public void ConfigureServices(IServiceCollection services)
+        {
+            var connectionString = Configuration.GetConnectionString("DefaultConnection");
+            services.AddDbContext<OfficeServiceDbContext>(options => options.UseSqlServer(connectionString));
+
+            services.AddScoped<IOfficeRepository, OfficeRepository>();
+            services.AddScoped<IOfficeMapper, OfficeMapper>();
+            services.AddScoped<IOfficeService, Services.OfficesService>();
+
+            services.AddControllers();
+        }
+
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())
@@ -30,10 +51,7 @@ namespace OfficeService
 
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapGet("/", async context =>
-                {
-                    await context.Response.WriteAsync("Hello World!");
-                });
+                endpoints.MapControllers();
             });
         }
     }
