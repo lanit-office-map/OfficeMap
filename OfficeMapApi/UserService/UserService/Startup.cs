@@ -31,7 +31,14 @@ namespace UserService
               .AddEntityFrameworkStores<UserServiceDBContext>();
 
             services.AddIdentityServer()
-                .AddApiAuthorization<DbUser, UserServiceDBContext>();
+              .AddApiAuthorization<DbUser, UserServiceDBContext>(
+                options =>
+                {
+                  options.IdentityResources.Clear();
+                  options.IdentityResources.AddRange(IdentityServerConfiguration.IdentityResources);
+                  options.Clients.AddRange(IdentityServerConfiguration.Clients);
+                  options.ApiResources.AddRange(IdentityServerConfiguration.ApiResources);
+                });
 
             services.AddAuthentication()
                 .AddIdentityServerJwt();
