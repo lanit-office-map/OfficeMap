@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Text;
 
 namespace OfficeService.Repository.Filters
@@ -11,10 +12,11 @@ namespace OfficeService.Repository.Filters
         public string House { get; }
         public string Building { get; }
         public string PhoneNumber { get; }
-
+        public Guid OfficeGuid { get; }
     
         public OfficeFilter(
             int officeId,
+            Guid officeGuid,
             string city = null,
             string street = null,
             string house = null,
@@ -27,6 +29,7 @@ namespace OfficeService.Repository.Filters
             House = house;
             Building = building;
             PhoneNumber = phoneNumber;
+            OfficeGuid = officeGuid;
         }
 
         public override string ToString()

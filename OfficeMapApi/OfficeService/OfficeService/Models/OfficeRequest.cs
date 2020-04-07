@@ -7,7 +7,7 @@ namespace OfficeService.Models
 {
     public class OfficeRequest : Office
     {
-        internal int OfficeId { get; set; }
+        internal Guid OfficeGuid { get; set; }
         internal int SpaceId { get; set; }
     }
 }
