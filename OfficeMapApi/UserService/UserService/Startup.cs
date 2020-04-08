@@ -1,3 +1,9 @@
+using System.IO;
+using System.Net.Mime;
+using System.Reflection;
+using System.Security.Cryptography.X509Certificates;
+using IdentityServer4.AccessTokenValidation;
+using IdentityServer4.Stores;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -7,15 +13,25 @@ using UserService.Database;
 using UserService.Database.Entities;
 using Microsoft.Extensions.Configuration;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Identity;
 
 namespace UserService
 {
     public class Startup
     {
+        #region private properties
+        private X509Certificate2 Certificate { get; }
+        #endregion
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
-        }
+            Certificate = new X509Certificate2(
+              Path.Combine(
+                Directory.GetCurrentDirectory(),
+                "Certificate.pfx"),
+              "secret");
+    }
 
         public IConfiguration Configuration { get; }
 
@@ -23,25 +39,37 @@ namespace UserService
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
+            var migrationsAssembly = typeof(Startup).GetTypeInfo().Assembly.GetName().Name;
             var connectionString = Configuration.GetConnectionString("DefaultConnection");
-            services.AddDbContext<UserServiceDBContext>(options =>
+            services.AddDbContext<UserServiceDbContext>(options =>
                 options.UseSqlServer(connectionString));
 
-            services.AddDefaultIdentity<DbUser>()
-              .AddEntityFrameworkStores<UserServiceDBContext>();
+            services.AddIdentity<DbUser, IdentityRole>()
+              .AddEntityFrameworkStores<UserServiceDbContext>()
+              .AddDefaultTokenProviders();
 
             services.AddIdentityServer()
-              .AddApiAuthorization<DbUser, UserServiceDBContext>(
-                options =>
-                {
-                  options.IdentityResources.Clear();
-                  options.IdentityResources.AddRange(IdentityServerConfiguration.IdentityResources);
-                  options.Clients.AddRange(IdentityServerConfiguration.Clients);
-                  options.ApiResources.AddRange(IdentityServerConfiguration.ApiResources);
-                });
+              .AddOperationalStore(options =>
+              {
+                options.ConfigureDbContext = b => b.UseSqlServer(connectionString,
+                    sql => sql.MigrationsAssembly(migrationsAssembly));
+              })
+              .AddDeveloperSigningCredential()
+              .AddInMemoryApiResources(IdentityServerConfiguration.ApiResources)
+              .AddInMemoryClients(IdentityServerConfiguration.Clients)
+              .AddAspNetIdentity<DbUser>();
 
-            services.AddAuthentication()
-                .AddIdentityServerJwt();
+            services.AddAuthentication(options =>
+              {
+                options.DefaultAuthenticateScheme = IdentityServerAuthenticationDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+              })
+              .AddIdentityServerAuthentication(options =>
+              {
+                options.Authority = "http://localhost:5000";
+                options.ApiName = "OfficeMapAPIs";
+                options.RequireHttpsMetadata = false;
+              });
 
             services.AddAuthorization();
 

@@ -6,10 +6,10 @@ using UserService.Database.Entities;
 
 namespace UserService.Database
 {
-    public class UserServiceDBContext : ApiAuthorizationDbContext<DbUser>
+    public class UserServiceDbContext : ApiAuthorizationDbContext<DbUser>
     {
-        public UserServiceDBContext(
-            DbContextOptions options,
+        public UserServiceDbContext(
+            DbContextOptions<UserServiceDbContext> options,
             IOptions<OperationalStoreOptions> operationalStoreOptions) : base(options, operationalStoreOptions)
         {
         }
@@ -28,7 +28,7 @@ namespace UserService.Database
 
             modelBuilder.Entity<DbEmployee>(entity =>
             {
-                entity.ToTable("Employees");
+                entity.ToTable("Employees", "dbo");
 
                 entity.HasKey(e => e.EmployeeId);
 

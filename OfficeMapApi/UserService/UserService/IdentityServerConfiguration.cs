@@ -39,8 +39,7 @@ namespace UserService
       new Client
       {
         ClientId = "service.client",
-        ClientName = "service.client",
-        AllowedGrantTypes = GrantTypes.ResourceOwnerPassword,
+        AllowedGrantTypes = GrantTypes.ClientCredentials,
         ClientSecrets =
         {
           new Secret("secret".Sha256())
@@ -50,8 +49,6 @@ namespace UserService
           (int)TimeSpan.FromDays(1).TotalSeconds,
         AllowedScopes = new List<string>
         {
-          IdentityServerConstants.StandardScopes.OpenId,
-          IdentityServerConstants.StandardScopes.OfflineAccess,
           "officemapapis"
         }
       }
