@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using UserService.Models;
 using UserService.Database.Entities;
 using Microsoft.AspNetCore.Authorization;
+using System;
 
 namespace UserService.Controllers
 {
@@ -48,8 +49,13 @@ namespace UserService.Controllers
         [HttpPost]
         public async Task<IActionResult> Logout()
         {
-            await _signInManager.SignOutAsync();
-            return Ok();
+            if (User?.Identity.IsAuthenticated == true)
+            {
+                await _signInManager.SignOutAsync();
+                return Ok();
+            }
+
+            return Unauthorized();
         }
 
         [HttpPost]
@@ -60,7 +66,8 @@ namespace UserService.Controllers
                 return BadRequest(model);
             }
 
-            var user = await _userManager.GetUserAsync(HttpContext.User);
+            var userId = Guid.Parse(User.FindFirst("sub").Value);
+            var user = await _userManager.FindByIdAsync(userId.ToString());
 
             if (user != null)
             {

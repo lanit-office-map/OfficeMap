@@ -15,6 +15,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
+using UserService.Services;
 
 namespace UserService
 {
@@ -49,7 +50,8 @@ namespace UserService
               .AddDeveloperSigningCredential()
               .AddInMemoryApiResources(IdentityServerConfiguration.ApiResources)
               .AddInMemoryClients(IdentityServerConfiguration.Clients)
-              .AddAspNetIdentity<DbUser>();
+              .AddAspNetIdentity<DbUser>()
+              .AddProfileService<ProfileService>();
 
             services.AddAuthentication(options =>
               {
