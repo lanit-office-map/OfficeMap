@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using OfficeService.Database;
 using OfficeService.Database.Entities;
 using OfficeService.Repository.Interfaces;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 
 namespace OfficeService.Repository
 {
@@ -25,37 +26,35 @@ namespace OfficeService.Repository
     }
 
     public Task<IEnumerable<DbOffice>> GetOfficesAsync()
-    { 
+    {
             return Task.FromResult(dbContext.Offices.AsEnumerable());
     }
 
-    public Task<DbOffice> GetOfficeAsync(Guid officeguid)
+    public Task<DbOffice> GetAsync(Guid officeguid)
         {
             return Task.FromResult(dbContext.Offices.Find(officeguid));
         }
 
-    public Task<DbOffice> UpdateOfficeAsync(DbOffice office)
+    public Task<DbOffice> UpdateAsync(DbOffice office)
         {
-            dbContext.Entry(office).State = EntityState.Modified;
-            return Task.FromResult(office);
+            EntityEntry<DbOffice> result = dbContext.Offices.Update(office);
+            dbContext.SaveChanges();
+            return Task.FromResult(result.Entity);
         }
 
-    public Task DeleteOfficeAsync(DbOffice office)
+    public Task DeleteAsync(DbOffice office)
         {
-            if (office != null)
-            {
                 dbContext.Offices.Remove(office);
-            }
-            return Task.CompletedTask;
+                dbContext.SaveChanges();
+                return Task.CompletedTask;
         }
-        
-        // как вывести перечисление добавленных сущностей?
-    public Task<DbOffice> CreateOfficeAsync(DbOffice office)
+    public Task<DbOffice> CreateAsync(DbOffice office)
         {
-            dbContext.Offices.Add(office);
+            EntityEntry<DbOffice> result = dbContext.Offices.Add(office);
             dbContext.SaveChanges();
-            return Task.FromResult(office);
+            return Task.FromResult(result.Entity);
         }
     #endregion
   }
 }
+ 
