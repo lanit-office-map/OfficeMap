@@ -20,18 +20,10 @@ namespace UserService
 {
     public class Startup
     {
-        #region private properties
-        private X509Certificate2 Certificate { get; }
-        #endregion
-        public Startup(IConfiguration configuration)
+      public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
-            Certificate = new X509Certificate2(
-              Path.Combine(
-                Directory.GetCurrentDirectory(),
-                "Certificate.pfx"),
-              "secret");
-    }
+        }
 
         public IConfiguration Configuration { get; }
 
