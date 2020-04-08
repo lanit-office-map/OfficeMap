@@ -1,18 +1,18 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using OfficeService.Database.Entities;
-using OfficeService.Models;
-using OfficeService.Repository.Filters;
 
 namespace OfficeService.Repository.Interfaces
 {
     public interface IOfficeRepository       
     { 
         Task<IEnumerable<DbOffice>> GetOfficesAsync();
-        Task<DbOffice> CreateOfficeAsync(DbOffice office);
-        Task DeleteOfficeAsync(DbOffice office);
-        Task<DbOffice> UpdateOfficeAsync(DbOffice office);
-        Task<DbOffice> GetOfficeAsync(Guid officeguid);
+        Task<DbOffice> CreateAsync(DbOffice office);
+        Task DeleteAsync(DbOffice office);
+        Task<DbOffice> UpdateAsync(DbOffice office);
+        Task<DbOffice> GetAsync(Guid officeguid);
+        Task<IEnumerable> FindAsync(Guid officeguid);
     } 
 }
