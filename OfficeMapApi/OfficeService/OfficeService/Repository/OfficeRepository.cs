@@ -24,9 +24,38 @@ namespace OfficeService.Repository
     }
 
     public Task<IEnumerable<DbOffice>> GetOfficesAsync()
-    {
-      return Task.FromResult(dbContext.Offices.AsEnumerable());
+    { 
+            return Task.FromResult(dbContext.Offices.AsEnumerable());
     }
+
+    public Task<DbOffice> GetOfficeAsync(Guid officeguid)
+        {
+            return Task.FromResult(dbContext.Offices.Find(officeguid));
+        }
+
+    public Task<DbOffice> PutOfficeAsync(Guid officeguid)
+        {
+            DbOffice office = dbContext.Offices.Find(officeguid);
+            dbContext.Entry(office).State = EntityState.Modified;
+            return Task.FromResult(dbContext.Offices.Find(officeguid));
+        }
+
+    public Task<DbOffice> DeleteOfficeAsync(Guid officeguid)
+        {
+            DbOffice office = dbContext.Offices.Find(officeguid);
+            if (office != null)
+            {
+                dbContext.Offices.Remove(office);
+            }
+            return Task.FromResult(dbContext.Offices.Find(officeguid));
+        }
+        
+        // как вывести перечисление добавленных сущностей?
+    public Task<IEnumerable<DbOffice>> PostOfficesAsync(DbOffice offices)
+        {
+            dbContext.Offices.Add(offices);
+            return Task.FromResult(dbContext.Offices.AsEnumerable());
+        }
     #endregion
   }
 }
