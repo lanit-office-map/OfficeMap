@@ -10,9 +10,9 @@ namespace OfficeService.Repository.Interfaces
     public interface IOfficeRepository       
     { 
         Task<IEnumerable<DbOffice>> GetOfficesAsync();
-        Task<IEnumerable<DbOffice>> PostOfficesAsync(DbOffice offices);
-        Task<DbOffice> DeleteOfficeAsync(Guid officeguid);
-        Task<DbOffice> PutOfficeAsync(Guid officeguid);
+        Task<DbOffice> CreateOfficeAsync(DbOffice office);
+        Task DeleteOfficeAsync(DbOffice office);
+        Task<DbOffice> UpdateOfficeAsync(DbOffice office);
         Task<DbOffice> GetOfficeAsync(Guid officeguid);
     } 
 }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Entity;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -33,28 +34,27 @@ namespace OfficeService.Repository
             return Task.FromResult(dbContext.Offices.Find(officeguid));
         }
 
-    public Task<DbOffice> PutOfficeAsync(Guid officeguid)
+    public Task<DbOffice> UpdateOfficeAsync(DbOffice office)
         {
-            DbOffice office = dbContext.Offices.Find(officeguid);
             dbContext.Entry(office).State = EntityState.Modified;
-            return Task.FromResult(dbContext.Offices.Find(officeguid));
+            return Task.FromResult(office);
         }
 
-    public Task<DbOffice> DeleteOfficeAsync(Guid officeguid)
+    public Task DeleteOfficeAsync(DbOffice office)
         {
-            DbOffice office = dbContext.Offices.Find(officeguid);
             if (office != null)
             {
                 dbContext.Offices.Remove(office);
             }
-            return Task.FromResult(dbContext.Offices.Find(officeguid));
+            return Task.CompletedTask;
         }
         
         // как вывести перечисление добавленных сущностей?
-    public Task<IEnumerable<DbOffice>> PostOfficesAsync(DbOffice offices)
+    public Task<DbOffice> CreateOfficeAsync(DbOffice office)
         {
-            dbContext.Offices.Add(offices);
-            return Task.FromResult(dbContext.Offices.AsEnumerable());
+            dbContext.Offices.Add(office);
+            dbContext.SaveChanges();
+            return Task.FromResult(office);
         }
     #endregion
   }
