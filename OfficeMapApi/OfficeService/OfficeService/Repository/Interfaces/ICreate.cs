@@ -1,8 +1,10 @@
-﻿namespace OfficeService.Repository.Interfaces
+﻿using System.Threading.Tasks;
+
+namespace OfficeService.Repository.Interfaces
 {
     public interface ICreate<TEntity>
        where TEntity : class
     {
-       TEntity Create(TEntity entity);
+       Task CreateAsync(TEntity entity);
     }
 }

@@ -1,8 +1,10 @@
-﻿namespace OfficeService.Repository.Interfaces
+﻿using System.Threading.Tasks;
+
+namespace OfficeService.Repository.Interfaces
 { 
     public interface IGet<out TEntity, in TKey>
         where TEntity : class
     {
-        TEntity Get(TKey id);
+        Task GetAsync(TKey id);
     }
 }

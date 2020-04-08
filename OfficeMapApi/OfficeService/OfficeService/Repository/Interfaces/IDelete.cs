@@ -1,8 +1,10 @@
-﻿namespace OfficeService.Repository.Interfaces
+﻿using System.Threading.Tasks;
+
+namespace OfficeService.Repository.Interfaces
 {
     public interface IDelete<in TEntity>
     {
-        void Delete(TEntity entity);
+        Task DeleteAsync(TEntity entity);
     }
 }
 
