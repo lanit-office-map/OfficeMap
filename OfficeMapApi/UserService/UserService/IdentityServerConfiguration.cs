@@ -12,7 +12,7 @@ namespace UserService
   {
     #region public properties
 
-    public static IdentityResource[] IdentityResources => new[]
+    public static IdentityResource[] IdentityResources => new IdentityResource[]
       {
         new IdentityResources.OpenId()
       };
@@ -39,7 +39,7 @@ namespace UserService
       new Client
       {
         ClientId = "service.client",
-        AllowedGrantTypes = GrantTypes.ClientCredentials,
+        AllowedGrantTypes = GrantTypes.ResourceOwnerPassword,
         ClientSecrets =
         {
           new Secret("secret".Sha256())

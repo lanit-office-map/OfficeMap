@@ -3,6 +3,7 @@ using System.Net.Mime;
 using System.Reflection;
 using System.Security.Cryptography.X509Certificates;
 using IdentityServer4.AccessTokenValidation;
+using IdentityServer4.Services;
 using IdentityServer4.Stores;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Builder;
@@ -41,19 +42,23 @@ namespace UserService
               .AddDefaultTokenProviders();
 
             services.AddIdentityServer()
-              .AddOperationalStore(options =>
-              {
-                options.ConfigureDbContext = b => b.UseSqlServer(connectionString,
+              .AddOperationalStore(
+                options =>
+                {
+                  options.ConfigureDbContext = b => b.UseSqlServer(
+                    connectionString,
                     sql => sql.MigrationsAssembly(migrationsAssembly));
-              })
+                })
               .AddDeveloperSigningCredential()
               .AddInMemoryApiResources(IdentityServerConfiguration.ApiResources)
               .AddInMemoryClients(IdentityServerConfiguration.Clients)
               .AddAspNetIdentity<DbUser>();
 
+            services.AddTransient<IProfileService, IdentityClaimsProfileService>();
+
             services.AddAuthentication(options =>
               {
-                options.DefaultAuthenticateScheme = IdentityServerAuthenticationDefaults.AuthenticationScheme;
+                options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
                 options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
               })
               .AddIdentityServerAuthentication(options =>
