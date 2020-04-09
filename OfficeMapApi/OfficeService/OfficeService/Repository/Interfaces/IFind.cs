@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace OfficeService.Repository.Interfaces
 {
-    public interface IFind<TFilter>
+    public interface IFind<TEntity, TFilter>
             where TFilter : class
     {
-        Task <IEnumerable> FindAsync(TFilter filter = null);
+        Task <IEnumerable<TEntity>> FindAsync(TFilter filter = null);
     }
 }

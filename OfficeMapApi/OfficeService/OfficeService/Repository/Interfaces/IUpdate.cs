@@ -2,10 +2,10 @@
 
 namespace OfficeService.Repository.Interfaces
 {
-        public interface IUpdate<TEntity>
+        public interface IUpdate <TEntity>
             where TEntity : class
         {
-            Task UpdateAsync(TEntity entity);
+            Task<TEntity> UpdateAsync(TEntity entity);
         }
 }
 

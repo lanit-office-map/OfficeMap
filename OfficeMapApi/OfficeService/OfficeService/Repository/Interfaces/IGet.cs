@@ -2,9 +2,9 @@
 
 namespace OfficeService.Repository.Interfaces
 { 
-    public interface IGet<out TEntity, in TKey>
+    public interface IGet<TEntity, in TKey>
         where TEntity : class
     {
-        Task GetAsync(TKey id);
+        Task<TEntity> GetAsync(TKey id);
     }
 }
