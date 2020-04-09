@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Entity;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -9,6 +8,7 @@ using OfficeService.Database;
 using OfficeService.Database.Entities;
 using OfficeService.Repository.Interfaces;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
+using OfficeService.Repository.Filters;
 
 namespace OfficeService.Repository
 {
@@ -53,6 +53,15 @@ namespace OfficeService.Repository
             EntityEntry<DbOffice> result = dbContext.Offices.Add(office);
             dbContext.SaveChanges();
             return Task.FromResult(result.Entity);
+        }
+
+    public Task<IEnumerable<DbOffice>> FindAsync(OfficeFilter filter = null)
+        {
+            if (filter != null)
+            {
+                throw new NotImplementedException();
+            }
+            return Task.FromResult(dbContext.Offices.AsEnumerable());
         }
     #endregion
   }
