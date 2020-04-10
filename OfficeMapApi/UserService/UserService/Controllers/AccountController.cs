@@ -25,7 +25,18 @@ namespace UserService.Controllers
             _signInManager = signInManager;
         }
 
+        /// <summary>
+        /// Attempts to sign in the email of user and password combination
+        /// </summary>
+        /// <param name="model">Contains mail, password, and whether to remember</param>
+        /// <returns></returns>
+        /// <response code="204">Ok</response>
+        /// <response code="400">Invalid fields</response>
+        /// <response code="404">User not found</response>
         [HttpPost]
+        [ProducesResponseType(204)]
+        [ProducesResponseType(typeof(DbUser), 400)]
+        [ProducesResponseType(404)]
         [AllowAnonymous]
         public async Task<IActionResult> Login([FromBody] LoginModel model)
         {
@@ -39,19 +50,37 @@ namespace UserService.Controllers
 
             if (result.Succeeded)
             {
-                return Ok();
+                return NoContent();
             }
 
-            return Unauthorized();
+            return NotFound();
         }
 
+        /// <summary>
+        /// Attempts to sign out the user
+        /// </summary>
+        /// <returns></returns>
+        /// <response code="204">Ok</response>
         [HttpPost]
+        [ProducesResponseType(204)]
         public async Task<IActionResult> Logout()
         {
             await _signInManager.SignOutAsync();
-            return Ok();
+            return NoContent();
         }
 
+        /// <summary>
+        ///  Attempts to change password for current user
+        /// </summary>
+        /// <param name="model">Contains new password, old password, and whether to remember (trying to re-login)</param>
+        /// <returns></returns>
+        /// <response code="204">Ok</response>
+        /// <response code="400">Invalid fields</response>
+        /// <response code="404">User not found</response>
+        [HttpPost]
+        [ProducesResponseType(204)]
+        [ProducesResponseType(typeof(DbUser), 400)]
+        [ProducesResponseType(404)]
         [HttpPost]
         public async Task<IActionResult> ChangePassword(ChangePasswordModel model)
         {
@@ -70,17 +99,28 @@ namespace UserService.Controllers
                 if (result.Succeeded)
                 {
                     await _signInManager.SignInAsync(user, model.RememberMe);
-                    return Ok();
+                    return NoContent();
                 }
 
                 return BadRequest();
             }
 
-            return BadRequest();
+            return NotFound();
         }
 
+        /// <summary>
+        ///  Attempts to change email for current user
+        /// </summary>
+        /// <param name="model">Contains new email and whether to remember (trying to re-login)</param>
+        /// <returns></returns>
+        /// <response code="204">Ok</response>
+        /// <response code="400">Invalid fields</response>
+        /// <response code="404">User not found</response>
         [HttpPost]
-        public async Task<IActionResult> ChangeEmail(ChangeEmailModel model, [FromQuery] string token)
+        [ProducesResponseType(204)]
+        [ProducesResponseType(typeof(DbUser), 400)]
+        [ProducesResponseType(404)]
+        public async Task<IActionResult> ChangeEmail(ChangeEmailModel model)
         {
             if (!ModelState.IsValid)
             {
@@ -91,18 +131,19 @@ namespace UserService.Controllers
 
             if (user != null)
             {
-                var result = await _userManager.ChangeEmailAsync(user, model.NewEmail, token); //token???
+                var token = await _userManager.GenerateChangeEmailTokenAsync(user, model.NewEmail);
+                var result = await _userManager.ChangeEmailAsync(user, model.NewEmail, token);
 
                 if (result.Succeeded)
                 {
                     await _signInManager.SignInAsync(user, model.RememberMe);
-                    return Ok();
+                    return NoContent();
                 }
 
                 return BadRequest();
             }
 
-            return BadRequest();
+            return NotFound();
         }
     }
 }
