@@ -65,6 +65,7 @@ namespace UserService.Controllers
         [ProducesResponseType(204)]
         public async Task<IActionResult> Logout()
         {
+            HttpContext.Session.Clear();
             await _signInManager.SignOutAsync();
             return NoContent();
         }
