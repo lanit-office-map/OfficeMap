@@ -1,11 +1,17 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
+﻿using System;
 using OfficeService.Models;
+using OfficeService.Repository.Filters;
+using OfficeService.Interfaces;
 
 namespace OfficeService.Services.Interface
 {
-  public interface IOfficeService
-  {
-    Task<IEnumerable<Office>> GetOfficesAsync();
-  }
+  public interface IOfficeService:
+        IGet<Office, Guid>,
+        IDelete<Office>,
+        IFind<Office, OfficeFilter>,
+        ICreate<Office>,
+        IUpdate<Office, Office>
+    {
+
+    }
 }
