@@ -1,13 +1,17 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using OfficeService.Repository.Filters;
 using OfficeService.Database.Entities;
+using OfficeService.Interfaces;
 
 namespace OfficeService.Repository.Interfaces
 {
-  public interface IOfficeRepository
-  {
-    Task<IEnumerable<DbOffice>> GetOfficesAsync();
-  }
+    public interface IOfficeRepository:
+        IGet<DbOffice, Guid>,
+        IDelete<DbOffice>,
+        IFind<DbOffice, OfficeFilter>,
+        ICreate<DbOffice>,
+        IUpdate<DbOffice>
+    { 
+
+    } 
 }
