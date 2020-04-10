@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
+using AutoMapper;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using UserService.Database.Entities;
@@ -14,11 +12,14 @@ namespace UserService.Controllers
     public class UserController : ControllerBase
     {
         private readonly UserManager<DbUser> _userManager;
+        private readonly IMapper _mapper;
 
         public UserController(
-            UserManager<DbUser> userManager)
+            UserManager<DbUser> userManager,
+            IMapper mapper)
         {
             _userManager = userManager;
+            _mapper = mapper;
         }
 
         [HttpGet("users/{userGuid}")]
