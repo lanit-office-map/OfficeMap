@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 
-namespace OfficeService.Repository.Interfaces
+namespace OfficeService.Interfaces
 {
     public interface ICreate<TEntity>
        where TEntity : class

@@ -1,6 +1,7 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 
-namespace OfficeService.Repository.Interfaces
+namespace OfficeService.Interfaces
 { 
     public interface IGet<TEntity, in TKey>
         where TEntity : class

@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace OfficeService.Repository.Interfaces
+namespace OfficeService.Interfaces
 {
     public interface IFind<TEntity, TFilter>
             where TFilter : class
