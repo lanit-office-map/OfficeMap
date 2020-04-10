@@ -25,11 +25,6 @@ namespace OfficeService.Repository
       this.dbContext = dbContext;
     }
 
-    public Task<IEnumerable<DbOffice>> GetOfficesAsync()
-    {
-            return Task.FromResult(dbContext.Offices.AsEnumerable());
-    }
-
     public Task<DbOffice> GetAsync(Guid officeguid)
         {
             return Task.FromResult(dbContext.Offices.Find(officeguid));
@@ -44,6 +39,7 @@ namespace OfficeService.Repository
 
     public Task DeleteAsync(DbOffice office)
         {
+
                 dbContext.Offices.Remove(office);
                 dbContext.SaveChanges();
                 return Task.CompletedTask;
