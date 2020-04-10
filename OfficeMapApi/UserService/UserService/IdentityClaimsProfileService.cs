@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
@@ -14,7 +13,7 @@ using UserService.Database.Entities;
 
 namespace UserService
 {
-  public class IdentityClaimsProfileService : ProfileService<DbUser>
+    public class IdentityClaimsProfileService : ProfileService<DbUser>
   {
     public IdentityClaimsProfileService(
       [FromServices]UserManager<DbUser> userManager,

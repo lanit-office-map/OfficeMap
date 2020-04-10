@@ -1,10 +1,5 @@
-using System.IO;
-using System.Net.Mime;
 using System.Reflection;
-using System.Security.Cryptography.X509Certificates;
-using IdentityServer4.AccessTokenValidation;
 using IdentityServer4.Services;
-using IdentityServer4.Stores;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -13,7 +8,6 @@ using Microsoft.Extensions.Hosting;
 using UserService.Database;
 using UserService.Database.Entities;
 using Microsoft.Extensions.Configuration;
-using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 
