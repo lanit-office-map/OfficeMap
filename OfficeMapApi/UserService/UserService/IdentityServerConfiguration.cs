@@ -1,14 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
-using IdentityServer4;
 using IdentityServer4.Models;
 
 namespace UserService
 {
-  /// <summary>
-  /// IdentityServer4 configuration.
-  /// </summary>
-  public static class IdentityServerConfiguration
+    /// <summary>
+    /// IdentityServer4 configuration.
+    /// </summary>
+    public static class IdentityServerConfiguration
   {
     #region public properties
 
