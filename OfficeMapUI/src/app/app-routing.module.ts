@@ -4,13 +4,16 @@ import { Routes, RouterModule } from '@angular/router';
 import { MapViewComponent } from './map-view/map-view.component';
 import { ModalBookComponent } from './modal-book/modal-book.component';
 import { ModalUserComponent } from './modal-user/modal-user.component';
-import { SettingsComponent } from './settings/settings.component';
-import { LeftMenuComponent } from './left-menu/left-menu.component';
+import { SettingsComponent } from './navigation/settings/settings.component';
+import { LeftMenuComponent } from './navigation/left-menu/left-menu.component';
 import { OfficeListComponent } from './office-list/office-list.component';
 import { EmployeeListComponent } from './employee-list/employee-list.component';
 import { MapEditorComponent } from './map-editor/map-editor.component';
+import { AuthComponent } from './auth/auth.component';
+import { NotFoundComponent } from './not-found/not-found.component';
 
 const routes: Routes = [
+  { path: '', component: AuthComponent },
   { path: 'home', component: LeftMenuComponent },
   { path: 'map/:id', component: MapViewComponent },
   { path: 'map/:id/book_room/:roomId', component: ModalBookComponent },
@@ -18,7 +21,8 @@ const routes: Routes = [
   { path: 'settings', component: SettingsComponent },
   { path: 'offices', component: OfficeListComponent },
   { path: 'users', component: EmployeeListComponent },
-  { path: 'editor/:id', component: MapEditorComponent }
+  { path: 'editor/:id', component: MapEditorComponent },
+  { path: '**', component: NotFoundComponent }
 ];
 
 @NgModule({
