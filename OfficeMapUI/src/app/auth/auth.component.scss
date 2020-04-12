@@ -20,7 +20,7 @@ body {
 ::placeholder {
   color: #B0B0B0;
 }
-:required {
+.required {
   border: 1px solid #FF0000;
 }
 .login-form__password-input {
