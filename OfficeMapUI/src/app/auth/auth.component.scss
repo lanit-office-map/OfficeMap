@@ -1,12 +1,12 @@
 body {
   font-family: system-ui;
 }
-.imageLogo {
+.logo-image {
   display: block;
   margin: auto;
   padding: 1em;
 }
-.inputField {
+.login-form__input-field {
   display: block;
   width: 20%;
   padding: 10px 10px;
@@ -23,10 +23,10 @@ body {
 :required {
   border: 1px solid #FF0000;
 }
-.buttonInside {
+.login-form__password-input {
   position: relative;
 }
-.showHideButton {
+.login-form__show-hide-button {
   position: absolute;
   top: 6px;
   left: 57%;
@@ -39,17 +39,17 @@ body {
   padding: 2px;
   background-color: transparent;
 }
-.showHideButton:hover {
+.login-form__show-hide-button:hover {
   cursor: pointer;
 }
-.inputError {
+.login-form__error {
   display: block;
   width: 20%;
   margin: auto;
   color: #FF0000;
   font-size: 15px;
 }
-.submitButton {
+.submit-button {
   display: block;
   width: 20%;
   padding: 10px 10px;

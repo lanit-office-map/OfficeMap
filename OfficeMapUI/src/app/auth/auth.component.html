@@ -5,29 +5,31 @@
 
 <body>
 
+<img class="logo-image" src="../../assets/logo-lanit-tercom.png" alt="Lanit-Tercom logo" width="15%">
+<img class="logo-image" src="../../assets/user-icon.png" alt="User icon" width="7%">
 
-<img class="imageLogo" src="../../assets/logo-lanit-tercom.png" alt="Lanit-Tercom logo" width="15%">
-<img class="imageLogo" src="../../assets/user-icon.png" alt="User icon" width="7%">
-<form [formGroup]="loginForm">
-  <div>
+<form [formGroup]="loginForm" class="login-form">
+  <div class="login-form__username-input">
     <label>
-      <input class="inputField" type="text" formControlName="username" required placeholder="Username"/>
+      <input class="login-form__input-field" type="text" formControlName="username" required placeholder="Username"/>
     </label>
-    <div class="inputError" *ngIf="isControlInvalid('username')">
+    <div class="login-form__error" *ngIf="isControlInvalid('username')">
       Field cannot be empty
     </div>
   </div>
-  <div class="buttonInside">
+  <div class="login-form__password-input">
     <label>
-      <input class="inputField" [type]="isVisible ? 'text' : 'password'" formControlName="password" required placeholder="Password">
-      <button class="showHideButton" (click)="showHidePassword()"><img class="imageEye" [src]="isVisible ? '../../assets/eyeOff.png' : '../../assets/eyeOn.png'" alt="Eye" width="70%"></button>
+      <input class="login-form__input-field" [type]="isVisible ? 'text' : 'password'" formControlName="password" required placeholder="Password">
+      <button class="login-form__show-hide-button" (click)="showHidePassword()">
+        <img class="imageEye" [src]="isVisible ? '../../assets/eyeOff.png' : '../../assets/eyeOn.png'" alt="Eye" width="70%">
+      </button>
     </label>
-    <div class="inputError" *ngIf="isControlInvalid('password')">
+    <div class="login-form__error" *ngIf="isControlInvalid('password')">
       Field cannot be empty
     </div>
   </div>
   <div>
-    <button class="submitButton" type="submit">Log in</button>
+    <button class="submit-button" type="submit">Log in</button>
   </div>
 </form>
 
