@@ -1,0 +1,35 @@
+<html>
+<head>
+  <title></title>
+</head>
+
+<body>
+
+
+<img class="imageLogo" src="../../assets/logo-lanit-tercom.png" alt="Lanit-Tercom logo" width="15%">
+<img class="imageLogo" src="../../assets/user-icon.png" alt="User icon" width="7%">
+<form [formGroup]="loginForm">
+  <div>
+    <label>
+      <input class="inputField" type="text" formControlName="username" required placeholder="Username"/>
+    </label>
+    <div class="inputError" *ngIf="isControlInvalid('username')">
+      Field cannot be empty
+    </div>
+  </div>
+  <div class="buttonInside">
+    <label>
+      <input class="inputField" [type]="isVisible ? 'text' : 'password'" formControlName="password" required placeholder="Password">
+      <button class="showHideButton" (click)="showHidePassword()"><img class="imageEye" [src]="isVisible ? '../../assets/eyeOff.png' : '../../assets/eyeOn.png'" alt="Eye" width="70%"></button>
+    </label>
+    <div class="inputError" *ngIf="isControlInvalid('password')">
+      Field cannot be empty
+    </div>
+  </div>
+  <div>
+    <button class="submitButton" type="submit">Log in</button>
+  </div>
+</form>
+
+</body>
+</html>
