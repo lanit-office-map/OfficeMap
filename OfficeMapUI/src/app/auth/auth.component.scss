@@ -25,11 +25,13 @@ body {
 }
 .login-form__password-input {
   position: relative;
+  margin: auto;
+  width: 330px;
 }
 .login-form__show-hide-button {
   position: absolute;
   top: 6px;
-  left: 57%;
+  right: 4px;
   border: none;
   height: 20px;
   width: 40px;
