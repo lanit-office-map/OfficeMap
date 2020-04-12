@@ -32,7 +32,7 @@ namespace UserService.Controllers
         /// <response code="200">Successfully returned users.</response>
         [HttpGet("users")]
         [ProducesResponseType(typeof(List<User>), 200)]
-        public IActionResult GetUsers()
+        public async Task<IActionResult> GetUsers()
         {
             var users = _userManager.Users.ToList();
 
@@ -63,11 +63,9 @@ namespace UserService.Controllers
         /// Deletes the specified user by userGuid.
         /// </summary>
         /// <response code="204">Successfully deleted user.</response>
-        /// <response code="503">WorkplaceService or MeetingService unavailable.</response>
         /// <response code="404">User not found.</response>
         [HttpDelete("users/{userGuid}")]
         [ProducesResponseType(204)]
-        [ProducesResponseType(503)]
         [ProducesResponseType(404)]
         [Authorize(Policy = "IsAdmin")]
         public async Task<IActionResult> DeleteUser(Guid userGuid)
@@ -82,8 +80,39 @@ namespace UserService.Controllers
                 {
                     return NoContent();
                 }
+            }
 
-                return StatusCode(503);
+            return NotFound();
+        }
+
+        /// <summary>
+        /// Updates user fields.
+        /// </summary>
+        /// <response code="204">Successfully updated user.</response>
+        /// <response code="404">User not found.</response>
+        /// <response code="400">Bad request.</response>
+        [HttpPut("users/{userGuid}")]
+        [ProducesResponseType(204)]
+        [ProducesResponseType(400)]
+        [ProducesResponseType(404)]
+        [Authorize(Policy = "IsAdmin")]
+        public async Task<IActionResult> PutUser([FromBody] User user, Guid userGuid)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(user);
+            }
+
+            var dbUser = await _userManager.FindByIdAsync(userGuid.ToString());
+
+            if (dbUser != null)
+            {
+                var result = await _userManager.UpdateAsync(_mapper.Map<DbUser>(user));
+
+                if (result.Succeeded)
+                {
+                    return NoContent();
+                }
             }
 
             return NotFound();
