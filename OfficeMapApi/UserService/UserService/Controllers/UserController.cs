@@ -117,5 +117,29 @@ namespace UserService.Controllers
 
             return NotFound();
         }
+
+        /// <summary>
+        /// Creates user.
+        /// </summary>
+        /// <response code="204">Successfully created user.</response>
+        /// <response code="400">Bad request.</response>
+        [HttpPost("users")]
+        [ProducesResponseType(200)]
+        [ProducesResponseType(400)]
+        [Authorize(Policy = "IsAdmin")]
+        public async Task<IActionResult> PostUser([FromBody] User user)
+        {
+            if (ModelState.IsValid)
+            {
+                var result = await _userManager.CreateAsync(_mapper.Map<DbUser>(user));
+
+                if (result.Succeeded)
+                {
+                    return Ok();
+                }
+            }
+
+            return BadRequest();
+        }
     }
 }
