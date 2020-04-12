@@ -21,7 +21,7 @@
     <label>
       <input class="login-form__input-field" [type]="isVisible ? 'text' : 'password'" formControlName="password" required placeholder="Password">
       <button class="login-form__show-hide-button" (click)="showHidePassword()">
-        <img class="eye-image" [src]="isVisible ? '../../assets/eyeOff.png' : '../../assets/eyeOn.png'" alt="Eye" width="70%">
+        <img class="eye-image" [src]="isVisible ? '../../assets/eye-close.svg' : '../../assets/eye-open.svg'" alt="Eye">
       </button>
     </label>
     <div class="login-form__error" *ngIf="isControlInvalid('password')">
