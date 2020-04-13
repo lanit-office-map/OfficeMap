@@ -19,8 +19,8 @@ namespace UserService.Controllers
         private readonly IMapper _mapper;
 
         public UserController(
-            UserManager<DbUser> userManager,
-            IMapper mapper)
+            [FromServices] UserManager<DbUser> userManager,
+            [FromServices] IMapper mapper)
         {
             _userManager = userManager;
             _mapper = mapper;
@@ -47,7 +47,7 @@ namespace UserService.Controllers
         [HttpGet("users/{userGuid}")]
         [ProducesResponseType(typeof(User), 200)]
         [ProducesResponseType(404)]
-        public async Task<IActionResult> GetUser(Guid userGuid)
+        public async Task<IActionResult> GetUser([FromRoute] Guid userGuid)
         {
             var user = await _userManager.FindByIdAsync(userGuid.ToString());
 
@@ -56,7 +56,7 @@ namespace UserService.Controllers
                 return Ok(_mapper.Map<User>(user));
             }
 
-            return NotFound();
+            return NoContent();
         }
 
         /// <summary>
@@ -68,7 +68,7 @@ namespace UserService.Controllers
         [ProducesResponseType(204)]
         [ProducesResponseType(404)]
         [Authorize(Policy = "IsAdmin")]
-        public async Task<IActionResult> DeleteUser(Guid userGuid)
+        public async Task<IActionResult> DeleteUser([FromRoute] Guid userGuid)
         {
             var user = await _userManager.FindByIdAsync(userGuid.ToString());
 
@@ -78,11 +78,11 @@ namespace UserService.Controllers
 
                 if (result.Succeeded)
                 {
-                    return NoContent();
+                    return Ok();
                 }
             }
 
-            return NotFound();
+            return NoContent();
         }
 
         /// <summary>
@@ -96,7 +96,7 @@ namespace UserService.Controllers
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]
         [Authorize(Policy = "IsAdmin")]
-        public async Task<IActionResult> PutUser([FromBody] User user, Guid userGuid)
+        public async Task<IActionResult> PutUser([FromRoute] Guid userGuid, [FromBody] User user)
         {
             if (!ModelState.IsValid)
             {
@@ -107,11 +107,12 @@ namespace UserService.Controllers
 
             if (dbUser != null)
             {
-                var result = await _userManager.UpdateAsync(_mapper.Map<DbUser>(user));
+                var updatedUser = _mapper.Map<DbUser>(user);
+                var result = await _userManager.UpdateAsync(updatedUser);
 
                 if (result.Succeeded)
                 {
-                    return NoContent();
+                    return Ok(updatedUser);
                 }
             }
 
@@ -129,14 +130,16 @@ namespace UserService.Controllers
         [Authorize(Policy = "IsAdmin")]
         public async Task<IActionResult> PostUser([FromBody] User user)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-                var result = await _userManager.CreateAsync(_mapper.Map<DbUser>(user));
+                return BadRequest(user);
+            }
 
-                if (result.Succeeded)
-                {
-                    return Ok();
-                }
+            var result = await _userManager.CreateAsync(_mapper.Map<DbUser>(user));
+
+            if (result.Succeeded)
+            {
+                return Ok();
             }
 
             return BadRequest();
