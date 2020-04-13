@@ -50,10 +50,10 @@ namespace UserService.Controllers
 
             if (result.Succeeded)
             {
-                return NoContent();
+                return Ok();
             }
 
-            return NotFound();
+            return NoContent();
         }
 
         /// <summary>
@@ -67,7 +67,7 @@ namespace UserService.Controllers
         {
             HttpContext.Session.Clear();
             await _signInManager.SignOutAsync();
-            return NoContent();
+            return Ok();
         }
 
         /// <summary>
@@ -92,21 +92,21 @@ namespace UserService.Controllers
 
             var user = await _userManager.GetUserAsync(HttpContext.User);
 
-            if (user != null)
+            if (user == null)
             {
-                var result = await _userManager.ChangePasswordAsync(
-                    user, model.OldPassword, model.NewPassword);
-
-                if (result.Succeeded)
-                {
-                    await _signInManager.SignInAsync(user, model.RememberMe);
-                    return NoContent();
-                }
-
-                return BadRequest();
+                return Unauthorized();
             }
 
-            return NotFound();
+            var result = await _userManager.ChangePasswordAsync(
+                user, model.OldPassword, model.NewPassword);
+
+            if (result.Succeeded)
+            {
+                await _signInManager.SignInAsync(user, model.RememberMe);
+                return Ok();
+            }
+
+            return BadRequest();
         }
 
         /// <summary>
@@ -130,21 +130,21 @@ namespace UserService.Controllers
 
             var user = await _userManager.GetUserAsync(HttpContext.User);
 
-            if (user != null)
+            if (user == null)
             {
-                var token = await _userManager.GenerateChangeEmailTokenAsync(user, model.NewEmail);
-                var result = await _userManager.ChangeEmailAsync(user, model.NewEmail, token);
-
-                if (result.Succeeded)
-                {
-                    await _signInManager.SignInAsync(user, model.RememberMe);
-                    return NoContent();
-                }
-
-                return BadRequest();
+                return Unauthorized();
             }
 
-            return NotFound();
+            var token = await _userManager.GenerateChangeEmailTokenAsync(user, model.NewEmail);
+            var result = await _userManager.ChangeEmailAsync(user, model.NewEmail, token);
+
+            if (result.Succeeded)
+            {
+                await _signInManager.SignInAsync(user, model.RememberMe);
+                return Ok();
+            }
+
+            return BadRequest();
         }
     }
 }
