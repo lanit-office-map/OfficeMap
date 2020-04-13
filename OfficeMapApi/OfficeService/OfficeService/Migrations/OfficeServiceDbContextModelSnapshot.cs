@@ -63,7 +63,7 @@ namespace OfficeService.Migrations
 
                     b.HasKey("OfficeId");
 
-                    b.ToTable("Offices");
+                    b.ToTable("Offices", "dbo");
                 });
 
             modelBuilder.Entity("OfficeService.Database.Entities.DbSpace", b =>
@@ -98,7 +98,7 @@ namespace OfficeService.Migrations
 
                     b.HasIndex("ParentId");
 
-                    b.ToTable("Spaces");
+                    b.ToTable("Spaces", "dbo");
                 });
 
             modelBuilder.Entity("OfficeService.Database.Entities.DbSpace", b =>
