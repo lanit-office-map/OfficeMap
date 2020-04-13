@@ -25,9 +25,10 @@ namespace OfficeService.Repository
       this.dbContext = dbContext;
     }
 
-    public Task<DbOffice> GetAsync(Guid officeguid)
+        public Task<DbOffice> GetAsync(Guid officeguid)
         {
-            return Task.FromResult(dbContext.Offices.Find(officeguid));
+            return Task.FromResult(dbContext.Offices.FirstOrDefault(x => 
+            x.OfficeGuid == officeguid && x.Obsolete == false) );
         }
 
     public Task<DbOffice> UpdateAsync(DbOffice office)
@@ -57,7 +58,7 @@ namespace OfficeService.Repository
             {
                 throw new NotImplementedException();
             }
-            return Task.FromResult(dbContext.Offices.AsEnumerable());
+            return Task.FromResult(dbContext.Offices.Where(x => x.Obsolete == false).AsEnumerable());
         }
     #endregion
   }
