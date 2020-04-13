@@ -30,13 +30,13 @@ namespace UserService.Controllers
         /// </summary>
         /// <param name="model">Contains mail, password, and whether to remember.</param>
         /// <returns></returns>
-        /// <response code="204">Successfully login.</response>
+        /// <response code="200">Successfully login.</response>
+        /// <response code="204">User is not logged in.</response>
         /// <response code="400">Invalid fields.</response>
-        /// <response code="404">User not found.</response>
         [HttpPost]
+        [ProducesResponseType(200)]
         [ProducesResponseType(204)]
         [ProducesResponseType(typeof(DbUser), 400)]
-        [ProducesResponseType(404)]
         [AllowAnonymous]
         public async Task<IActionResult> Login([FromBody] LoginModel model)
         {
@@ -44,6 +44,7 @@ namespace UserService.Controllers
             {
                 return BadRequest(model);
             }
+
             var user = await _userManager.FindByEmailAsync(model.Email);
             var result = await _signInManager.PasswordSignInAsync(
              user, model.Password, model.RememberMe, false);
@@ -60,9 +61,9 @@ namespace UserService.Controllers
         /// Attempts to sign out the user
         /// </summary>
         /// <returns></returns>
-        /// <response code="204">Successfully logout.</response>
+        /// <response code="200">Successfully logout.</response>
         [HttpPost]
-        [ProducesResponseType(204)]
+        [ProducesResponseType(200)]
         public async Task<IActionResult> Logout()
         {
             HttpContext.Session.Clear();
@@ -77,11 +78,11 @@ namespace UserService.Controllers
         /// <returns></returns>
         /// <response code="204">Successfully changed password.</response>
         /// <response code="400">Invalid fields.</response>
-        /// <response code="404">User not found.</response>
+        /// <response code="401">User not authorized.</response>
         [HttpPost]
         [ProducesResponseType(204)]
         [ProducesResponseType(typeof(DbUser), 400)]
-        [ProducesResponseType(404)]
+        [ProducesResponseType(401)]
         [HttpPost]
         public async Task<IActionResult> ChangePassword(ChangePasswordModel model)
         {
@@ -116,11 +117,11 @@ namespace UserService.Controllers
         /// <returns></returns>
         /// <response code="204">Successfully changed email.</response>
         /// <response code="400">Invalid fields.</response>
-        /// <response code="404">User not found.</response>
+        /// <response code="401">User not authorized.</response>
         [HttpPost]
         [ProducesResponseType(204)]
         [ProducesResponseType(typeof(DbUser), 400)]
-        [ProducesResponseType(404)]
+        [ProducesResponseType(401)]
         public async Task<IActionResult> ChangeEmail(ChangeEmailModel model)
         {
             if (!ModelState.IsValid)
