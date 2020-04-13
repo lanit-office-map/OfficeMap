@@ -17,7 +17,9 @@ namespace OfficeService.Mappers
             CreateMap<DbOffice, Office>();
 
             CreateMap<Office, DbOffice>()
-                .ForMember(dboffice => dboffice.Spaces, opt => opt.Ignore());
+                .ForMember(dboffice => dboffice.Spaces, opt => opt.Ignore())
+                .ForMember(dboffice => dboffice.Obsolete, opt => opt.Ignore())
+                .ForMember(dboffice => dboffice.OfficeId, opt => opt.Ignore());
             #endregion
         }
     }
