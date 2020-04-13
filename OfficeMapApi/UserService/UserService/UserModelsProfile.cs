@@ -4,9 +4,9 @@ using UserService.Models;
 
 namespace UserService
 {
-    public class AutomapperProfile : Profile
+    public class UserModelsProfile : Profile
     {
-        public AutomapperProfile()
+        public UserModelsProfile()
         {
             CreateMap<User, DbUser>();
         }

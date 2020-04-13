@@ -68,12 +68,7 @@ namespace UserService
             services.AddAuthorization();
 
             //Add automapping
-            var mappingConfig = new MapperConfiguration(mc =>
-            {
-                mc.AddProfile<AutomapperProfile>();
-            });
-            var mapper = mappingConfig.CreateMapper();
-            services.AddSingleton(mapper);
+            services.AddAutoMapper(typeof(UserModelsProfile));
 
             //Adds services for controllers for an API
             services.AddControllers();
