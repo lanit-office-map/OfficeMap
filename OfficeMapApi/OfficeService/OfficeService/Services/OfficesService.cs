@@ -49,17 +49,30 @@ namespace OfficeService.Services
             return Task.FromResult(automapper.Map<Office>(result));
         }
 
-    public Task DeleteAsync(Office office)
+    public Task DeleteAsync(Guid officeguid)
         {
-            officeRepository.DeleteAsync(automapper.Map<DbOffice>(office));
-
+            var source = officeRepository.GetAsync(officeguid).Result;
+            if (source != null)
+            {
+                officeRepository.DeleteAsync(source);
+            }
             return Task.CompletedTask;
         }
 
-    public Task<Office> UpdateAsync(Office source, Office target)
+    public Task<Office> UpdateAsync(Office target)
         {
-            // TODO добавить логику присваивания из Target в Source
-            var result = officeRepository.UpdateAsync(automapper.Map<DbOffice>(source));
+            var source = officeRepository.GetAsync(target.OfficeGuid).Result;
+            if (source == null)
+            {
+                // TODO создать ошибку для Not Found
+                throw new NotImplementedException();
+            }
+            source.City = target.City;
+            source.Building = target.Building;
+            source.House = target.House;
+            source.PhoneNumber = target.PhoneNumber;
+            source.Street = target.Street;
+            var result = officeRepository.UpdateAsync(source).Result;
             return Task.FromResult(automapper.Map<Office>(result));
         }
     #endregion
