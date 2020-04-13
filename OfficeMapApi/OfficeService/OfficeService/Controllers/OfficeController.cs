@@ -42,39 +42,33 @@ namespace OfficeService.Controllers
         
 
         [HttpGet("offices/{officeGuid}")]
-        public async Task<ActionResult<Office>> GetOfficeId([FromRoute] Guid officeGuid)
+        public async Task<ActionResult<Office>> GetOffice([FromRoute] Guid officeGuid)
         {
             var result = await officeService.GetAsync(officeGuid);
+            if (result == null)
+            {
+                return NotFound();
+            }
             return Ok(result);
         }
 
    
 
       [HttpPut("offices/{officeGuid}")]
-        public async Task<ActionResult<Office>> PutOfficeId(
+        public async Task<ActionResult<Office>> PutOffice(
           [FromRoute] Guid officeGuid,
           [FromBody] Office target)
 
         {
-            var source = await officeService.GetAsync(officeGuid);
-            if (source == null)
-            {
-                // TODO создать ошибку для Not Found
-                throw new NotImplementedException();
-            }
-            var result = await officeService.UpdateAsync(source, target);
+            target.OfficeGuid = officeGuid;
+            var result = await officeService.UpdateAsync(target);
             return Ok(result);
         }
 
         [HttpDelete("offices/{officeGuid}")]
         public async Task<ActionResult> DeleteOffice([FromRoute] Guid officeGuid)
         {
-            var source = await officeService.GetAsync(officeGuid);
-            if (source != null)
-            {
-                await officeService.DeleteAsync(source);
-            }
-
+            await officeService.DeleteAsync(officeGuid);
             return Ok();
         }
 
