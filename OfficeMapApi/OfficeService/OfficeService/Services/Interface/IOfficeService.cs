@@ -7,10 +7,10 @@ namespace OfficeService.Services.Interface
 {
   public interface IOfficeService:
         IGet<Office, Guid>,
-        IDelete<Office>,
+        IDelete<Guid>,
         IFind<Office, OfficeFilter>,
         ICreate<Office>,
-        IUpdate<Office, Office>
+        IUpdate<Office>
     {
 
     }
