@@ -1,10 +1,12 @@
 ﻿using System;
+using System.Runtime.Serialization;
 
 namespace OfficeService.Models
 {
 
 	public class Office
 	{
+        [IgnoreDataMember]
         public Guid OfficeGuid{ get; set; }
         public string City { get; set; }
         public string Street { get; set; }
