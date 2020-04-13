@@ -14,8 +14,8 @@ namespace UserService.Controllers
         private readonly SignInManager<DbUser> _signInManager;
         private readonly UserManager<DbUser> _userManager;
 
-        /// <param name="userManager">Allows you to manage users</param>
-        /// <param name="signInManager">Provides the APIs for user sign in</param>
+        /// <param name="userManager">Allows you to manage users.</param>
+        /// <param name="signInManager">Provides the APIs for user sign in.</param>
         public AccountController(
             UserManager<DbUser> userManager,
             SignInManager<DbUser> signInManager
@@ -26,13 +26,13 @@ namespace UserService.Controllers
         }
 
         /// <summary>
-        /// Attempts to sign in the email of user and password combination
+        /// Attempts to sign in the email of user and password combination.
         /// </summary>
-        /// <param name="model">Contains mail, password, and whether to remember</param>
+        /// <param name="model">Contains mail, password, and whether to remember.</param>
         /// <returns></returns>
-        /// <response code="204">Ok</response>
-        /// <response code="400">Invalid fields</response>
-        /// <response code="404">User not found</response>
+        /// <response code="204">Successfully login.</response>
+        /// <response code="400">Invalid fields.</response>
+        /// <response code="404">User not found.</response>
         [HttpPost]
         [ProducesResponseType(204)]
         [ProducesResponseType(typeof(DbUser), 400)]
@@ -60,7 +60,7 @@ namespace UserService.Controllers
         /// Attempts to sign out the user
         /// </summary>
         /// <returns></returns>
-        /// <response code="204">Ok</response>
+        /// <response code="204">Successfully logout.</response>
         [HttpPost]
         [ProducesResponseType(204)]
         public async Task<IActionResult> Logout()
@@ -71,13 +71,13 @@ namespace UserService.Controllers
         }
 
         /// <summary>
-        ///  Attempts to change password for current user
+        ///  Attempts to change password for current user.
         /// </summary>
-        /// <param name="model">Contains new password, old password, and whether to remember (trying to re-login)</param>
+        /// <param name="model">Contains new password, old password, and whether to remember (trying to re-login).</param>
         /// <returns></returns>
-        /// <response code="204">Ok</response>
-        /// <response code="400">Invalid fields</response>
-        /// <response code="404">User not found</response>
+        /// <response code="204">Successfully changed password.</response>
+        /// <response code="400">Invalid fields.</response>
+        /// <response code="404">User not found.</response>
         [HttpPost]
         [ProducesResponseType(204)]
         [ProducesResponseType(typeof(DbUser), 400)]
@@ -110,13 +110,13 @@ namespace UserService.Controllers
         }
 
         /// <summary>
-        ///  Attempts to change email for current user
+        ///  Attempts to change email for current user.
         /// </summary>
-        /// <param name="model">Contains new email and whether to remember (trying to re-login)</param>
+        /// <param name="model">Contains new email and whether to remember (trying to re-login).</param>
         /// <returns></returns>
-        /// <response code="204">Ok</response>
-        /// <response code="400">Invalid fields</response>
-        /// <response code="404">User not found</response>
+        /// <response code="204">Successfully changed email.</response>
+        /// <response code="400">Invalid fields.</response>
+        /// <response code="404">User not found.</response>
         [HttpPost]
         [ProducesResponseType(204)]
         [ProducesResponseType(typeof(DbUser), 400)]
