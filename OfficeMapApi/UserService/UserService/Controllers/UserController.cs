@@ -6,6 +6,7 @@ using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using UserService.Database.Entities;
 using UserService.Models;
 
@@ -34,9 +35,13 @@ namespace UserService.Controllers
         [ProducesResponseType(typeof(List<User>), 200)]
         public async Task<IActionResult> GetUsers()
         {
-            var users = _userManager.Users.ToList();
+            var users = _userManager.Users
+                .Include(u => u.Employee).ToList();
 
-            return Ok(_mapper.Map<User[]>(users));
+            var result = users
+                .Where(u => u.Employee != null && u.Employee.Obsolete == false).ToList();
+
+            return Ok(_mapper.Map<IEnumerable<User>>(users));
         }
 
         /// <summary>
