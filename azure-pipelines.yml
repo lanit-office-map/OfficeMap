@@ -4,6 +4,7 @@
 # https://docs.microsoft.com/azure/devops/pipelines/languages/dotnet-core
 
 trigger:
+- master
 - develop
 
 pool:
@@ -35,12 +36,13 @@ steps:
   inputs:
     command: 'test'
     projects: $(tests)
+    
 - task: DotNetCoreCLI@2
   displayName:  'Publish the project - $(buildConfiguration)'
   inputs:
     command: 'publish'
     publishWebProjects: true
-    zipAfterPublish: false
+    zipAfterPublish: true
     arguments: '--no-build --configuration $(buildConfiguration) --output $(Build.ArtifactStagingDirectory)/$(buildConfiguration)'
 
 - task: PublishBuildArtifacts@1
