@@ -11,7 +11,7 @@ namespace SpaceService.Database.Entities
         }
 
         public int TypeId { get; set; }
-        public bool? Bookable { get; set; }
+        public bool Bookable { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
         public Guid SpaceTypeGuid { get; set; }
