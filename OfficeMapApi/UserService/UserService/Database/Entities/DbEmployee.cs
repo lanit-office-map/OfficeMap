@@ -19,6 +19,8 @@ namespace UserService.Database.Entities
         public string Login { get; set; }
         public Guid EmployeeGuid { get; set; }
         public bool Obsolete { get; set; }
+        public int MaxRole { get; set; } = 0;
+        public double Rate { get; set; } = 1;
 
         public virtual DbEmployee Manager { get; set; }
         public virtual ICollection<DbUser> Users { get; set; }

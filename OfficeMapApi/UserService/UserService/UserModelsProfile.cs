@@ -16,14 +16,13 @@ namespace UserService
 
             CreateMap<Employee, DbEmployee>();
 
-            /*
-             * Возможно пригодится в разговоре:
-                .ForPath(user => user.Employee.EmployeeGuid, opt => opt.MapFrom(src => src.Employee.EmployeeGuid))
-                .ForAllOtherMembers(opt => opt.Ignore());
-                .ForMember(user => user.EmployeeId, opt => opt.Ignore())
-                .ForPath(user => user.Employee.EmployeeId, opt => opt.Ignore())
-                CreateMap<DbUser, User>().ReverseMap();
-             */
+            CreateMap<RegisterUserModel, DbUser>()
+                .BeforeMap((src, dest) =>
+                {
+                    dest.Employee = new DbEmployee();
+                })
+                .ForPath(user => user.Employee.FirstName, opt => opt.MapFrom(src => src.FirstName))
+                .ForPath(user => user.Employee.SecondName, opt => opt.MapFrom(src => src.SecondName));
         }
     }
 }

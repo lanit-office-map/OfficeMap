@@ -2,7 +2,7 @@
 
 namespace UserService.Models
 {
-    public class LoginModel
+    public class LoginUserModel
     {
         [Required]
         [EmailAddress]

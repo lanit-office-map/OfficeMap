@@ -35,11 +35,9 @@ namespace UserService.Controllers
         [ProducesResponseType(typeof(List<User>), 200)]
         public async Task<IActionResult> GetUsers()
         {
-            var users = _userManager.Users
-                .Include(u => u.Employee).ToList();
-
-            var result = users
-                .Where(u => u.Employee != null && u.Employee.Obsolete == false).ToList();
+            var users = await _userManager.Users
+                .Include(u => u.Employee)
+                .Where(u => u.Employee != null && u.Employee.Obsolete == false).ToListAsync();
 
             return Ok(_mapper.Map<IEnumerable<User>>(users));
         }
@@ -54,7 +52,9 @@ namespace UserService.Controllers
         [ProducesResponseType(204)]
         public async Task<IActionResult> GetUser([FromRoute] Guid userGuid)
         {
-            var user = await _userManager.FindByIdAsync(userGuid.ToString());
+            var user = await _userManager.Users
+                .Include(u => u.Employee)
+                .SingleOrDefaultAsync(u => u.Id == userGuid.ToString());
 
             if (user == null)
             {
@@ -73,7 +73,8 @@ namespace UserService.Controllers
         [HttpDelete("users/{userGuid}")]
         [ProducesResponseType(200)]
         [ProducesResponseType(204)]
-        [Authorize(Policy = "IsAdmin")]
+        [ProducesResponseType(400)]
+        [Authorize]
         public async Task<IActionResult> DeleteUser([FromRoute] Guid userGuid)
         {
             var user = await _userManager.FindByIdAsync(userGuid.ToString());
@@ -100,10 +101,10 @@ namespace UserService.Controllers
         /// <response code="204">User not found.</response>
         /// <response code="400">Bad request.</response>
         [HttpPut("users/{userGuid}")]
-        [ProducesResponseType(204)]
         [ProducesResponseType(typeof(DbUser), 200)]
-        [ProducesResponseType(404)]
-        [Authorize(Policy = "IsAdmin")]
+        [ProducesResponseType(204)]
+        [ProducesResponseType(400)]
+        [Authorize]
         public async Task<IActionResult> PutUser([FromRoute] Guid userGuid, [FromBody] User user)
         {
             if (!ModelState.IsValid)
@@ -111,18 +112,30 @@ namespace UserService.Controllers
                 return BadRequest(user);
             }
 
-            var dbUser = await _userManager.FindByIdAsync(userGuid.ToString());
+            var dbUser = await _userManager.Users
+                .Include(u => u.Employee)
+                .SingleOrDefaultAsync(u => u.Id == userGuid.ToString());
 
             if (dbUser == null)
             {
                 return NoContent();
             }
 
-            var updatedUser = _mapper.Map<DbUser>(user);
-            var result = await _userManager.UpdateAsync(updatedUser);
+            if (user.Employee != null)
+            {
+                dbUser.Employee.ManagerId = user.Employee.ManagerId;
+                dbUser.Employee.FirstName = user.Employee.FirstName;
+                dbUser.Employee.SecondName = user.Employee.SecondName;
+            }
+
+            var result = await _userManager.UpdateAsync(dbUser);
 
             if (result.Succeeded)
             {
+                var updatedUser = await _userManager.Users
+                .Include(u => u.Employee)
+                .SingleOrDefaultAsync(u => u.Id == dbUser.Id);
+
                 return Ok(updatedUser);
             }
 
@@ -137,8 +150,8 @@ namespace UserService.Controllers
         [HttpPost("users")]
         [ProducesResponseType(typeof(DbUser), 200)]
         [ProducesResponseType(400)]
-        [Authorize(Policy = "IsAdmin")]
-        public async Task<IActionResult> PostUser([FromBody] User user)
+        [Authorize]
+        public async Task<IActionResult> PostUser([FromBody] RegisterUserModel user)
         {
             if (!ModelState.IsValid)
             {
@@ -150,7 +163,9 @@ namespace UserService.Controllers
 
             if (result.Succeeded)
             {
-                return Ok(newUser);
+                var createdUser = await _userManager.FindByEmailAsync(user.Email);
+
+                return Ok(createdUser);
             }
 
             return BadRequest(result.Errors);

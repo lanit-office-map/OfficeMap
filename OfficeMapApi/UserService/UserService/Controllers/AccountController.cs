@@ -38,7 +38,7 @@ namespace UserService.Controllers
         [ProducesResponseType(typeof(DbUser), 400)]
         [ProducesResponseType(404)]
         [AllowAnonymous]
-        public async Task<IActionResult> Login([FromBody] LoginModel model)
+        public async Task<IActionResult> Login([FromBody] LoginUserModel model)
         {
             if (!ModelState.IsValid)
             {

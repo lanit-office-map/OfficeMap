@@ -13,6 +13,5 @@ namespace UserService.Models
         public string FirstName { get; set; }
         [Required]
         public string SecondName { get; set; }
-        public string Mail { get; set; }
     }
 }
