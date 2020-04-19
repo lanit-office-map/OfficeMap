@@ -21,8 +21,7 @@ namespace UserService.Database
             modelBuilder.Entity<DbUser>(entity =>
             {
                 entity.HasOne(d => d.Employee)
-                    .WithMany(p => p.Users)
-                    .HasForeignKey(d => d.EmployeeId)
+                    .WithOne(p => p.User)
                     .OnDelete(DeleteBehavior.ClientSetNull);
             });
 
@@ -38,9 +37,9 @@ namespace UserService.Database
                     .HasColumnName("EmployeeGUID")
                     .HasDefaultValueSql("(newid())");
 
-                entity.HasOne(d => d.Manager)
-                    .WithMany(p => p.InverseManager)
-                    .HasForeignKey(d => d.ManagerId);
+                entity.HasOne(e => e.User)
+                    .WithOne(au => au.Employee)
+                    .HasForeignKey<DbUser>(u => u.EmployeeId);
             });
 
             base.OnModelCreating(modelBuilder);

@@ -10,6 +10,7 @@ using UserService.Database.Entities;
 using Microsoft.Extensions.Configuration;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
+using AutoMapper;
 
 namespace UserService
 {
@@ -26,15 +27,25 @@ namespace UserService
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
+            //Add db settings
             var migrationsAssembly = typeof(Startup).GetTypeInfo().Assembly.GetName().Name;
             var connectionString = Configuration.GetConnectionString("DefaultConnection");
             services.AddDbContext<UserServiceDbContext>(options =>
                 options.UseSqlServer(connectionString));
 
-            services.AddIdentity<DbUser, IdentityRole>()
+            services.AddIdentity<DbUser, IdentityRole>(options =>
+            {
+                options.User.RequireUniqueEmail = true;
+                options.Password.RequiredLength = 6;
+                options.Password.RequireNonAlphanumeric = false;
+                options.Password.RequireLowercase = false;
+                options.Password.RequireUppercase = false;
+                options.Password.RequireDigit = false;
+            })
               .AddEntityFrameworkStores<UserServiceDbContext>()
               .AddDefaultTokenProviders();
 
+            //Add authentication and authorization
             services.AddIdentityServer()
               .AddOperationalStore(
                 options =>
@@ -64,6 +75,10 @@ namespace UserService
 
             services.AddAuthorization();
 
+            //Add automapping
+            services.AddAutoMapper(typeof(UserModelsProfile));
+
+            //Adds services for controllers for an API
             services.AddControllers();
     }
 
