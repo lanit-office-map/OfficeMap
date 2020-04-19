@@ -7,7 +7,7 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
   styleUrls: ['./auth.component.scss']
 })
 export class AuthComponent implements OnInit {
-  loginForm: FormGroup;
+  public loginForm: FormGroup;
   private isVisible = false;
 
   constructor() {

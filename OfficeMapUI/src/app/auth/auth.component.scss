@@ -1,55 +1,64 @@
-body {
-  font-family: system-ui;
-}
 .logo-image {
-  display: block;
-  margin: auto;
-  padding: 1em;
+  &__lanit-tercom {
+    display: block;
+    margin: auto;
+    padding: 1em;
+    width: 330px;
+  }
+  &__user-icon
+  {
+    display: block;
+    margin: auto;
+    padding: 1em;
+    width: 130px;
+  }
 }
-.login-form__input-field {
-  display: block;
-  width: 330px;
-  padding: 10px 10px;
-  margin: 20px auto;
-  box-sizing: border-box;
-  border: 1px solid #EAEAEA;
-  border-radius: 5px;
-  color: #575757;
-  font-size: 17px;
+.login-form {
+  &__input-field {
+    display: block;
+    width: 330px;
+    padding: 10px 10px;
+    margin: 20px auto;
+    box-sizing: border-box;
+    border: 1px solid light-grey;
+    border-radius: 5px;
+    color: dark-grey;
+    font-size: 17px;
+  }
+  &__password-input {
+    position: relative;
+    margin: auto;
+    width: 330px;
+  }
+  &__show-hide-button {
+    position: absolute;
+    top: 11px;
+    right: 4px;
+    border: none;
+    height: 20px;
+    width: 40px;
+    outline: none;
+    margin: auto;
+    text-align: center;
+    padding: 2px;
+    background-color: transparent;
+    :hover {
+      cursor: pointer;
+    }
+  }
+  &__error {
+    display: block;
+    width: 330px;
+    margin: auto;
+    color: red;
+    font-size: 15px;
+  }
 }
 ::placeholder {
-  color: #B0B0B0;
+  color: grey;
 }
 .required {
-  border: 1px solid #FF0000;
-}
-.login-form__password-input {
-  position: relative;
-  margin: auto;
-  width: 330px;
-}
-.login-form__show-hide-button {
-  position: absolute;
-  top: 11px;
-  right: 4px;
-  border: none;
-  height: 20px;
-  width: 40px;
-  outline: none;
-  margin: auto;
-  text-align: center;
-  padding: 2px;
-  background-color: transparent;
-}
-.login-form__show-hide-button:hover {
-  cursor: pointer;
-}
-.login-form__error {
-  display: block;
-  width: 330px;
-  margin: auto;
-  color: #FF0000;
-  font-size: 15px;
+  border: 1px solid red;
 }
 .submit__submit-button {
   display: block;
@@ -59,7 +68,7 @@ body {
   border: none;
   border-radius: 5px;
   color: white;
-  background-color: #35ABDB;
+  background-color: blue-main;
   cursor: pointer;
   font-size: 17px;
 }
