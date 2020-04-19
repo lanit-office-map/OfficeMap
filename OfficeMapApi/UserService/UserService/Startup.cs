@@ -33,7 +33,15 @@ namespace UserService
             services.AddDbContext<UserServiceDbContext>(options =>
                 options.UseSqlServer(connectionString));
 
-            services.AddIdentity<DbUser, IdentityRole>()
+            services.AddIdentity<DbUser, IdentityRole>(options =>
+            {
+                options.User.RequireUniqueEmail = true;
+                options.Password.RequiredLength = 6;
+                options.Password.RequireNonAlphanumeric = false;
+                options.Password.RequireLowercase = false;
+                options.Password.RequireUppercase = false;
+                options.Password.RequireDigit = false;
+            })
               .AddEntityFrameworkStores<UserServiceDbContext>()
               .AddDefaultTokenProviders();
 

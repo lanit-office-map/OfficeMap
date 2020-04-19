@@ -8,7 +8,8 @@ namespace UserService
     {
         public UserModelsProfile()
         {
-            CreateMap<DbUser, User>();
+            CreateMap<DbUser, User>()
+                .ForPath(user => user.UserGuid, opt => opt.MapFrom(src => src.Id));
 
             CreateMap<User, DbUser>();
 

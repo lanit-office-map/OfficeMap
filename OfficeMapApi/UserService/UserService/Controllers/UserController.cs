@@ -101,7 +101,7 @@ namespace UserService.Controllers
         /// <response code="204">User not found.</response>
         /// <response code="400">Bad request.</response>
         [HttpPut("users/{userGuid}")]
-        [ProducesResponseType(typeof(DbUser), 200)]
+        [ProducesResponseType(typeof(User), 200)]
         [ProducesResponseType(204)]
         [ProducesResponseType(400)]
         [Authorize]
@@ -123,7 +123,6 @@ namespace UserService.Controllers
 
             if (user.Employee != null)
             {
-                dbUser.Employee.ManagerId = user.Employee.ManagerId;
                 dbUser.Employee.FirstName = user.Employee.FirstName;
                 dbUser.Employee.SecondName = user.Employee.SecondName;
             }
@@ -136,7 +135,7 @@ namespace UserService.Controllers
                 .Include(u => u.Employee)
                 .SingleOrDefaultAsync(u => u.Id == dbUser.Id);
 
-                return Ok(updatedUser);
+                return Ok(_mapper.Map<User>(updatedUser));
             }
 
             return BadRequest(result.Errors);
@@ -148,7 +147,7 @@ namespace UserService.Controllers
         /// <response code="204">Successfully created user.</response>
         /// <response code="400">Bad request.</response>
         [HttpPost("users")]
-        [ProducesResponseType(typeof(DbUser), 200)]
+        [ProducesResponseType(typeof(User), 200)]
         [ProducesResponseType(400)]
         [Authorize]
         public async Task<IActionResult> PostUser([FromBody] RegisterUserModel user)
@@ -159,13 +158,13 @@ namespace UserService.Controllers
             }
 
             var newUser = _mapper.Map<DbUser>(user);
-            var result = await _userManager.CreateAsync(newUser);
+            var result = await _userManager.CreateAsync(newUser, user.Password);
 
             if (result.Succeeded)
             {
                 var createdUser = await _userManager.FindByEmailAsync(user.Email);
 
-                return Ok(createdUser);
+                return Ok(_mapper.Map<User>(createdUser));
             }
 
             return BadRequest(result.Errors);
