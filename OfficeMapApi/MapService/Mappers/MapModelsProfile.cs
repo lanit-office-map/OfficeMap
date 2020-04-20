@@ -1,9 +1,8 @@
 ﻿using AutoMapper;
 using MapService.Database.Entities;
 using MapService.Models;
-using System;
 
-namespace OfficeService.Mappers
+namespace MapService.Mappers
 {
     public class MapModelsProfile : Profile
     {

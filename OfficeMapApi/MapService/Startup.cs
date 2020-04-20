@@ -1,4 +1,6 @@
+using AutoMapper;
 using MapService.Database;
+using MapService.Mappers;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -22,7 +24,7 @@ namespace MapService
         {
             var connectionString = Configuration.GetConnectionString("DefaultConnection");
             services.AddDbContext<MapServiceDbContext>(options => options.UseSqlServer(connectionString));
-            //services.AddAutoMapper(typeof(MapModelsProfile));
+            services.AddAutoMapper(typeof(MapModelsProfile));
             //services.AddScoped<IMapRepository, MapRepository>();
             //services.AddScoped<IMapService, Services.MapService>();
 
