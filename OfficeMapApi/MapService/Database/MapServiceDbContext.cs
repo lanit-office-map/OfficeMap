@@ -11,11 +11,11 @@ namespace MapService.Database
             Database.EnsureCreated();
         }
 
-        public virtual DbSet<MapFiles> MapFiles { get; set; }
+        public virtual DbSet<DbMapFiles> MapFiles { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-            modelBuilder.Entity<MapFiles>(entity =>
+            modelBuilder.Entity<DbMapFiles>(entity =>
             {
                 entity.HasKey(e => e.MapId)
                     .HasName("PK_Maps");
