@@ -1,7 +1,5 @@
-﻿using System;
-using MapService.Database.Entities;
+﻿using MapService.Database.Entities;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata;
 
 namespace MapService.Database
 {
