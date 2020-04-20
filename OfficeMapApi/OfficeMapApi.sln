@@ -8,6 +8,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UserService", "UserService\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OfficeService", "OfficeService\OfficeService\OfficeService.csproj", "{9B055CA8-E2B9-48F2-9A0C-137568CD4403}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MapService", "MapService\MapService.csproj", "{A6121EC0-C2F7-4C38-83DD-F41F0CA2209C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -26,6 +28,10 @@ Global
 		{9B055CA8-E2B9-48F2-9A0C-137568CD4403}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9B055CA8-E2B9-48F2-9A0C-137568CD4403}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9B055CA8-E2B9-48F2-9A0C-137568CD4403}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A6121EC0-C2F7-4C38-83DD-F41F0CA2209C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A6121EC0-C2F7-4C38-83DD-F41F0CA2209C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A6121EC0-C2F7-4C38-83DD-F41F0CA2209C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A6121EC0-C2F7-4C38-83DD-F41F0CA2209C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
