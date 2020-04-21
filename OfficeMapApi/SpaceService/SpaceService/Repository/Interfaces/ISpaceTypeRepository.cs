@@ -1,11 +1,16 @@
 ﻿using SpaceService.Database.Entities;
 using SpaceService.Interfaces;
 using SpaceService.Repository.Filters;
+using System;
 
 namespace SpaceService.Repository.Interfaces
 {
     public interface ISpaceTypeRepository :
-        IFind<DbSpaceType, SpaceTypeFilter>
+        IGet<DbSpaceType, Guid>,
+        IDelete<DbSpaceType>,
+        IFind<DbSpaceType, SpaceTypeFilter>,
+        ICreate<DbSpaceType>,
+        IUpdate<DbSpaceType>
     {
 
     }

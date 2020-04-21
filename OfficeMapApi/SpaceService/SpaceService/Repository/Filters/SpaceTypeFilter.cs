@@ -8,7 +8,6 @@ namespace SpaceService.Repository.Filters
         public string Name { get; set; }
         public string Description { get; set; }
         public Guid SpaceTypeGuid { get; set; }
-        public bool Obsolete { get; set; }
 
         public SpaceTypeFilter(
             int typeId,
