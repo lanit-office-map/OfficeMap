@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using IdentityServer4;
 using IdentityServer4.Models;
 
 namespace UserService
@@ -13,7 +14,8 @@ namespace UserService
 
     public static IdentityResource[] IdentityResources => new IdentityResource[]
       {
-        new IdentityResources.OpenId()
+        new IdentityResources.OpenId(),
+        new IdentityResources.Email()
       };
 
 
@@ -38,7 +40,7 @@ namespace UserService
       new Client
       {
         ClientId = "service.client",
-        AllowedGrantTypes = GrantTypes.ResourceOwnerPassword,
+        AllowedGrantTypes = GrantTypes.Implicit,
         ClientSecrets =
         {
           new Secret("secret".Sha256())
@@ -46,10 +48,18 @@ namespace UserService
         AllowOfflineAccess = true,
         AccessTokenLifetime =
           (int)TimeSpan.FromDays(1).TotalSeconds,
+        RedirectUris = { "http://localhost:4200/index.html" },
+        //RedirectUris = { "https://localhost:44397/Home/SignIn" },
         AllowedScopes = new List<string>
         {
+          IdentityServerConstants.StandardScopes.OpenId,
+          IdentityServerConstants.StandardScopes.Email,
           "officemapapis"
-        }
+        },
+        AllowedCorsOrigins = { "https://localhost:4200" },
+        AllowAccessTokensViaBrowser = true,
+        //AlwaysIncludeUserClaimsInIdToken = true,
+        RequireConsent = false,
       }
     };
     #endregion

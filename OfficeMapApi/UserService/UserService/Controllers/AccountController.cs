@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
+using IdentityServer4.Models;
+using Microsoft.AspNetCore.Authentication;
 using UserService.Models;
 using UserService.Database.Entities;
 using Microsoft.AspNetCore.Authorization;
@@ -8,8 +10,7 @@ using Microsoft.AspNetCore.Authorization;
 namespace UserService.Controllers
 {
     [Route("UserService/[controller]/[action]")]
-    [ApiController, Authorize]
-    public class AccountController : ControllerBase
+    public class AccountController : Controller
     {
         private readonly SignInManager<DbUser> _signInManager;
         private readonly UserManager<DbUser> _userManager;
@@ -25,20 +26,16 @@ namespace UserService.Controllers
             _signInManager = signInManager;
         }
 
-        /// <summary>
-        /// Attempts to sign in the email of user and password combination.
-        /// </summary>
-        /// <param name="model">Contains mail, password, and whether to remember.</param>
-        /// <returns></returns>
-        /// <response code="200">Successfully login.</response>
-        /// <response code="204">User is not logged in.</response>
-        /// <response code="400">Invalid fields.</response>
-        [HttpPost]
-        [ProducesResponseType(200)]
-        [ProducesResponseType(204)]
-        [ProducesResponseType(typeof(DbUser), 400)]
-        [AllowAnonymous]
-        public async Task<IActionResult> Login([FromBody] LoginUserModel model)
+    /// <summary>
+    /// Attempts to sign in the email of user and password combination.
+    /// </summary>
+    /// <param name="model">Contains mail, password, and whether to remember.</param>
+    /// <returns></returns>
+    /// <response code="200">Successfully login.</response>
+    /// <response code="204">User is not logged in.</response>
+    /// <response code="400">Invalid fields.</response>
+    [HttpPost]
+    public async Task<IActionResult> Login([FromBody]LoginUserModel model)
         {
             if (!ModelState.IsValid)
             {
@@ -47,11 +44,11 @@ namespace UserService.Controllers
 
             var user = await _userManager.FindByEmailAsync(model.Email);
             var result = await _signInManager.PasswordSignInAsync(
-             user, model.Password, model.RememberMe, false);
+             user.UserName, model.Password, false, false);
 
             if (result.Succeeded)
             {
-                return Ok();
+              return Redirect(model.ReturnUrl);
             }
 
             return NoContent();
