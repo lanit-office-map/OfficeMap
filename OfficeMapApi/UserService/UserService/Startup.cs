@@ -47,42 +47,44 @@ namespace UserService
         .AddEntityFrameworkStores<UserServiceDbContext>()
         .AddDefaultTokenProviders();
 
+
+
       //Add authentication and authorization
-      services.AddIdentityServer(options =>
-      {
-        options.UserInteraction = new UserInteractionOptions()
-        {
-          LogoutUrl = "http://localhost:4200/home",
-          LoginUrl = "http://localhost:4200/login",
-          //LoginReturnUrlParameter = "ReturnUrl",
-        };
-      })
-      .AddOperationalStore(
-        options =>
-        {
-          options.ConfigureDbContext = b => b.UseSqlServer(
-            connectionString,
-            sql => sql.MigrationsAssembly(migrationsAssembly));
-        })
-      .AddDeveloperSigningCredential()
-      .AddInMemoryIdentityResources(IdentityServerConfiguration.IdentityResources)
-      .AddInMemoryApiResources(IdentityServerConfiguration.ApiResources)
-      .AddInMemoryClients(IdentityServerConfiguration.Clients)
-      .AddAspNetIdentity<DbUser>();
+      services.AddIdentityServer(
+          options =>
+          {
+            options.UserInteraction = new UserInteractionOptions()
+            {
+              LogoutUrl = "/UserService/Account/Logout",
+              LoginUrl = "/UserService/Account/Login",
+              //LoginReturnUrlParameter = "ReturnUrl",
+            };
+          })
+        .AddOperationalStore(
+          options =>
+          {
+            options.ConfigureDbContext = b => b.UseSqlServer(
+              connectionString,
+              sql => sql.MigrationsAssembly(migrationsAssembly));
+          })
+        .AddDeveloperSigningCredential()
+        .AddInMemoryIdentityResources(
+          IdentityServerConfiguration.IdentityResources)
+        .AddInMemoryApiResources(IdentityServerConfiguration.ApiResources)
+        .AddInMemoryClients(IdentityServerConfiguration.Clients)
+        .AddAspNetIdentity<DbUser>();
 
       //services.AddTransient<IProfileService, IdentityClaimsProfileService>();
 
       services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         .AddJwtBearer(options =>
         {
-          //options.Authority = "https://localhost:44381";
           options.Authority = "http://localhost:5000";
           options.Audience = "OfficeMapAPIs";
           options.RequireHttpsMetadata = false;
           options.SaveToken = true;
         });
-
-      //services.AddAuthorization();
+      services.AddAuthorization();
 
       //Add automapping
       services.AddAutoMapper(typeof(UserModelsProfile));
@@ -94,7 +96,7 @@ namespace UserService
             .AllowAnyHeader()));
 
       //Adds services for controllers for an API
-      services.AddControllers();
+      services.AddControllersWithViews();
     }
 
     // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -107,10 +109,10 @@ namespace UserService
       app.UseCors("AllowAngularClient");
       app.UseRouting();
 
-      //app.UseAuthentication();
+      app.UseAuthentication();
       app.UseIdentityServer();
 
-      //app.UseAuthorization();
+      app.UseAuthorization();
 
       //app.UseCookiePolicy(new CookiePolicyOptions { MinimumSameSitePolicy = SameSiteMode.Lax });
 

@@ -5,23 +5,21 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { OAuthModule, OAuthStorage } from 'angular-oauth2-oidc';
 import { HttpClientModule } from '@angular/common/http';
 import { HomeComponent } from './home/home.component';
-import { LoginComponent } from './login/login.component';
+import { AuthCallbackComponent } from './auth-callback/auth-callback.component';
 
 
 @NgModule({
   declarations: [
     AppComponent,
     HomeComponent,
-    LoginComponent
+    AuthCallbackComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
     BrowserAnimationsModule,
-    OAuthModule.forRoot(),
     HttpClientModule,
     FormsModule,
     ReactiveFormsModule

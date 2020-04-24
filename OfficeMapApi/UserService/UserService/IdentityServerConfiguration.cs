@@ -48,15 +48,14 @@ namespace UserService
         AllowOfflineAccess = true,
         AccessTokenLifetime =
           (int)TimeSpan.FromDays(1).TotalSeconds,
-        RedirectUris = { "http://localhost:4200/index.html" },
-        //RedirectUris = { "https://localhost:44397/Home/SignIn" },
+        RedirectUris = { "http://localhost:4200/auth-callback" },
         AllowedScopes = new List<string>
         {
           IdentityServerConstants.StandardScopes.OpenId,
           IdentityServerConstants.StandardScopes.Email,
           "officemapapis"
         },
-        AllowedCorsOrigins = { "https://localhost:4200" },
+        AllowedCorsOrigins = { "http://localhost:4200" },
         AllowAccessTokensViaBrowser = true,
         //AlwaysIncludeUserClaimsInIdToken = true,
         RequireConsent = false,

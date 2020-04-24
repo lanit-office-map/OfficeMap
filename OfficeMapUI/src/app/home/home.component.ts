@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { OAuthService } from 'angular-oauth2-oidc';
+import { AuthService } from '../auth.service';
 
 @Component({
   selector: 'app-home',
@@ -8,33 +8,14 @@ import { OAuthService } from 'angular-oauth2-oidc';
 })
 export class HomeComponent implements OnInit {
 
-  constructor(private oauthService: OAuthService) {
+  constructor(private authService: AuthService) {
   }
 
   ngOnInit(){
     
   }
 
-  public login() {
-      this.oauthService.initLoginFlow();
+  public signin() {    
+      this.authService.login(); 
   }
-
-  public logoff() {
-      this.oauthService.logOut();
-  }
-
-  public get name() {
-      let claims = this.oauthService.getIdentityClaims();
-      if (!claims) return null;
-      return claims['given_name'];
-  }
-
-  public get idToken(): string {
-    return this.oauthService.getIdToken();
-  }
-
-  public get accessToken(): string {
-    return this.oauthService.getAccessToken();
-  }
-
 }
