@@ -8,8 +8,8 @@ namespace MapService.Models
         [IgnoreDataMember]
         public Guid MapGuid { get; set; }
         public string Name { get; set; }
-        public byte[] Content { get; set; }
         public string Extension { get; set; }
+        public byte[] Content { get; set; }
         public bool Obsolete { get; set; }
     }
 }
