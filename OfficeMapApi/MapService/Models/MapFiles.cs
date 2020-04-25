@@ -3,7 +3,7 @@ using System.Runtime.Serialization;
 
 namespace MapService.Models
 {
-    public partial class MapFiles
+    public partial class MapFiles //Наверное, его логичноее переименовать в MapFile, т.к. он один
     {
         [IgnoreDataMember]
         public Guid MapGuid { get; set; }

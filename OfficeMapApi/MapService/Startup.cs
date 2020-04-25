@@ -3,7 +3,6 @@ using MapService.Database;
 using MapService.Mappers;
 using MapService.Repository;
 using MapService.Repository.Interfaces;
-using MapService.Services;
 using MapService.Services.Interfaces;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
