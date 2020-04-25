@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using SpaceService.Database.Entities;
 using SpaceService.Repository.Interfaces;
-using SpaceService.Repository.Filters;
+using SpaceService.Filters;
 
 namespace SpaceService.Repository
 {

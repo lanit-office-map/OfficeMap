@@ -1,6 +1,6 @@
 ﻿using SpaceService.Database.Entities;
 using SpaceService.Interfaces;
-using SpaceService.Repository.Filters;
+using SpaceService.Filters;
 using System;
 
 namespace SpaceService.Repository.Interfaces
