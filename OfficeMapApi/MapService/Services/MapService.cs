@@ -13,30 +13,30 @@ namespace MapService.Services
 {
     public class MapService : IMapService
     {
-        private readonly IMapFilesRepository repository;
+        private readonly IMapFilesRepository mapRepository;
         private readonly IMapper automapper;
 
         public MapService(
-          [FromServices] IMapFilesRepository repository,
+          [FromServices] IMapFilesRepository mapRepository,
           [FromServices] IMapper automapper)
         {
-            this.repository = repository;
+            this.mapRepository = mapRepository;
             this.automapper = automapper;
         }
 
-        public Task<MapFiles> CreateAsync(MapFiles entity)
+        public Task<MapFiles> CreateAsync(MapFiles mapFile)
         {
-            var result = repository.CreateAsync(automapper.Map<DbMapFiles>(entity)).Result;
+            var result = mapRepository.CreateAsync(automapper.Map<DbMapFiles>(mapFile)).Result;
 
             return Task.FromResult(automapper.Map<MapFiles>(result));
         }
 
-        public Task DeleteAsync(Guid id)
+        public Task DeleteAsync(Guid mapGuid)
         {
-            var source = repository.GetAsync(id).Result;
+            var source = mapRepository.GetAsync(mapGuid).Result;
             if (source != null)
             {
-                repository.DeleteAsync(source);
+                mapRepository.DeleteAsync(source);
             }
 
             return Task.CompletedTask;
@@ -44,19 +44,19 @@ namespace MapService.Services
 
         public Task<IEnumerable<MapFiles>> FindAsync(MapFilesFilter filter = null)
         {
-            var result = repository.FindAsync(filter).Result;
+            var result = mapRepository.FindAsync(filter).Result;
 
             return Task.FromResult(automapper.Map<IEnumerable<MapFiles>>(result));
         }
 
-        public Task<MapFiles> GetAsync(Guid id)
+        public Task<MapFiles> GetAsync(Guid mapGuid)
         {
-            var result = repository.GetAsync(id).Result;
+            var result = mapRepository.GetAsync(mapGuid).Result;
 
             return Task.FromResult(automapper.Map<MapFiles>(result));
         }
 
-        public Task<MapFiles> UpdateAsync(MapFiles entity)
+        public Task<MapFiles> UpdateAsync(MapFiles mapFile)
         {
             throw new NotImplementedException(); //TODO
         }

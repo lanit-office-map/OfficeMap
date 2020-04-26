@@ -20,17 +20,17 @@ namespace MapService.Repository
             this.dbContext = dbContext;
         }
 
-        public Task<DbMapFiles> CreateAsync(DbMapFiles entity)
+        public Task<DbMapFiles> CreateAsync(DbMapFiles mapFile)
         {
-            var result = dbContext.MapFiles.Add(entity);
+            var result = dbContext.MapFiles.Add(mapFile);
             dbContext.SaveChanges();
 
             return Task.FromResult(result.Entity);
         }
 
-        public Task DeleteAsync(DbMapFiles entity)
+        public Task DeleteAsync(DbMapFiles mapFile)
         {
-            dbContext.MapFiles.Remove(entity);
+            dbContext.MapFiles.Remove(mapFile);
             dbContext.SaveChanges();
 
             return Task.CompletedTask;
@@ -52,9 +52,9 @@ namespace MapService.Repository
                 x.MapGuid == id && x.Obsolete == false));
         }
 
-        public Task<DbMapFiles> UpdateAsync(DbMapFiles entity)
+        public Task<DbMapFiles> UpdateAsync(DbMapFiles mapFile)
         {
-            var result = dbContext.MapFiles.Update(entity);
+            var result = dbContext.MapFiles.Update(mapFile);
             dbContext.SaveChanges();
 
             return Task.FromResult(result.Entity);

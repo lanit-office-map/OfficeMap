@@ -10,33 +10,33 @@ namespace MapService.Controllers
     [ApiController]
     public class MapController : ControllerBase
     {
-        private readonly IMapService service;
+        private readonly IMapService mapService;
 
-        public MapController([FromServices] IMapService service)
+        public MapController([FromServices] IMapService mapService)
         {
-            this.service = service;
+            this.mapService = mapService;
         }
 
         [HttpGet("mapFiles")]
         public async Task<ActionResult> GetMapFiles()
         {
-            var result = await service.FindAsync();
+            var result = await mapService.FindAsync();
 
             return Ok(result);
         }
 
         [HttpPost("mapFiles")]
-        public async Task<ActionResult<MapFiles>> PostMapFiles([FromBody] MapFiles office)
+        public async Task<ActionResult<MapFiles>> PostMapFiles([FromBody] MapFiles mapFile)
         {
-            var result = await service.CreateAsync(office);
+            var result = await mapService.CreateAsync(mapFile);
 
             return Ok(result);
         }
 
         [HttpGet("mapFiles/{maoFileGuid}")]
-        public async Task<ActionResult<MapFiles>> GetMapFiles([FromRoute] Guid id)
+        public async Task<ActionResult<MapFiles>> GetMapFiles([FromRoute] Guid mapGuid)
         {
-            var result = await service.GetAsync(id);
+            var result = await mapService.GetAsync(mapGuid);
             if (result == null)
             {
                 return NoContent();
@@ -47,20 +47,20 @@ namespace MapService.Controllers
 
         [HttpPut("mapFiles/{maoFileGuid}")]
         public async Task<ActionResult<MapFiles>> PutMapFiles(
-            [FromRoute] Guid officeGuid,
-            [FromBody] MapFiles entity)
+            [FromRoute] Guid mapGuid,
+            [FromBody] MapFiles mapFile)
 
         {
-            entity.MapGuid = officeGuid;
-            var result = await service.UpdateAsync(entity);
+            mapFile.MapGuid = mapGuid;
+            var result = await mapService.UpdateAsync(mapFile);
 
             return Ok(result);
         }
 
         [HttpDelete("mapFiles/{maoFileGuid}")]
-        public async Task<ActionResult> DeleteMapFiles([FromRoute] Guid id)
+        public async Task<ActionResult> DeleteMapFiles([FromRoute] Guid mapGuid)
         {
-            await service.DeleteAsync(id);
+            await mapService.DeleteAsync(mapGuid);
 
             return Ok();
         }
