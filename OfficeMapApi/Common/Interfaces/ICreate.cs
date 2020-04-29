@@ -3,7 +3,7 @@
 namespace Common.Interfaces
 {
     public interface ICreate<TEntity>
-       where TEntity : class
+        where TEntity : class
     {
         Task<TEntity> CreateAsync(TEntity entity);
     }
