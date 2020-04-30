@@ -2,13 +2,13 @@
 using System;
 using Microsoft.AspNetCore.Mvc;
 using SpaceService.Models;
-using SpaceService.Services.Interface;
+using SpaceService.Services.Interfaces;
 
 namespace SpaceService.Controllers
 {
-    [Route("SpaceTypeService/[controller]")]
+    [Route("SpaceService/[controller]")]
     [ApiController]
-    public class SpaceTypeController : ControllerBase
+    public class SpaceTypeController : Controller
     {
         private readonly ISpaceTypeService spacetypeService;
 
@@ -17,7 +17,6 @@ namespace SpaceService.Controllers
         {
             this.spacetypeService = spacetypeService;
         }
-
         [HttpGet("spacetypes")]
         public async Task<ActionResult> GetSpaceTypes()
         {

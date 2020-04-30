@@ -3,11 +3,11 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using SpaceService.Models;
 using SpaceService.Repository.Interfaces;
-using SpaceService.Services.Interface;
 using AutoMapper;
-using SpaceService.Repository.Filters;
+using SpaceService.Filters;
 using SpaceService.Database.Entities;
 using System;
+using SpaceService.Services.Interfaces;
 
 namespace SpaceService.Services
 {
