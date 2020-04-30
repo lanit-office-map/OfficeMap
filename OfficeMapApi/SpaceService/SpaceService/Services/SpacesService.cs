@@ -53,6 +53,7 @@ namespace SpaceService.Services
             {
                 throw new NotImplementedException();
             }
+            source.OfficeId = target.OfficeId;
             source.ParentId = target.ParentId;
             source.TypeId = target.TypeId;
             source.SpaceName = target.SpaceName;
