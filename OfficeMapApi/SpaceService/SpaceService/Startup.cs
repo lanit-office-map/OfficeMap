@@ -1,16 +1,20 @@
 using AutoMapper;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using RabbitMQ.Client;
+using SpaceService.Clients;
 using SpaceService.Database.Entities;
 using SpaceService.Mappers;
+using SpaceService.RabbitMQ;
+using SpaceService.RabbitMQ.Interface;
 using SpaceService.Repository;
 using SpaceService.Repository.Interfaces;
-using SpaceService.Services.Interface;
+using SpaceService.Services;
+using SpaceService.Services.Interfaces;
 
 namespace SpaceService
 {
@@ -30,7 +34,21 @@ namespace SpaceService
             services.AddDbContext<SpaceServiceDbContext>(options => options.UseSqlServer(connectionString));
             services.AddAutoMapper(typeof(SpaceModelsProfile));
             services.AddScoped<ISpaceTypeRepository, SpaceTypeRepository>();
-            services.AddScoped<ISpaceTypeService, Services.SpaceTypeService>();
+            services.AddScoped<ISpaceRepository, SpaceRepository>();
+            services.AddScoped<ISpacesService, SpacesService>();
+            services.AddScoped<ISpaceTypeService, SpaceTypeService>();
+            services.AddScoped<OfficeServiceClient>();
+            services.AddSingleton<IRabbitMQPersistentConnection, RabbitMQPersistentConnection>();
+            services.AddSingleton<IConnectionFactory, ConnectionFactory>(sp =>
+            {
+                return new ConnectionFactory()
+                {
+                    HostName = Configuration["RabbitMQConnection"],
+                    UserName = Configuration["RabbitMQUsername"],
+                    Password = Configuration["RabbitMQPassword"]
+                };
+            });
+
             services.AddControllers();
         }
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
