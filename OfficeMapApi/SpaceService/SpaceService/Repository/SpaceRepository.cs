@@ -50,7 +50,7 @@ namespace SpaceService.Repository
         {
             if (filter != null)
             {
-                throw new NotImplementedException();
+                return Task.FromResult(dbContext.Spaces.Where(x => x.Obsolete == false && x.OfficeId == filter.OfficeId).AsEnumerable());
             }
             return Task.FromResult(dbContext.Spaces.Where(x => x.Obsolete == false).AsEnumerable());
         }
