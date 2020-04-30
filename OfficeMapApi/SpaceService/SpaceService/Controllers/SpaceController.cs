@@ -27,7 +27,7 @@ namespace SpaceService.Controllers
 
         [HttpGet("spaces")]
 
-        public async Task<ActionResult<Space>> GetSpaces([FromRoute] Guid officeGuid)
+        public async Task<ActionResult> GetSpaces([FromRoute] Guid officeGuid)
         {
             Console.WriteLine("SpaceService awaiting Office model");
             var response = officeServiceClient.GetOfficeAsync(officeGuid).Result;
@@ -43,9 +43,74 @@ namespace SpaceService.Controllers
             [FromBody] Space space)
         {
             var response = officeServiceClient.GetOfficeAsync(officeGuid).Result;
-            officeServiceClient.Dispose();
-            throw new NotImplementedException();
-
+            if (response == null)
+            {
+                return NotFound();
+            }
+            else
+            {
+                space.OfficeId = response.OfficeId;
+                var result = await spaceService.CreateAsync(space);
+                return Ok(result);
+            }
         }
+        
+        [HttpGet("spaces/{spaceGuid}")]
+
+        public async Task<ActionResult<Space>> GetSpace(
+            [FromRoute] Guid officeGuid, 
+            [FromRoute] Guid spaceGuid)
+        {
+            var response = officeServiceClient.GetOfficeAsync(officeGuid).Result;
+            if (response == null)
+            {
+                return NotFound();
+            }
+            else
+            {
+                var result = await spaceService.GetAsync(spaceGuid);
+                return Ok(result);
+            }
+        }
+
+        [HttpPut("spaces/{spaceGuid}")]
+        
+        public async Task<ActionResult<Space>> PutSpace(
+            [FromRoute] Guid officeGuid, 
+            [FromRoute] Guid spaceGuid,
+            [FromBody] Space target)
+        {
+            var response = officeServiceClient.GetOfficeAsync(officeGuid).Result;
+            if (response == null)
+            {
+                return NotFound();
+            }
+            else
+            {
+                target.OfficeId = response.OfficeId;
+                target.SpaceGuid = spaceGuid;
+                var result = await spaceService.UpdateAsync(target);
+                return Ok(result);
+            }
+        }
+
+        [HttpDelete("spaces/{spaceGuid}")]
+
+        public async Task<ActionResult> DeleteSpace(
+            [FromRoute] Guid officeGuid, 
+            [FromRoute] Guid spaceGuid)
+        {
+            var response = officeServiceClient.GetOfficeAsync(officeGuid).Result;
+            if (response == null)
+            {
+                return NotFound();
+            }
+            else
+            {
+                await spaceService.DeleteAsync(spaceGuid);
+                return Ok();
+            }
+        }
+            
     }
 }
