@@ -7,6 +7,6 @@ namespace SpaceService.Models
 {
     public class Map
     {
-        public byte[] Content { get; set; }
+        public string Content { get; set; }
     }
 }

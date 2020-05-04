@@ -40,18 +40,9 @@ namespace SpaceService.Database.Entities
                     .HasMaxLength(50)
                     .IsFixedLength();
 
-                entity.Property(e => e.Extension)
-                    .HasMaxLength(50)
-                    .IsUnicode(false);
-
                 entity.Property(e => e.MapGuid)
                     .HasColumnName("MapGUID")
                     .HasDefaultValueSql("(newid())");
-
-                entity.Property(e => e.Name)
-                    .IsRequired()
-                    .HasMaxLength(50)
-                    .IsUnicode(false);
             });
 
             modelBuilder.Entity<DbOffice>(entity =>
