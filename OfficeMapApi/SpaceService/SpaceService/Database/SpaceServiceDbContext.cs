@@ -14,11 +14,10 @@ namespace SpaceService.Database.Entities
             : base(options)
         {
         }
-
+        public virtual DbSet<DbSpace> Spaces { get; set; }
         public virtual DbSet<DbMapFile> MapFiles { get; set; }
         public virtual DbSet<DbOffice> Offices { get; set; }
         public virtual DbSet<DbSpaceType> SpaceTypes { get; set; }
-        public virtual DbSet<DbSpace> Spaces { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -125,7 +124,7 @@ namespace SpaceService.Database.Entities
                     .HasMaxLength(50)
                     .IsUnicode(false);
 
-                entity.HasOne(d => d.Maps)
+                entity.HasOne(d => d.MapFiles)
                     .WithMany(p => p.Spaces)
                     .HasForeignKey(d => d.MapId);
 
@@ -138,7 +137,7 @@ namespace SpaceService.Database.Entities
                     .WithMany(p => p.InverseParent)
                     .HasForeignKey(d => d.ParentId);
 
-                entity.HasOne(d => d.Types)
+                entity.HasOne(d => d.SpaceTypes)
                     .WithMany(p => p.Spaces)
                     .HasForeignKey(d => d.TypeId)
                     .OnDelete(DeleteBehavior.SetNull);

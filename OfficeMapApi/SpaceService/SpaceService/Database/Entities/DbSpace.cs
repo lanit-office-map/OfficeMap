@@ -22,10 +22,10 @@ namespace SpaceService.Database.Entities
         public Guid SpaceGuid { get; set; }
         public bool Obsolete { get; set; }
 
-        public virtual DbMapFile Maps { get; set; }
-        public virtual DbOffice Offices { get; set; }
-        public virtual DbSpace Parents { get; set; }
-        public virtual DbSpaceType Types { get; set; }
-        public virtual ICollection<DbSpace> InverseParent { get; set; }
+        public DbMapFile MapFiles { get; set; }
+        public DbOffice Offices { get; set; }
+        public DbSpace Parents { get; set; }
+        public DbSpaceType SpaceTypes { get; set; }
+        public ICollection<DbSpace> InverseParent { get; set; }
     }
 }
