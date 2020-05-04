@@ -8,6 +8,7 @@ namespace OfficeService.Database.Entities
         public DbSpace()
         {
         }
+
         public int SpaceId { get; set; }
         public int TypeId { get; set; }
         public int ParentId {get; set; }
