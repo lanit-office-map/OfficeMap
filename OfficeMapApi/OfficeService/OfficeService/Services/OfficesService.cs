@@ -4,10 +4,10 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using OfficeService.Database.Entities;
 using OfficeService.Models;
+using OfficeService.Repository.Filters;
 using OfficeService.Repository.Interfaces;
 using OfficeService.Services.Interface;
 using AutoMapper;
-using OfficeService.Repository.Filters;
 
 namespace OfficeService.Services
 {
@@ -29,11 +29,11 @@ namespace OfficeService.Services
       this.automapper = automapper;
     }
 
-    public Task<IEnumerable<Office>> FindAsync(OfficeFilter filter)
+    public Task<IEnumerable<OfficeResponse>> FindAsync(OfficeFilter filter)
     {
       var result = officeRepository.FindAsync(filter).Result;
 
-      return  Task.FromResult(automapper.Map<IEnumerable<Office>>(result));
+      return  Task.FromResult(automapper.Map<IEnumerable<OfficeResponse>>(result));
     }
     
     public Task<Office> CreateAsync(Office office)
@@ -41,12 +41,11 @@ namespace OfficeService.Services
             var result = officeRepository.CreateAsync(automapper.Map<DbOffice>(office)).Result;
             return Task.FromResult(automapper.Map<Office>(result));
         }
-
-    public Task<Office> GetAsync(Guid officeguid)
+        public Task<OfficeResponse> GetAsync(Guid officeguid)
         { 
             var result = officeRepository.GetAsync(officeguid).Result;
 
-            return Task.FromResult(automapper.Map<Office>(result));
+            return Task.FromResult(automapper.Map<OfficeResponse>(result));
         }
 
     public Task DeleteAsync(Guid officeguid)
@@ -59,7 +58,7 @@ namespace OfficeService.Services
             return Task.CompletedTask;
         }
 
-    public Task<Office> UpdateAsync(Office target)
+    public Task<OfficeResponse> UpdateAsync(OfficeResponse target)
         {
             var source = officeRepository.GetAsync(target.OfficeGuid).Result;
             if (source == null)
@@ -73,7 +72,7 @@ namespace OfficeService.Services
             source.PhoneNumber = target.PhoneNumber;
             source.Street = target.Street;
             var result = officeRepository.UpdateAsync(source).Result;
-            return Task.FromResult(automapper.Map<Office>(result));
+            return Task.FromResult(automapper.Map<OfficeResponse>(result));
         }
     #endregion
 

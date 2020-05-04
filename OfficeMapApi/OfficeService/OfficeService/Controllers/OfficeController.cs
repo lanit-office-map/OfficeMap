@@ -57,7 +57,7 @@ namespace OfficeService.Controllers
       [HttpPut("offices/{officeGuid}")]
         public async Task<ActionResult<Office>> PutOffice(
           [FromRoute] Guid officeGuid,
-          [FromBody] Office target)
+          [FromBody] OfficeResponse target)
 
         {
             target.OfficeGuid = officeGuid;

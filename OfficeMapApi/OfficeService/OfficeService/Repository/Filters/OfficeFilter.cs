@@ -1,11 +1,9 @@
 ﻿using System;
-using System.Text;
 
 namespace OfficeService.Repository.Filters
 {
     public class OfficeFilter
     {
-        public int OfficeId { get; }
         public string City { get; }
         public string Street { get; }
         public string House { get; }
@@ -14,7 +12,6 @@ namespace OfficeService.Repository.Filters
         public Guid OfficeGuid { get; }
 
         public OfficeFilter(
-            int officeId,
             Guid officeGuid,
             string city = null,
             string street = null,
@@ -22,36 +19,12 @@ namespace OfficeService.Repository.Filters
             string building = null,
             string phoneNumber = null)
         {
-            OfficeId = officeId;
             City = city;
             Street = street;
             House = house;
             Building = building;
             PhoneNumber = phoneNumber;
             OfficeGuid = officeGuid;
-        }
-
-        public override string ToString()
-        {
-            var result = new StringBuilder($"(OfficeId: {OfficeId}");
-            if (City != null)
-            {
-                result.Append($", City: {City}");
-            }
-            if (Street != null)
-            {
-                result.Append($", Street: {Street}");
-            }
-            if (House != null)
-            {
-                result.Append($", House: {House}");
-            }
-            if (Building != null)
-            {
-                result.Append($", Building: {Building}");
-            }
-
-            return result.ToString();
         }
 
 
