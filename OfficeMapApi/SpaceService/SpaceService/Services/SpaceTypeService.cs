@@ -25,17 +25,17 @@ namespace SpaceService.Services
             this.automapper = automapper;
         }
 
-        public Task<SpaceType> CreateAsync(SpaceType office)
+        public Task<SpaceType> CreateAsync(SpaceType spacetype)
         {
-            var result = spacetypeRepository.CreateAsync(automapper.Map<DbSpaceType>(office)).Result;
+            var result = spacetypeRepository.CreateAsync(automapper.Map<DbSpaceType>(spacetype)).Result;
             return Task.FromResult(automapper.Map<SpaceType>(result));
         }
 
-        public Task<SpaceType> GetAsync(Guid spacetypeguid)
+        public Task<SpaceTypeResponse> GetAsync(Guid spacetypeguid)
         {
             var result = spacetypeRepository.GetAsync(spacetypeguid).Result;
 
-            return Task.FromResult(automapper.Map<SpaceType>(result));
+            return Task.FromResult(automapper.Map<SpaceTypeResponse>(result));
         }
 
         public Task DeleteAsync(Guid spacetypeguid)
@@ -62,11 +62,11 @@ namespace SpaceService.Services
             return Task.FromResult(automapper.Map<SpaceType>(result));
         }
 
-        public Task<IEnumerable<SpaceType>> FindAsync(SpaceTypeFilter filter)
+        public Task<IEnumerable<SpaceTypeResponse>> FindAsync(SpaceTypeFilter filter)
         {
             var result = spacetypeRepository.FindAsync(filter).Result;
 
-            return Task.FromResult(automapper.Map<IEnumerable<SpaceType>>(result));
+            return Task.FromResult(automapper.Map<IEnumerable<SpaceTypeResponse>>(result));
         }
 
 

@@ -2,6 +2,7 @@
 using SpaceService.Interfaces;
 using SpaceService.Filters;
 using System;
+using SpaceService.Models;
 
 namespace SpaceService.Repository.Interfaces
 {

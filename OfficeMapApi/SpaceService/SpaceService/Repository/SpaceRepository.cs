@@ -1,7 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
+using Microsoft.EntityFrameworkCore;
 using SpaceService.Database.Entities;
 using SpaceService.Filters;
+using SpaceService.Models;
 using SpaceService.Repository.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -22,8 +24,14 @@ namespace SpaceService.Repository
 
         public Task<DbSpace> GetAsync(Guid spaceguid)
         {
-            return Task.FromResult(dbContext.Spaces.FirstOrDefault(x =>
-            x.SpaceGuid == spaceguid && x.Obsolete == false));
+            var result = dbContext.Spaces
+                .Include(s => s.Offices)
+                .Include(s => s.MapFiles)
+                .Include(s => s.SpaceTypes)
+                .FirstOrDefault(x =>
+                                x.SpaceGuid == spaceguid &&
+                                x.Obsolete == false);
+            return Task.FromResult(result);
         }
 
         public Task<DbSpace> UpdateAsync(DbSpace space)
@@ -50,9 +58,18 @@ namespace SpaceService.Repository
         {
             if (filter != null)
             {
-                return Task.FromResult(dbContext.Spaces.Where(x => x.Obsolete == false && x.OfficeId == filter.OfficeId).AsEnumerable());
+                var result = dbContext.Spaces
+                    .Include(s => s.SpaceTypes)
+                    .Include(s => s.MapFiles)
+                    .Include(s => s.Offices)
+                .Where(s => s.Obsolete == false && s.OfficeId == filter.OfficeId)
+                .AsEnumerable();
+                return Task.FromResult(result);
+            }          
+            else
+            {
+                throw new NotImplementedException();
             }
-            return Task.FromResult(dbContext.Spaces.Where(x => x.Obsolete == false).AsEnumerable());
         }
 
     }

@@ -7,6 +7,7 @@ using Microsoft.EntityFrameworkCore.ChangeTracking;
 using SpaceService.Database.Entities;
 using SpaceService.Repository.Interfaces;
 using SpaceService.Filters;
+using Microsoft.EntityFrameworkCore;
 
 namespace SpaceService.Repository
 {
@@ -22,8 +23,9 @@ namespace SpaceService.Repository
 
         public Task<DbSpaceType> GetAsync(Guid spacetypeguid)
         {
-            return Task.FromResult(dbContext.SpaceTypes.FirstOrDefault(x =>
-            x.SpaceTypeGuid == spacetypeguid && x.Obsolete == false));
+            return Task.FromResult(dbContext.SpaceTypes
+                .Include(s => s.Spaces)
+                .FirstOrDefault(x => x.Obsolete == false && x.SpaceTypeGuid == spacetypeguid));
         }
 
         public Task<DbSpaceType> UpdateAsync(DbSpaceType spacetype)
@@ -52,7 +54,10 @@ namespace SpaceService.Repository
             {
                 throw new NotImplementedException();
             }
-            return Task.FromResult(dbContext.SpaceTypes.Where(x => x.Obsolete == false).AsEnumerable());
+
+            return Task.FromResult(dbContext.SpaceTypes
+                .Include(x => x.Spaces)
+                .Where(x => x.Obsolete == false).AsEnumerable());
         }
     }
 }

@@ -4,8 +4,6 @@ using SpaceService.Models;
 using System;
 using System.Threading.Tasks;
 using SpaceService.Filters;
-using SpaceService.RabbitMQ;
-using System.Collections.Generic;
 using SpaceService.Clients;
 
 namespace SpaceService.Controllers
@@ -29,11 +27,21 @@ namespace SpaceService.Controllers
 
         public async Task<ActionResult> GetSpaces([FromRoute] Guid officeGuid)
         {
-            Console.WriteLine("SpaceService awaiting Office model");
             var response = officeServiceClient.GetOfficeAsync(officeGuid).Result;
-            SpaceFilter filter = new SpaceFilter(response.OfficeId);
-            var result = await spaceService.FindAsync(filter);
-            return Ok(result);
+            if (response == null)
+            {
+                return NotFound();
+            }
+            else
+            {
+                SpaceFilter filter = new SpaceFilter(response.OfficeId, response.OfficeGuid);
+                var spaces = await spaceService.FindAsync(filter);
+                foreach (var space in spaces)
+                {
+                    space.OfficeGuid = filter.OfficeGuid;
+                }
+                return Ok(spaces);
+            }
         }
 
         [HttpPost("spaces")]
@@ -57,7 +65,7 @@ namespace SpaceService.Controllers
         
         [HttpGet("spaces/{spaceGuid}")]
 
-        public async Task<ActionResult<Space>> GetSpace(
+        public async Task<ActionResult<SpaceResponse>> GetSpace(
             [FromRoute] Guid officeGuid, 
             [FromRoute] Guid spaceGuid)
         {
@@ -69,6 +77,7 @@ namespace SpaceService.Controllers
             else
             {
                 var result = await spaceService.GetAsync(spaceGuid);
+                result.OfficeGuid = response.OfficeGuid;
                 return Ok(result);
             }
         }
@@ -107,8 +116,9 @@ namespace SpaceService.Controllers
             }
             else
             {
+                var result = await spaceService.GetAsync(spaceGuid);
                 await spaceService.DeleteAsync(spaceGuid);
-                return Ok();
+                return Ok(result);
             }
         }
             

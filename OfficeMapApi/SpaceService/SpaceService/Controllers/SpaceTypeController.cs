@@ -35,7 +35,7 @@ namespace SpaceService.Controllers
 
 
         [HttpGet("spacetypes/{spacetypeGuid}")]
-        public async Task<ActionResult<SpaceType>> GetSpaceType([FromRoute] Guid spacetypeGuid)
+        public async Task<ActionResult<SpaceTypeResponse>> GetSpaceType([FromRoute] Guid spacetypeGuid)
         {
             var result = await spacetypeService.GetAsync(spacetypeGuid);
             if (result == null)

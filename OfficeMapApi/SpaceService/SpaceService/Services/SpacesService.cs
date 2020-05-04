@@ -23,17 +23,18 @@ namespace SpaceService.Services
             this.spaceRepository = spaceRepository;
             this.automapper = automapper;
         }
-        public Task<Space> CreateAsync(Space office)
+        public Task<Space> CreateAsync(Space space)
         {
-            var result = spaceRepository.CreateAsync(automapper.Map<DbSpace>(office)).Result;
+            var result = spaceRepository.CreateAsync(automapper.Map<DbSpace>(space)).Result;
             return Task.FromResult(automapper.Map<Space>(result));
         }
 
-        public Task<Space> GetAsync(Guid spaceguid)
+        public Task<SpaceResponse> GetAsync(Guid spaceguid)
         {
             var result = spaceRepository.GetAsync(spaceguid).Result;
 
-            return Task.FromResult(automapper.Map<Space>(result));
+
+            return Task.FromResult(automapper.Map<SpaceResponse>(result));
         }
 
         public Task DeleteAsync(Guid spaceguid)
@@ -53,9 +54,6 @@ namespace SpaceService.Services
             {
                 throw new NotImplementedException();
             }
-            source.OfficeId = target.OfficeId;
-            source.ParentId = target.ParentId;
-            source.TypeId = target.TypeId;
             source.SpaceName = target.SpaceName;
             source.Description = target.Description;
             source.Capacity = target.Capacity;
@@ -64,11 +62,11 @@ namespace SpaceService.Services
             return Task.FromResult(automapper.Map<Space>(result));
         }
 
-        public Task<IEnumerable<Space>> FindAsync(SpaceFilter filter)
+        public Task<IEnumerable<SpaceResponse>> FindAsync(SpaceFilter filter)
         {
             var result = spaceRepository.FindAsync(filter).Result;
 
-            return Task.FromResult(automapper.Map<IEnumerable<Space>>(result));
+            return Task.FromResult(automapper.Map<IEnumerable<SpaceResponse>>(result));
         }
 
 
