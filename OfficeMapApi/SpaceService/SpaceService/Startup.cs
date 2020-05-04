@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.AspNetCore.Mvc.NewtonsoftJson;
 using RabbitMQ.Client;
 using SpaceService.Clients;
 using SpaceService.Database.Entities;
@@ -37,8 +38,6 @@ namespace SpaceService
             services.AddScoped<ISpaceRepository, SpaceRepository>();
             services.AddScoped<ISpacesService, SpacesService>();
             services.AddScoped<ISpaceTypeService, SpaceTypeService>();
-            services.AddScoped<OfficeServiceClient>();
-            services.AddSingleton<IRabbitMQPersistentConnection, RabbitMQPersistentConnection>();
             services.AddSingleton<IConnectionFactory, ConnectionFactory>(sp =>
             {
                 return new ConnectionFactory()
@@ -48,8 +47,14 @@ namespace SpaceService
                     Password = Configuration["RabbitMQPassword"]
                 };
             });
+            services.AddSingleton<IRabbitMQPersistentConnection, RabbitMQPersistentConnection>();
+            services.AddScoped<OfficeServiceClient>();
 
-            services.AddControllers();
+
+
+            services.AddControllers().AddNewtonsoftJson(options =>
+    options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
+);
         }
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
