@@ -25,6 +25,7 @@ namespace SpaceService.Repository
         public Task<DbSpace> GetAsync(Guid spaceguid)
         {
             var result = dbContext.Spaces
+                .Include(s => s.InverseParent)
                 .Include(s => s.Offices)
                 .Include(s => s.MapFiles)
                 .Include(s => s.SpaceTypes)
@@ -59,6 +60,7 @@ namespace SpaceService.Repository
             if (filter != null)
             {
                 var result = dbContext.Spaces
+                    .Include(s => s.InverseParent)
                     .Include(s => s.SpaceTypes)
                     .Include(s => s.MapFiles)
                     .Include(s => s.Offices)

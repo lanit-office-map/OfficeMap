@@ -24,7 +24,10 @@ namespace SpaceService.Mappers
                 .ForMember(dbspace => dbspace.SpaceId, opt => opt.Ignore());
 
 
+
             CreateMap<DbSpace, SpaceResponse>()
+                .ForMember(response => response.ParentId, opt => opt.MapFrom(src => src.ParentId))
+                .ForMember(response => response.Spaces, opt => opt.MapFrom(src => src.InverseParent))
                 .ForMember(response => response.SpaceGuid, opt => opt.MapFrom(src => src.SpaceGuid))
                 .ForMember(response => response.OfficeGuid, opt => opt.Ignore())
                 .ForMember(response => response.Map, opt => opt.MapFrom(src => src.MapFiles))

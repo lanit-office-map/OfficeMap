@@ -10,10 +10,10 @@ namespace SpaceService.Models
         public Guid SpaceGuid { get; set; }
         
         [IgnoreDataMember]
+        public int OfficeGuid { get; set; }
         public int OfficeId { get; set; }
-        public int ParentId { get; set; }
-        public int MapId { get; set; }
         public int TypeId { get; set; }
+        public ICollection<SpaceResponse> Spaces { get; set; }
         public Map Map { get; set; }
         public Guid SpaceTypeGuid { get; set; }
         public string SpaceName { get; set; }
