@@ -16,19 +16,13 @@ namespace SpaceService.Clients
     {
         private readonly IModel channel;
         private readonly string replyQueueName;
-        private readonly EventingBasicConsumer consumer;
-        private readonly BlockingCollection<Office> respQueue = new BlockingCollection<Office>();
         private readonly IBasicProperties props;
+        private readonly EventingBasicConsumer consumer;
         private readonly IRabbitMQPersistentConnection rabbitMQPersistentConnection;
-
-        private readonly ISpacesService spacesService;
-        public OfficeServiceClient(
-            [FromServices] ISpacesService spacesService,
-            [FromServices] IRabbitMQPersistentConnection rabbitMQPersistentConnection
-        )
+        private readonly BlockingCollection<Office> respQueue = new BlockingCollection<Office>();
+        public OfficeServiceClient([FromServices] IRabbitMQPersistentConnection rabbitMQPersistentConnection)
         {
             this.rabbitMQPersistentConnection = rabbitMQPersistentConnection;
-            this.spacesService = spacesService;
             channel = rabbitMQPersistentConnection.CreateModel();
             replyQueueName = channel.QueueDeclare().QueueName;
             consumer = new EventingBasicConsumer(channel);
@@ -52,20 +46,25 @@ namespace SpaceService.Clients
             public Task<Office> GetOfficeAsync(Guid officeGuid)
         {
             Console.WriteLine("HTTP-request is sent");
-            var messageBytes = Encoding.UTF8.GetBytes(officeGuid.ToString());
-                channel.BasicPublish(
-                    exchange: "",
-                    routingKey: "officeguid_queue",
-                    basicProperties: props,
-                    body: messageBytes);
-
-                channel.BasicConsume(
-                    consumer: consumer,
-                    queue: replyQueueName,
-                    autoAck: true);
-            var item = respQueue.Take();
-            Console.WriteLine("SpaceService received answer from OfficeService");
+            var item = Message(officeGuid);
             return Task.FromResult(item);
+        }
+
+        public Office Message(Guid officeguid)
+        {
+            var message = Encoding.UTF8.GetBytes(officeguid.ToString());
+            channel.BasicPublish(
+                exchange: "",
+                routingKey: "officeguid_queue",
+                basicProperties: props,
+                body: message);
+
+            channel.BasicConsume(
+                consumer: consumer,
+                queue: replyQueueName,
+                autoAck: true);
+            var item = respQueue.Take();
+            return item;
         }
 
         public void Close()
