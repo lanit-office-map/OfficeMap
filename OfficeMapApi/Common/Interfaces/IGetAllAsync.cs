@@ -3,9 +3,9 @@ using System.Threading.Tasks;
 
 namespace Common.Interfaces
 {
-    public interface IFindAll<TEntity>
+    public interface IGetAllAsync<TEntity>
         where TEntity : class
     {
-        Task<IEnumerable<TEntity>> FindAll();
+        Task<IEnumerable<TEntity>> GetAll();
     }
 }
