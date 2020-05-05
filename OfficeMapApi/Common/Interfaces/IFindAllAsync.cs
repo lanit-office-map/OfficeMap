@@ -6,6 +6,6 @@ namespace Common.Interfaces
     public interface IFindAllAsync<TEntity>
         where TEntity : class
     {
-        Task<IEnumerable<TEntity>> FindAll();
+        Task<IEnumerable<TEntity>> FindAllAsync();
     }
 }
