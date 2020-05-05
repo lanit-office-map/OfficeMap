@@ -6,6 +6,6 @@ namespace Common.Interfaces
     public interface IGetAllAsync<TEntity>
         where TEntity : class
     {
-        Task<IEnumerable<TEntity>> GetAll();
+        Task<IEnumerable<TEntity>> GetAllAsync();
     }
 }
