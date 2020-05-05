@@ -23,7 +23,7 @@ namespace OfficeService.Services
             this.automapper = automapper;
         }
 
-        public Task<IEnumerable<Office>> GetAll()
+        public Task<IEnumerable<Office>> FindAllAsync()
         {
             var result = officeRepository.FindAll(office => office.Obsolete == false);
 

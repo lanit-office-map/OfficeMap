@@ -7,7 +7,7 @@ namespace OfficeService.Services.Interface
     public interface IOfficeService :
           IGet<Office, Guid>,
           IDelete<Guid>,
-          IGetAllAsync<Office>,
+          IFindAllAsync<Office>,
           ICreate<Office>,
           IUpdate<Office>
     {

@@ -21,7 +21,7 @@ namespace OfficeService.Controllers
         [HttpGet("offices")]
         public async Task<ActionResult> GetOffices()
         {
-            var result = await officeService.GetAll();
+            var result = await officeService.FindAllAsync();
 
             return Ok(result);
         }
