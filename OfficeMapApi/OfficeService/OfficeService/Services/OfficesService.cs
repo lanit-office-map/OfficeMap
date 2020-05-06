@@ -25,7 +25,7 @@ namespace OfficeService.Services
 
         public Task<IEnumerable<Office>> FindAllAsync()
         {
-            var result = officeRepository.FindAll(office => office.Obsolete == false);
+            var result = officeRepository.FindAllAsync(office => office.Obsolete == false);
 
             return Task.FromResult(automapper.Map<IEnumerable<Office>>(result));
         }
@@ -33,6 +33,7 @@ namespace OfficeService.Services
         public Task<Office> CreateAsync(Office office)
         {
             var result = officeRepository.CreateAsync(automapper.Map<DbOffice>(office)).Result;
+
             return Task.FromResult(automapper.Map<Office>(result));
         }
 
@@ -45,7 +46,11 @@ namespace OfficeService.Services
 
         public Task DeleteAsync(Guid officeguid)
         {
-            officeRepository.DeleteAsync(officeguid);
+            var source = officeRepository.GetAsync(officeguid).Result;
+            if (source != null)
+            {
+                officeRepository.DeleteAsync(source);
+            }
 
             return Task.CompletedTask;
         }

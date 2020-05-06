@@ -8,7 +8,6 @@ namespace OfficeService.Database
         public OfficeServiceDbContext(DbContextOptions<OfficeServiceDbContext> options)
             : base(options)
         {
-            Database.EnsureCreated();
         }
 
         public virtual DbSet<DbOffice> Offices { get; set; }
@@ -56,7 +55,7 @@ namespace OfficeService.Database
 
                 entity.Property(e => e.SpaceId).ValueGeneratedOnAdd();
 
-                entity.Property(e => e.SpaceGuid)
+                entity.Property(e => e.Guid)
                     .HasColumnName("SpaceGUID")
                     .HasDefaultValueSql("(newid())");
 
