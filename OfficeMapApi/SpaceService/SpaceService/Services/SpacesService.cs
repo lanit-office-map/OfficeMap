@@ -15,18 +15,24 @@ namespace SpaceService.Services
     {
         private readonly ISpaceRepository spaceRepository;
         private readonly IMapper automapper;
+        private readonly ISpaceTypeRepository spaceTypeRepository;
 
         public SpacesService(
           [FromServices] ISpaceRepository spaceRepository,
-          [FromServices] IMapper automapper)
+          [FromServices] IMapper automapper,
+          [FromServices] ISpaceTypeRepository spaceTypeRepository)
         {
             this.spaceRepository = spaceRepository;
             this.automapper = automapper;
+            this.spaceTypeRepository = spaceTypeRepository;
         }
         public Task<Space> CreateAsync(Space space)
         {
-            var result = spaceRepository.CreateAsync(automapper.Map<DbSpace>(space)).Result;
-            return Task.FromResult(automapper.Map<Space>(result));
+
+                var Space = automapper.Map<DbSpace>(space);
+                Space.TypeId = spaceTypeRepository.GetAsync(space.SpaceTypeGuid).Result.TypeId;
+                var result = spaceRepository.CreateAsync(Space).Result;
+                return Task.FromResult(automapper.Map<Space>(result));
         }
 
         public Task<SpaceResponse> GetAsync(Guid spaceguid)
@@ -54,6 +60,7 @@ namespace SpaceService.Services
             {
                 throw new NotImplementedException();
             }
+            source.TypeId = spaceTypeRepository.GetAsync(target.SpaceTypeGuid).Result.TypeId;
             source.SpaceName = target.SpaceName;
             source.Description = target.Description;
             source.Capacity = target.Capacity;
