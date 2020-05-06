@@ -15,23 +15,28 @@ namespace Common.Repositories
         {
         }
 
-        public async Task<TEntity> CreateAsync(TEntity item)
+        public virtual async Task<TEntity> CreateAsync(TEntity entity)
         {
-            var entity = await Context.AddAsync(item);
+            var entityEntry = await Context.AddAsync(entity);
             await Context.SaveChangesAsync();
-            return entity.Entity;
+            return entityEntry.Entity;
         }
 
-        public async Task DeleteAsync(TKey id)
+        public virtual async Task DeleteAsync(TEntity entity)
         {
-            await Context.Set<TEntity>().Where(entity => entity.Guid.Equals(id)).DeleteAsync();
+            await DeleteAsync(entity.Guid);
         }
 
-        public async Task<TEntity> UpdateAsync(TEntity entity)
+        public virtual async Task DeleteAsync(TKey guid)
         {
-            var updatedEntity = Context.Set<TEntity>().Update(entity);
+            await Context.Set<TEntity>().Where(entity => entity.Guid.Equals(guid)).DeleteAsync();
+        }
+
+        public virtual async Task<TEntity> UpdateAsync(TEntity item)
+        {
+            var entityEntry = Context.Set<TEntity>().Update(item);
             await Context.SaveChangesAsync();
-            return updatedEntity.Entity;
+            return entityEntry.Entity;
         }
     }
 }

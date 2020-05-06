@@ -7,8 +7,9 @@ namespace Common.Repositories
         where TEntity : IEntity<TKey>
         where TKey : IEquatable<TKey>
     {
-        Task<TEntity> CreateAsync(TEntity item);
-        Task DeleteAsync(TKey id);
+        Task<TEntity> CreateAsync(TEntity entity);
+        Task DeleteAsync(TEntity entity);
+        Task DeleteAsync(TKey guid);
         Task<TEntity> UpdateAsync(TEntity entity);
     }
 }

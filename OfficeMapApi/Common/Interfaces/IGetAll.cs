@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 
 namespace Common.Interfaces
 {
-    public interface IGetAllAsync<TEntity>
+    public interface IGetAll<TEntity>
         where TEntity : class
     {
         Task<IEnumerable<TEntity>> GetAllAsync();

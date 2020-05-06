@@ -17,22 +17,29 @@ namespace Common.Repositories
             Context = context;
         }
 
-        public IQueryable<TEntity> GetAll()
+
+        /// <summary>
+        /// Returns entities that the change tracker will not track
+        /// </summary>
+        public virtual IQueryable<TEntity> GetAllAsync()
         {
             return Context.Set<TEntity>().AsNoTracking();
         }
 
-        public IQueryable<TEntity> FindAll(Expression<Func<TEntity, bool>> predicate)
+        /// <summary>
+        /// Returns entities that the change tracker will not track
+        /// </summary>
+        public virtual IQueryable<TEntity> FindAllAsync(Expression<Func<TEntity, bool>> predicate)
         {
             return Context.Set<TEntity>().AsNoTracking().Where(predicate);
         }
 
-        public async Task<TEntity> GetAsync(TKey id)
+        public virtual async Task<TEntity> GetAsync(TKey guid)
         {
-            return await Context.FindAsync<TEntity>(id);
+            return await Context.FindAsync<TEntity>(guid);
         }
 
-        public async Task<TEntity> FindAsync(Expression<Func<TEntity, bool>> predicate)
+        public virtual async Task<TEntity> FindAsync(Expression<Func<TEntity, bool>> predicate)
         {
             return await Context.Set<TEntity>().AsNoTracking().FirstOrDefaultAsync(predicate);
         }
