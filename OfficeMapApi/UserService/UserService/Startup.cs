@@ -106,6 +106,8 @@ namespace UserService
       {
         app.UseDeveloperExceptionPage();
       }
+
+      app.UseStaticFiles();
       app.UseCors("AllowAngularClient");
       app.UseRouting();
 
@@ -113,8 +115,6 @@ namespace UserService
       app.UseIdentityServer();
 
       app.UseAuthorization();
-
-      //app.UseCookiePolicy(new CookiePolicyOptions { MinimumSameSitePolicy = SameSiteMode.Lax });
 
       app.UseEndpoints(
         endpoints =>

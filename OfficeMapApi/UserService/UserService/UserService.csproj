@@ -6,6 +6,8 @@
 
   <ItemGroup>
     <Folder Include="Mappers\" />
+    <Folder Include="wwwroot\js\" />
+    <Folder Include="wwwroot\assets\" />
   </ItemGroup>
 
   <ItemGroup>
@@ -22,7 +24,7 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="3.1.3" />
-    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="3.1.1" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="3.1.2" />
   </ItemGroup>
 
 </Project>

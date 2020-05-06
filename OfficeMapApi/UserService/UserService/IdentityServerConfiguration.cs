@@ -39,7 +39,7 @@ namespace UserService
     {
       new Client
       {
-        ClientId = "service.client",
+        ClientId = "angular.client",
         AllowedGrantTypes = GrantTypes.Implicit,
         ClientSecrets =
         {
@@ -59,6 +59,19 @@ namespace UserService
         AllowAccessTokensViaBrowser = true,
         //AlwaysIncludeUserClaimsInIdToken = true,
         RequireConsent = false,
+      },
+      new Client
+      {
+        ClientId = "service.client",
+        AllowedGrantTypes = GrantTypes.ClientCredentials,
+        ClientSecrets =
+        {
+          new Secret("secret".Sha256())
+        },
+        AllowOfflineAccess = true,
+        AccessTokenLifetime =
+          (int)TimeSpan.FromDays(1).TotalSeconds,
+        AllowedScopes = { "officemapapis"}
       }
     };
     #endregion

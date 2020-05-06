@@ -42,8 +42,9 @@ export class AuthService {
 export function getClientSettings(): UserManagerSettings {
   return {
       authority: 'http://localhost:5000',
-      client_id: 'service.client',
+      client_id: 'angular.client',
       redirect_uri: 'http://localhost:4200/auth-callback',   
+      post_logout_redirect_uri: 'http://localhost:4200/home',
       response_type:"id_token token",
       scope:"openid email offline_access officemapapis" ,
       userStore: new WebStorageStateStore({ store: window.localStorage })    
