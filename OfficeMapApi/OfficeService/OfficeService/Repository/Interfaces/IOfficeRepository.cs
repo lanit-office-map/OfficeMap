@@ -10,7 +10,7 @@ namespace OfficeService.Repository.Interfaces
         IDelete<DbOffice>,
         IFind<DbOffice, OfficeFilter>,
         ICreate<DbOffice>,
-        IUpdate<DbOffice>
+        IUpdate<DbOffice, DbOffice>
     { 
 
     } 

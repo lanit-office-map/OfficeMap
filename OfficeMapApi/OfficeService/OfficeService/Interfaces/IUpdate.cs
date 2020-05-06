@@ -2,10 +2,10 @@
 
 namespace OfficeService.Interfaces
 {
-        public interface IUpdate <TEntity>
-            where TEntity : class
+        public interface IUpdate <TResponse, TEntity>
+            where TResponse : class
         {
-            Task<TEntity> UpdateAsync(TEntity entity);
+            Task<TResponse> UpdateAsync(TEntity entity);
         }
 }
 

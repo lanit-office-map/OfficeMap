@@ -9,7 +9,7 @@ namespace OfficeService.Controllers
 {
     [Route("OfficeService/[controller]")]
     [ApiController]
-    public class OfficeController : ControllerBase
+    public class OfficeController : Controller
     {
       #region private fields
       private readonly IOfficeService officeService;
@@ -55,9 +55,9 @@ namespace OfficeService.Controllers
    
 
       [HttpPut("offices/{officeGuid}")]
-        public async Task<ActionResult<Office>> PutOffice(
+        public async Task<ActionResult<OfficeResponse>> PutOffice(
           [FromRoute] Guid officeGuid,
-          [FromBody] OfficeResponse target)
+          [FromBody] Office target)
 
         {
             target.OfficeGuid = officeGuid;

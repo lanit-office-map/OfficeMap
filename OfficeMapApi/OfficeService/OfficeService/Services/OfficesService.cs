@@ -58,7 +58,7 @@ namespace OfficeService.Services
             return Task.CompletedTask;
         }
 
-    public Task<OfficeResponse> UpdateAsync(OfficeResponse target)
+    public Task<OfficeResponse> UpdateAsync(Office target)
         {
             var source = officeRepository.GetAsync(target.OfficeGuid).Result;
             if (source == null)

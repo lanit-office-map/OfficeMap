@@ -10,7 +10,7 @@ namespace OfficeService.Services.Interface
         IDelete<Guid>,
         IFind<OfficeResponse, OfficeFilter>,
         ICreate<Office>,
-        IUpdate<OfficeResponse>
+        IUpdate<OfficeResponse, Office>
     {
 
     }
