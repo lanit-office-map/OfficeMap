@@ -12,7 +12,7 @@ namespace SpaceService.Models
         [IgnoreDataMember]
         public int OfficeGuid { get; set; }
         public int OfficeId { get; set; }
-        public int TypeId { get; set; }
+        public Space Parents { get; set; }
         public ICollection<SpaceResponse> Spaces { get; set; }
         public Map Map { get; set; }
         public Guid SpaceTypeGuid { get; set; }
@@ -21,9 +21,9 @@ namespace SpaceService.Models
         public int? Capacity { get; set; }
         public int? Floor { get; set; }
 
-        
+
         //public Space Parents { get; set; }
-       
+
         //public SpaceType SpaceTypes { get; set; }
         //public ICollection<Space> InverseParent { get; set; }
 
