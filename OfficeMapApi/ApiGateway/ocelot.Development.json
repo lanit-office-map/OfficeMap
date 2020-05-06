@@ -1,0 +1,11 @@
+{
+  "ReRoutes": [
+
+  ],
+  "Aggregates": [
+
+  ],
+  "GlobalConfiguration": {
+    "BaseUrl": "https://localhost"
+  }
+}
