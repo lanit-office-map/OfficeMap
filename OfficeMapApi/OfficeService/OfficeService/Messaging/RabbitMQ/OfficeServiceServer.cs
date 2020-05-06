@@ -60,7 +60,7 @@ namespace OfficeService.Messaging.RabbitMQ
 
             
         }
-        public void ReceivedEvent(object? model, BasicDeliverEventArgs ea, IModel channel)
+        private void ReceivedEvent(object? model, BasicDeliverEventArgs ea, IModel channel)
         {
             var body = ea.Body;
             var props = ea.BasicProperties;
