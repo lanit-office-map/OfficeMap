@@ -32,6 +32,7 @@ namespace OfficeService
             services.AddAutoMapper(typeof(OfficeModelsProfile));
             services.AddScoped<IOfficeRepository, OfficeRepository>();
             services.AddScoped<IOfficeService, OfficesService>();
+            services.AddScoped<OfficeServiceServer>();
             services.AddSingleton<IConnectionFactory, ConnectionFactory>(sp =>
             {
                 return new ConnectionFactory()
@@ -42,7 +43,7 @@ namespace OfficeService
                 };
             });
             services.AddSingleton<IRabbitMQPersistentConnection, RabbitMQPersistentConnection>();
-            services.AddHostedService<OfficeServiceServer>();
+            services.AddHostedService<ConsumeScopedServiceHostedService>();
             
             services.AddControllers();
         } 

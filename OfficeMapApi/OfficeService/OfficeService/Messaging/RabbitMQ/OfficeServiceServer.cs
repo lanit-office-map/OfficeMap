@@ -13,7 +13,7 @@ using System.Threading;
 
 namespace OfficeService.Messaging.RabbitMQ
 {
-    public class OfficeServiceServer : IHostedService
+    public class OfficeServiceServer
     {
         private readonly IRabbitMQPersistentConnection persistentConnection;
         private readonly IOfficeService officeService;
@@ -82,16 +82,6 @@ namespace OfficeService.Messaging.RabbitMQ
 
             channel.BasicAck(deliveryTag: ea.DeliveryTag,
                              multiple: false);
-        }
-
-        public Task StartAsync(CancellationToken cancellationToken)
-        {
-            return Task.CompletedTask;
-        }
-
-        public Task StopAsync(CancellationToken cancellationToken)
-        {
-            return Task.CompletedTask;
         }
     }
 }
