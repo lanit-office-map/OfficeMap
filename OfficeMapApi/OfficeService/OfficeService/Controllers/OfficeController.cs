@@ -10,8 +10,11 @@ namespace OfficeService.Controllers
     [ApiController]
     public class OfficeController : ControllerBase
     {
+        #region private fields
         private readonly IOfficeService officeService;
+        #endregion
 
+        #region public methods
         public OfficeController(
         [FromServices] IOfficeService officeService)
         {
@@ -61,5 +64,6 @@ namespace OfficeService.Controllers
             await officeService.DeleteAsync(officeGuid);
             return Ok();
         }
+        #endregion
     }
 }

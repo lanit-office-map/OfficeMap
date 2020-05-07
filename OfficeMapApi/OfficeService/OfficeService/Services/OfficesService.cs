@@ -12,9 +12,12 @@ namespace OfficeService.Services
 {
     public class OfficesService : IOfficeService
     {
+        #region private fields
         private readonly IOfficeRepository officeRepository;
         private readonly IMapper automapper;
+        #endregion
 
+        #region public methods
         public OfficesService(
           [FromServices] IOfficeRepository officeRepository,
           [FromServices] IMapper automapper)
@@ -71,5 +74,6 @@ namespace OfficeService.Services
             var result = officeRepository.UpdateAsync(source).Result;
             return Task.FromResult(automapper.Map<Office>(result));
         }
+        #endregion
     }
 }
