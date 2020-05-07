@@ -36,7 +36,7 @@ namespace Common.Repositories
 
         public virtual async Task<TEntity> GetAsync(TKey guid)
         {
-            return await Context.FindAsync<TEntity>(guid);
+            return await Context.Set<TEntity>().FirstOrDefaultAsync(entity => entity.Guid.Equals(guid));
         }
 
         public virtual async Task<TEntity> FindAsync(Expression<Func<TEntity, bool>> predicate)

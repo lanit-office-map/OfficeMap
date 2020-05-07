@@ -9,7 +9,6 @@ namespace Common.Repositories
     {
         Task<TEntity> CreateAsync(TEntity entity);
         Task DeleteAsync(TEntity entity);
-        Task DeleteAsync(TKey guid);
         Task<TEntity> UpdateAsync(TEntity entity);
     }
 }

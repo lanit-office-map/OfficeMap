@@ -1,8 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System;
-using System.Linq;
 using System.Threading.Tasks;
-using Z.EntityFramework.Plus;
 
 namespace Common.Repositories
 {
@@ -24,12 +22,7 @@ namespace Common.Repositories
 
         public virtual async Task DeleteAsync(TEntity entity)
         {
-            await DeleteAsync(entity.Guid);
-        }
-
-        public virtual async Task DeleteAsync(TKey guid)
-        {
-            await Context.Set<TEntity>().Where(entity => entity.Guid.Equals(guid)).DeleteAsync();
+            await Context.SingleDeleteAsync(entity);
         }
 
         public virtual async Task<TEntity> UpdateAsync(TEntity item)

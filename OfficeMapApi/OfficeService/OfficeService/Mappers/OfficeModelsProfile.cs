@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using AutoMapper;
+﻿using AutoMapper;
 using OfficeService.Database.Entities;
 using OfficeService.Models;
 
@@ -13,7 +9,6 @@ namespace OfficeService.Mappers
         public OfficeModelsProfile()
         {
             #region Office
-
             CreateMap<DbOffice, Office>();
 
             CreateMap<Office, DbOffice>()
