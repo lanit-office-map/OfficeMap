@@ -1,14 +1,14 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
-import { MapViewComponent } from './map-view/map-view.component';
-import { ModalBookComponent } from './modal-book/modal-book.component';
-import { ModalUserComponent } from './modal-user/modal-user.component';
+import { MapViewComponent } from './map/map-view/map-view.component';
+import { ModalBookComponent } from './map/modal-book/modal-book.component';
+import { ModalUserComponent } from './map/modal-user/modal-user.component';
 import { SettingsComponent } from './navigation/settings/settings.component';
 import { LeftMenuComponent } from './navigation/left-menu/left-menu.component';
 import { OfficeListComponent } from './office-list/office-list.component';
 import { EmployeeListComponent } from './employee-list/employee-list.component';
-import { MapEditorComponent } from './map-editor/map-editor.component';
+import { MapEditorComponent } from './map/map-editor/map-editor.component';
 import { AuthComponent } from './auth/auth.component';
 import { NotFoundComponent } from './not-found/not-found.component';
 

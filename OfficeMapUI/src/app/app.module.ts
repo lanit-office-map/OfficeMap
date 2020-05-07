@@ -13,10 +13,10 @@ import { TopMenuComponent } from './navigation/top-menu/top-menu.component';
 import { SearchComponent } from './search/search.component';
 import { OfficeListComponent } from './office-list/office-list.component';
 import { EmployeeListComponent } from './employee-list/employee-list.component';
-import { MapViewComponent } from './map-view/map-view.component';
-import { MapEditorComponent } from './map-editor/map-editor.component';
-import { ModalUserComponent } from './modal-user/modal-user.component';
-import { ModalBookComponent } from './modal-book/modal-book.component';
+import { MapViewComponent } from './map/map-view/map-view.component';
+import { MapEditorComponent } from './map/map-editor/map-editor.component';
+import { ModalUserComponent } from './map/modal-user/modal-user.component';
+import { ModalBookComponent } from './map/modal-book/modal-book.component';
 import { SettingsComponent } from './navigation/settings/settings.component';
 import { NotFoundComponent } from './not-found/not-found.component';
 
