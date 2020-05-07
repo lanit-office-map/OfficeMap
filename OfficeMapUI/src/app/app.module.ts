@@ -7,7 +7,7 @@ import { RouterModule } from '@angular/router';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { AuthComponent } from './auth/auth.component';
+import { AuthComponent } from './authorization/auth/auth.component';
 import { LeftMenuComponent } from './navigation/left-menu/left-menu.component';
 import { TopMenuComponent } from './navigation/top-menu/top-menu.component';
 import { SearchComponent } from './search/search.component';

@@ -9,7 +9,7 @@ import { LeftMenuComponent } from './navigation/left-menu/left-menu.component';
 import { OfficeListComponent } from './office-list/office-list.component';
 import { EmployeeListComponent } from './employee-list/employee-list.component';
 import { MapEditorComponent } from './map/map-editor/map-editor.component';
-import { AuthComponent } from './auth/auth.component';
+import { AuthComponent } from './authorization/auth/auth.component';
 import { NotFoundComponent } from './not-found/not-found.component';
 
 const routes: Routes = [
