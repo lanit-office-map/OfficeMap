@@ -1,28 +1,20 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 
-import { MapViewComponent } from './map/map-view/map-view.component';
-import { ModalBookComponent } from './map/modal-book/modal-book.component';
-import { ModalUserComponent } from './map/modal-user/modal-user.component';
-import { SettingsComponent } from './navigation/settings/settings.component';
 import { LeftMenuComponent } from './navigation/left-menu/left-menu.component';
-import { OfficeListComponent } from './office-list/office-list.component';
-import { EmployeeListComponent } from './employee-list/employee-list.component';
-import { MapEditorComponent } from './map/map-editor/map-editor.component';
-import { AuthComponent } from './authorization/auth/auth.component';
 import { NotFoundComponent } from './not-found/not-found.component';
+import { SearchComponent } from './search/search.component';
+import { SettingsComponent } from './navigation/settings/settings.component';
 
 const routes: Routes = [
-  { path: '', component: AuthComponent },
   { path: 'home', component: LeftMenuComponent },
-  { path: 'map/:id', component: MapViewComponent },
-  { path: 'map/:id/book_room/:roomId', component: ModalBookComponent },
-  { path: 'map/:id/user_info/:userId', component: ModalUserComponent },
-  { path: 'settings', component: SettingsComponent },
-  { path: 'offices', component: OfficeListComponent },
-  { path: 'users', component: EmployeeListComponent },
-  { path: 'editor/:id', component: MapEditorComponent },
-  { path: '**', component: NotFoundComponent }
+  { path: '', component: LeftMenuComponent },
+  { path: 'search', component: SearchComponent },
+  { path: 'settings', component: SettingsComponent},
+  { path: 'auth', loadChildren: './authorization/authorization.module#AuthorizationModule' },
+  { path: 'map', loadChildren: './map/map.module#MapModule'},
+  { path: 'admin', loadChildren: './admin/admin.module#AdminModule'},
+  { path: '**', component: NotFoundComponent}
 ];
 
 @NgModule({

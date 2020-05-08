@@ -11,14 +11,17 @@ import { AuthComponent } from './authorization/auth/auth.component';
 import { LeftMenuComponent } from './navigation/left-menu/left-menu.component';
 import { TopMenuComponent } from './navigation/top-menu/top-menu.component';
 import { SearchComponent } from './search/search.component';
-import { OfficeListComponent } from './office-list/office-list.component';
-import { EmployeeListComponent } from './employee-list/employee-list.component';
+import { OfficeListComponent } from './admin/office-list/office-list.component';
+import { EmployeeListComponent } from './admin/employee-list/employee-list.component';
 import { MapViewComponent } from './map/map-view/map-view.component';
-import { MapEditorComponent } from './map/map-editor/map-editor.component';
+import { MapEditorComponent } from './admin/map-editor/map-editor.component';
 import { ModalUserComponent } from './map/modal-user/modal-user.component';
 import { ModalBookComponent } from './map/modal-book/modal-book.component';
 import { SettingsComponent } from './navigation/settings/settings.component';
 import { NotFoundComponent } from './not-found/not-found.component';
+import {AdminModule} from './admin/admin.module';
+import {MapModule} from './map/map.module';
+import {AuthorizationModule} from './authorization/authorization.module';
 
 @NgModule({
   declarations: [
@@ -42,7 +45,10 @@ import { NotFoundComponent } from './not-found/not-found.component';
     BrowserAnimationsModule,
     FormsModule,
     ReactiveFormsModule,
-    RouterModule
+    RouterModule,
+    AdminModule,
+    MapModule,
+    AuthorizationModule
   ],
   providers: [],
   bootstrap: [AppComponent]
