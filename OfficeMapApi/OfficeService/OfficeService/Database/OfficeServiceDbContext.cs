@@ -1,55 +1,50 @@
-﻿using System;
-using System.Collections.Generic;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata;
+﻿using Microsoft.EntityFrameworkCore;
 using OfficeService.Database.Entities;
 
 namespace OfficeService.Database
 {
     public partial class OfficeServiceDbContext : DbContext
     {
-        public OfficeServiceDbContext (DbContextOptions<OfficeServiceDbContext> options)
+        public OfficeServiceDbContext(DbContextOptions<OfficeServiceDbContext> options)
             : base(options)
         {
-            Database.EnsureCreated();
         }
 
         public virtual DbSet<DbOffice> Offices { get; set; }
-        public virtual DbSet<DbSpace> Spaces { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-          modelBuilder.Entity<DbOffice>(entity =>
-          {
-            entity.ToTable("Offices", "dbo");
-            entity.HasKey(e => e.OfficeId);
+            modelBuilder.Entity<DbOffice>(entity =>
+            {
+                entity.ToTable("Offices", "dbo");
+                entity.HasKey(e => e.OfficeId);
 
                 entity.Property(e => e.OfficeId).ValueGeneratedOnAdd();
 
                 entity.Property(e => e.Building)
-                    .HasMaxLength(50)
-                    .IsUnicode(false);
+                  .HasMaxLength(50)
+                  .IsUnicode(false);
 
                 entity.Property(e => e.City)
-                    .HasMaxLength(50)
-                    .IsUnicode(false);
+                  .HasMaxLength(50)
+                  .IsUnicode(false);
 
                 entity.Property(e => e.House)
-                    .HasMaxLength(50)
-                    .IsUnicode(false);
+                  .HasMaxLength(50)
+                  .IsUnicode(false);
 
-                entity.Property(e => e.OfficeGuid)
-                    .HasColumnName("OfficeGUID")
-                    .HasDefaultValueSql("(newid())");
+                entity.Property(e => e.Guid)
+                  .HasColumnName("OfficeGUID")
+                  .HasDefaultValueSql("(newid())");
 
                 entity.Property(e => e.PhoneNumber)
-                    .HasColumnName("Phone_Number")
-                    .HasMaxLength(50)
-                    .IsUnicode(false);
+                  .HasColumnName("Phone_Number")
+                  .HasMaxLength(50)
+                  .IsUnicode(false);
 
                 entity.Property(e => e.Street)
-                    .HasMaxLength(50)
-                    .IsUnicode(false);
+                  .HasMaxLength(50)
+                  .IsUnicode(false);
             });
 
             modelBuilder.Entity<DbSpace>(entity =>
@@ -60,7 +55,7 @@ namespace OfficeService.Database
 
                 entity.Property(e => e.SpaceId).ValueGeneratedOnAdd();
 
-                entity.Property(e => e.SpaceGuid)
+                entity.Property(e => e.Guid)
                     .HasColumnName("SpaceGUID")
                     .HasDefaultValueSql("(newid())");
 
