@@ -7,3 +7,4 @@ namespace OfficeService.Repository.Interfaces
     public interface IOfficeRepository : ICrudRepository<DbOffice, Guid>
     {
     }
+}
