@@ -39,7 +39,7 @@ namespace OfficeService.Services
 
             return Task.FromResult(automapper.Map<Office>(result));
         }
-
+        
         public Task<OfficeResponse> GetAsync(Guid officeguid)
         {
             var result = officeRepository.GetAsync(officeguid).Result;
@@ -77,3 +77,4 @@ namespace OfficeService.Services
         #endregion
     }
 }
+

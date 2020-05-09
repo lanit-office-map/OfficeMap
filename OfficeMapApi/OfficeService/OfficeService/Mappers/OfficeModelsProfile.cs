@@ -9,7 +9,6 @@ namespace OfficeService.Mappers
         public OfficeModelsProfile()
         {
             #region Office
-
             CreateMap<DbOffice, Office>();
 
             CreateMap<Office, DbOffice>()
