@@ -26,11 +26,11 @@ namespace OfficeService.Services
             this.automapper = automapper;
         }
 
-        public Task<IEnumerable<Office>> FindAllAsync()
+        public Task<IEnumerable<OfficeResponse>> FindAllAsync()
         {
             var result = officeRepository.FindAllAsync(office => office.Obsolete == false);
 
-            return Task.FromResult(automapper.Map<IEnumerable<Office>>(result));
+            return Task.FromResult(automapper.Map<IEnumerable<OfficeResponse>>(result));
         }
 
         public Task<Office> CreateAsync(Office office)
@@ -39,12 +39,12 @@ namespace OfficeService.Services
 
             return Task.FromResult(automapper.Map<Office>(result));
         }
-
-        public Task<Office> GetAsync(Guid officeguid)
+        
+        public Task<OfficeResponse> GetAsync(Guid officeguid)
         {
             var result = officeRepository.GetAsync(officeguid).Result;
 
-            return Task.FromResult(automapper.Map<Office>(result));
+            return Task.FromResult(automapper.Map<OfficeResponse>(result));
         }
 
         public Task DeleteAsync(Guid officeguid)
@@ -77,3 +77,4 @@ namespace OfficeService.Services
         #endregion
     }
 }
+
