@@ -9,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Z.EntityFramework.Plus;
 
 namespace SpaceService.Repository
 {
@@ -25,10 +26,10 @@ namespace SpaceService.Repository
         public Task<DbSpace> GetAsync(Guid spaceguid)
         {
             var result = dbContext.Spaces
-                .Include(s => s.InverseParent)
-                .Include(s => s.Offices)
-                .Include(s => s.MapFiles)
-                .Include(s => s.SpaceTypes)
+                .IncludeFilter(s => s.InverseParent.Where(i => i.Obsolete == false))
+              //  .Include(s => s.Offices)
+              //  .Include(s => s.MapFiles)
+              //  .Include(s => s.SpaceTypes)
                 .FirstOrDefault(x =>
                                 x.SpaceGuid == spaceguid &&
                                 x.Obsolete == false);
@@ -60,10 +61,9 @@ namespace SpaceService.Repository
             if (filter != null)
             {
                 var result = dbContext.Spaces
-                    .Include(s => s.InverseParent)
-                    .Include(s => s.SpaceTypes)
-                    .Include(s => s.MapFiles)
-                    .Include(s => s.Offices)
+                    .IncludeFilter(s => s.InverseParent.Where(i => i.Obsolete == false))
+                    .IncludeFilter(s => s.SpaceTypes)
+                    .IncludeFilter(s => s.MapFiles)
                 .Where(s => s.Obsolete == false && s.OfficeId == filter.OfficeId)
                 .AsEnumerable();
                 return Task.FromResult(result);

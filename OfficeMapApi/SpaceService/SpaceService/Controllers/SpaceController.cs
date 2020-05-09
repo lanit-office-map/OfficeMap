@@ -5,6 +5,7 @@ using System;
 using System.Threading.Tasks;
 using SpaceService.Filters;
 using SpaceService.Clients;
+using SpaceService.Repository.Interfaces;
 
 namespace SpaceService.Controllers
 {
@@ -27,6 +28,8 @@ namespace SpaceService.Controllers
 
         public async Task<ActionResult> GetSpaces([FromRoute] Guid officeGuid)
         {
+            
+            
             var response = officeServiceClient.GetOfficeAsync(officeGuid).Result;
             if (response == null)
             {
@@ -34,12 +37,9 @@ namespace SpaceService.Controllers
             }
             else
             {
+                
                 SpaceFilter filter = new SpaceFilter(response.OfficeId, response.OfficeGuid);
                 var spaces = await spaceService.FindAsync(filter);
-                foreach (var space in spaces)
-                {
-                    space.OfficeGuid = filter.OfficeGuid;
-                }
                 return Ok(spaces);
             }
         }
@@ -77,7 +77,7 @@ namespace SpaceService.Controllers
             else
             {
                 var result = await spaceService.GetAsync(spaceGuid);
-                result.OfficeGuid = response.OfficeGuid;
+               // result.OfficeGuid = response.OfficeGuid;
                 return Ok(result);
             }
         }

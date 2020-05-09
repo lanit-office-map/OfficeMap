@@ -71,11 +71,30 @@ namespace SpaceService.Services
 
         public Task<IEnumerable<SpaceResponse>> FindAsync(SpaceFilter filter)
         {
-            var result = spaceRepository.FindAsync(filter).Result;
+            
+            
+            var spaces = spaceRepository.FindAsync(filter).Result;
+            var result = automapper.Map<IEnumerable<SpaceResponse>>(spaces);
+            foreach (DbSpace space in spaces)
+            {
+                SpaceResponse temp = automapper.Map<SpaceResponse>(space);
+                if (space.InverseParent != null)
+                {
+                    foreach (SpaceResponse spaceResponse in result)
+                    {
+                        if (spaceResponse.SpaceGuid == space.SpaceGuid)
+                        {
+                            spaceResponse.Spaces = temp.Spaces;
+                            spaceResponse.SpaceType = temp.SpaceType;
+                            spaceResponse.Map = temp.Map;                           
+                        }
+                    }
+                }
+            }
 
-            return Task.FromResult(automapper.Map<IEnumerable<SpaceResponse>>(result));
+            return Task.FromResult(result);
         }
-
+         
 
     }
 }

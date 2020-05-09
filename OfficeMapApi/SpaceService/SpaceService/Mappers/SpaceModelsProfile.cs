@@ -1,6 +1,9 @@
 ﻿using AutoMapper;
 using SpaceService.Database.Entities;
 using SpaceService.Models;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
 
 namespace SpaceService.Mappers
 {
@@ -26,7 +29,6 @@ namespace SpaceService.Mappers
 
 
             CreateMap<DbSpace, SpaceResponse>()
-                .ForMember(response => response.ParentId, opt => opt.MapFrom(src => src.ParentId))
                 .ForMember(response => response.Spaces, opt => opt.MapFrom(src => src.InverseParent))
                 .ForMember(response => response.SpaceGuid, opt => opt.MapFrom(src => src.SpaceGuid))
                 .ForMember(response => response.OfficeGuid, opt => opt.Ignore())
@@ -35,6 +37,7 @@ namespace SpaceService.Mappers
                 .ForMember(response => response.Capacity, opt => opt.MapFrom(src => src.Capacity))
                 .ForMember(response => response.Description, opt => opt.MapFrom(src => src.Description))
                 .ForMember(response => response.Floor, opt => opt.MapFrom(src => src.Floor));
+                
 
             CreateMap<DbSpaceType, SpaceTypeResponse>()
                 .ForMember(response => response.SpaceTypeGuid, opt => opt.MapFrom(src => src.SpaceTypeGuid))
@@ -43,13 +46,14 @@ namespace SpaceService.Mappers
                 .ForMember(response => response.Description, opt => opt.MapFrom(src => src.Description));
 
             CreateMap<DbMapFile, MapResponse>()
-                .ForMember(response => response.Content, opt => opt.MapFrom(src => src.Content))
+                .ForMember(response => response.Content, opt => opt.MapFrom(src => Encoding.UTF8.GetString(src.Content)))
                 .ForMember(response => response.MapGuid, opt => opt.MapFrom(src => src.MapGuid));
 
             CreateMap<DbMapFile, Map>()
-                .ForMember(m => m.Content, opt => opt.MapFrom(src => src.Content));
+                .ForMember(m => m.Content, opt => opt.MapFrom(src => Encoding.UTF8.GetString(src.Content)));
 
-
+            CreateMap<Map, DbMapFile>()
+                .ForMember(m => m.Content, opt => opt.MapFrom(src => Encoding.UTF8.GetBytes(src.Content)));
 
         }
     }
