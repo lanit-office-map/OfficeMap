@@ -5,9 +5,9 @@ using Common.Interfaces;
 namespace OfficeService.Services.Interface
 {
     public interface IOfficeService :
-          IGet<Office, Guid>,
+          IGet<OfficeResponse, Guid>,
           IDelete<Guid>,
-          IFindAll<Office>,
+          IFindAll<OfficeResponse>,
           ICreate<Office>,
           IUpdate<Office>
     {
