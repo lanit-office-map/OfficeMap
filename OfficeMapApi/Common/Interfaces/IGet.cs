@@ -1,7 +1,7 @@
 ﻿using System.Threading.Tasks;
 
-namespace OfficeService.Interfaces
-{ 
+namespace Common.Interfaces
+{
     public interface IGet<TEntity, in TKey>
         where TEntity : class
     {

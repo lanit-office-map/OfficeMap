@@ -4,42 +4,37 @@ using OfficeService.Models;
 using OfficeService.Services.Interface;
 using System;
 
-
 namespace OfficeService.Controllers
 {
     [Route("OfficeService/[controller]")]
     [ApiController]
-    public class OfficeController : Controller
+    public class OfficeController : ControllerBase
     {
-      #region private fields
-      private readonly IOfficeService officeService;
+        #region private fields
+        private readonly IOfficeService officeService;
         #endregion
-
-
 
         #region public methods
         public OfficeController(
         [FromServices] IOfficeService officeService)
-      {
-        this.officeService = officeService;
-      }
+        {
+            this.officeService = officeService;
+        }
 
-      [HttpGet("offices")]
-      public async Task<ActionResult> GetOffices()
-      {
-        var result = await officeService.FindAsync();
+        [HttpGet("offices")]
+        public async Task<ActionResult> GetOffices()
+        {
+            var result = await officeService.FindAllAsync();
 
-        return Ok(result);
-      }
+            return Ok(result);
+        }
 
-      [HttpPost("offices")]
+        [HttpPost("offices")]
         public async Task<ActionResult<Office>> PostOffices([FromBody] Office office)
         {
             var result = await officeService.CreateAsync(office);
             return Ok(result);
         }
-
-        
 
         [HttpGet("offices/{officeGuid}")]
         public async Task<ActionResult<Office>> GetOffice([FromRoute] Guid officeGuid)
@@ -52,15 +47,13 @@ namespace OfficeService.Controllers
             return Ok(result);
         }
 
-   
-
-      [HttpPut("offices/{officeGuid}")]
-        public async Task<ActionResult<OfficeResponse>> PutOffice(
-          [FromRoute] Guid officeGuid,
-          [FromBody] Office target)
+        [HttpPut("offices/{officeGuid}")]
+        public async Task<ActionResult<Office>> PutOffice(
+            [FromRoute] Guid officeGuid,
+            [FromBody] Office target)
 
         {
-            target.OfficeGuid = officeGuid;
+            target.Guid = officeGuid;
             var result = await officeService.UpdateAsync(target);
             return Ok(result);
         }
@@ -71,10 +64,6 @@ namespace OfficeService.Controllers
             await officeService.DeleteAsync(officeGuid);
             return Ok();
         }
-
-
-
-      #endregion
-
-  }
+        #endregion
+    }
 }
