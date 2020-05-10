@@ -14,7 +14,7 @@ namespace SpaceService.Models
         public ICollection<SpaceResponse> Spaces { get; set; }
         public MapResponse Map { get; set; }
         public SpaceTypeResponse SpaceType { get; set; }
-        public string Workplaces { get; set; }
+        public IEnumerable<WorkplaceResponse> Workplaces { get; set; }
         public int Capacity { get; set; }
         public string Description { get; set; }
         public int Floor { get; set; }

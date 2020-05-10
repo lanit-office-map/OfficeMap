@@ -16,13 +16,16 @@ namespace SpaceService.Controllers
     {
         private readonly ISpacesService spaceService;
         private readonly OfficeServiceClient officeServiceClient;
+        private readonly WorkplaceServiceClient workplaceServiceClient;
 
         public SpaceController(
             [FromServices] ISpacesService spaceService,
-            [FromServices] OfficeServiceClient officeServiceClient)
+            [FromServices] OfficeServiceClient officeServiceClient,
+            [FromServices] WorkplaceServiceClient workplaceServiceClient)
         {
             this.spaceService = spaceService;
             this.officeServiceClient = officeServiceClient;
+            this.workplaceServiceClient = workplaceServiceClient;
         }
 
         [HttpGet("spaces")]
@@ -37,13 +40,16 @@ namespace SpaceService.Controllers
             else
             { 
                 SpaceFilter filter = new SpaceFilter(response.OfficeId, response.Guid);
-                var spaces = await spaceService.FindAsync(filter);
-                foreach (var space in spaces)
+                var result = await spaceService.FindAsync(filter);
+                
+                foreach (var space in result)
                 {
+                    var _response = workplaceServiceClient.GetWorkplacesAsync(space.SpaceGuid).Result;
+                    space.Workplaces = _response;
                     space.OfficeGuid = filter.OfficeGuid;
                     InnerSpaces(space.Spaces, officeGuid);
                 }
-                return Ok(spaces);
+                return Ok(result);
             }
         }
 
@@ -79,7 +85,10 @@ namespace SpaceService.Controllers
             }
             else
             {
+
                 var result = await spaceService.GetAsync(spaceGuid);
+                var _response = workplaceServiceClient.GetWorkplacesAsync(spaceGuid).Result;
+                result.Workplaces = _response;
                 result.OfficeGuid = officeGuid;
                 InnerSpaces(result.Spaces, officeGuid);
                 return Ok(result);

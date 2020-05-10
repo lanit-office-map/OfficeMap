@@ -49,6 +49,7 @@ namespace SpaceService
             });
             services.AddSingleton<IRabbitMQPersistentConnection, RabbitMQPersistentConnection>();
             services.AddScoped<OfficeServiceClient>();
+            services.AddScoped<WorkplaceServiceClient>();
 
 
 
