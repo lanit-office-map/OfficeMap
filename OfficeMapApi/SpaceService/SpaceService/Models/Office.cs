@@ -6,7 +6,7 @@ namespace SpaceService.Models
 
     public class Office
     {
-        public Guid OfficeGuid { get; set; }
+        public Guid Guid { get; set; }
         public int OfficeId { get; set; }
 
     }

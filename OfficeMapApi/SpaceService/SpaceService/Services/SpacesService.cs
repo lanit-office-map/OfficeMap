@@ -37,10 +37,28 @@ namespace SpaceService.Services
 
         public Task<SpaceResponse> GetAsync(Guid spaceguid)
         {
-            var result = spaceRepository.GetAsync(spaceguid).Result;
-
-
-            return Task.FromResult(automapper.Map<SpaceResponse>(result));
+            var spaces = spaceRepository.FindAsync().Result;
+            var result = automapper.Map<IEnumerable<SpaceResponse>>(spaces);
+            // TODO Make a better implementation
+            int k = 0;
+            foreach (var space in result)
+            {
+                if (space.SpaceGuid == spaceguid)
+                {
+                    k = k + 1;
+                    return Task.FromResult(space);
+                }
+            }
+            if (k > 0)
+            {
+                var _space = spaceRepository.GetAsync(spaceguid).Result;
+                var _result = automapper.Map<SpaceResponse>(_space);
+                return Task.FromResult(_result);
+            }
+            else
+            {
+                throw new NotImplementedException();
+            }
         }
 
         public Task DeleteAsync(Guid spaceguid)
@@ -71,30 +89,12 @@ namespace SpaceService.Services
 
         public Task<IEnumerable<SpaceResponse>> FindAsync(SpaceFilter filter)
         {
-            
-            
             var spaces = spaceRepository.FindAsync(filter).Result;
             var result = automapper.Map<IEnumerable<SpaceResponse>>(spaces);
-            foreach (DbSpace space in spaces)
-            {
-                SpaceResponse temp = automapper.Map<SpaceResponse>(space);
-                if (space.InverseParent != null)
-                {
-                    foreach (SpaceResponse spaceResponse in result)
-                    {
-                        if (spaceResponse.SpaceGuid == space.SpaceGuid)
-                        {
-                            spaceResponse.Spaces = temp.Spaces;
-                            spaceResponse.SpaceType = temp.SpaceType;
-                            spaceResponse.Map = temp.Map;                           
-                        }
-                    }
-                }
-            }
-
             return Task.FromResult(result);
         }
          
+
 
     }
 }

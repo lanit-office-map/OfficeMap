@@ -27,12 +27,11 @@ namespace SpaceService.Repository
         {
             var result = dbContext.Spaces
                 .IncludeFilter(s => s.InverseParent.Where(i => i.Obsolete == false))
-              //  .Include(s => s.Offices)
-              //  .Include(s => s.MapFiles)
-              //  .Include(s => s.SpaceTypes)
-                .FirstOrDefault(x =>
-                                x.SpaceGuid == spaceguid &&
-                                x.Obsolete == false);
+                .IncludeFilter(s => s.SpaceTypes)
+                .IncludeFilter(s => s.MapFiles)
+                .Single(s => 
+                        s.Obsolete == false && 
+                        s.SpaceGuid == spaceguid);
             return Task.FromResult(result);
         }
 
@@ -70,7 +69,13 @@ namespace SpaceService.Repository
             }          
             else
             {
-                throw new NotImplementedException();
+                var result = dbContext.Spaces
+                   .IncludeFilter(s => s.InverseParent.Where(i => i.Obsolete == false))
+                   .IncludeFilter(s => s.SpaceTypes)
+                   .IncludeFilter(s => s.MapFiles)
+               .Where(s => s.Obsolete == false)
+               .AsEnumerable();
+                return Task.FromResult(result);
             }
         }
 

@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using SpaceService.Filters;
 using SpaceService.Clients;
 using SpaceService.Repository.Interfaces;
+using System.Collections.Generic;
 
 namespace SpaceService.Controllers
 {
@@ -28,18 +29,20 @@ namespace SpaceService.Controllers
 
         public async Task<ActionResult> GetSpaces([FromRoute] Guid officeGuid)
         {
-            
-            
             var response = officeServiceClient.GetOfficeAsync(officeGuid).Result;
             if (response == null)
             {
                 return NotFound();
             }
             else
-            {
-                
-                SpaceFilter filter = new SpaceFilter(response.OfficeId, response.OfficeGuid);
+            { 
+                SpaceFilter filter = new SpaceFilter(response.OfficeId, response.Guid);
                 var spaces = await spaceService.FindAsync(filter);
+                foreach (var space in spaces)
+                {
+                    space.OfficeGuid = filter.OfficeGuid;
+                    InnerSpaces(space.Spaces, officeGuid);
+                }
                 return Ok(spaces);
             }
         }
@@ -65,7 +68,7 @@ namespace SpaceService.Controllers
         
         [HttpGet("spaces/{spaceGuid}")]
 
-        public async Task<ActionResult<SpaceResponse>> GetSpace(
+        public async Task<ActionResult> GetSpace(
             [FromRoute] Guid officeGuid, 
             [FromRoute] Guid spaceGuid)
         {
@@ -77,7 +80,8 @@ namespace SpaceService.Controllers
             else
             {
                 var result = await spaceService.GetAsync(spaceGuid);
-               // result.OfficeGuid = response.OfficeGuid;
+                result.OfficeGuid = officeGuid;
+                InnerSpaces(result.Spaces, officeGuid);
                 return Ok(result);
             }
         }
@@ -121,6 +125,19 @@ namespace SpaceService.Controllers
                 return Ok(result);
             }
         }
-            
+
+        public void InnerSpaces(ICollection<SpaceResponse> innerSpaces, Guid officeGuid)
+        {
+            foreach (var space in innerSpaces)
+            {
+                while (space.OfficeGuid != officeGuid)
+                {
+                    space.OfficeGuid = officeGuid;
+                    InnerSpaces(space.Spaces, officeGuid);
+                }
+            }
+            return;
+        }
+
     }
 }
