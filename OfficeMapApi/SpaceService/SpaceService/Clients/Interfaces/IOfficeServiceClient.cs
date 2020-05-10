@@ -1,12 +1,10 @@
 ﻿using SpaceService.Models;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
-namespace SpaceService.Clients
+namespace SpaceService.Clients.Interfaces
 {
-    interface IOfficeServiceClient
+    public interface IOfficeServiceClient
     {
         Task<Office> GetOfficeAsync(Guid officeGuid);
     }

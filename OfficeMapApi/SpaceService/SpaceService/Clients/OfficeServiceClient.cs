@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using SpaceService.Models;
-using SpaceService.Services.Interfaces;
 using System;
 using SpaceService.RabbitMQ.Interface;
 using RabbitMQ.Client;
@@ -9,6 +8,7 @@ using System.Threading.Tasks;
 using RabbitMQ.Client.Events;
 using System.Collections.Concurrent;
 using Newtonsoft.Json;
+using SpaceService.Clients.Interfaces;
 
 namespace SpaceService.Clients
 {
@@ -31,6 +31,8 @@ namespace SpaceService.Clients
             var correlationId = Guid.NewGuid().ToString();
             props.CorrelationId = correlationId;
             props.ReplyTo = replyQueueName;
+            Console.WriteLine("SpaceService is connected to RabbitMQ ready to get feedback from OfficeService");
+
 
             consumer.Received += (model, ea) =>
             {
