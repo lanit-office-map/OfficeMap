@@ -7,17 +7,12 @@ namespace WorkplaceService.Database.Entities
 {
     public partial class DbMapFile : IEntity<Guid>
     {
-        public DbMapFile()
-        {
-            Workplaces = new HashSet<DbWorkplace>();
-        }
-
         [Key]
         public Guid Guid { get; set; }
         public int MapId { get; set; }
         public byte[] Content { get; set; }
         public bool Obsolete { get; set; }
 
-        public virtual ICollection<DbWorkplace> Workplaces { get; set; }
+        public virtual DbWorkplace Workplace { get; set; }
     }
 }

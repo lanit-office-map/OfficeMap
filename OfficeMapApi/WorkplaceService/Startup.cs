@@ -5,8 +5,14 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using RabbitMQ.Client;
 using WorkplaceService.Database;
 using WorkplaceService.Mappers;
+using WorkplaceService.Messaging.RabbitMQ;
+using WorkplaceService.Messaging.RabbitMQ.Interface;
+using WorkplaceService.Repository;
+using WorkplaceService.Repository.Interfaces;
+using WorkplaceService.Services;
 
 namespace WorkplaceService
 {
@@ -24,8 +30,22 @@ namespace WorkplaceService
             var connectionString = Configuration.GetConnectionString("DefaultConnection");
             services.AddDbContext<WorkplaceServiceDbContext>(options => options.UseSqlServer(connectionString));
             services.AddAutoMapper(typeof(WorkplaceModelsProfile));
-            //services.AddScoped<IWorkplaceRepository, WorkplaceRepository>();
-            //services.AddScoped<IWorkplaceService, Services.WorkplaceService>();
+            services.AddScoped<IWorkplaceRepository, WorkplaceRepository>();
+            services.AddScoped<IWorkplaceService, Services.WorkplaceService>();
+
+            //RabbitMQ
+            services.AddScoped<WorkplaceServiceServer>();
+            services.AddSingleton<IConnectionFactory, ConnectionFactory>(sp =>
+            {
+                return new ConnectionFactory()
+                {
+                    HostName = Configuration["RabbitMQConnection"],
+                    UserName = Configuration["RabbitMQUsername"],
+                    Password = Configuration["RabbitMQPassword"]
+                };
+            });
+            services.AddSingleton<IRabbitMQPersistentConnection, RabbitMQPersistentConnection>();
+            services.AddHostedService<ConsumeScopedServiceHostedService>();
 
             services.AddControllers();
         }

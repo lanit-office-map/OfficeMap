@@ -55,8 +55,8 @@ namespace WorkplaceService.Database
                     .HasDefaultValueSql("(newid())");
 
                 entity.HasOne(d => d.Map)
-                    .WithMany(p => p.Workplaces)
-                    .HasForeignKey(d => d.MapId)
+                    .WithOne(p => p.Workplace)
+                    .HasForeignKey<DbWorkplace>(w => w.MapId)
                     .HasConstraintName("FK_Workplaces_MapFiles");
             });
 

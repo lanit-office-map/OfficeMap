@@ -1,6 +1,6 @@
 ﻿namespace WorkplaceService.Services
 {
-    interface IWorkplaceService
+    public interface IWorkplaceService
     {
     }
 }

@@ -11,8 +11,8 @@ namespace WorkplaceService.Mappers
             CreateMap<DbMapFile, MapResponse>();
             CreateMap<Map, DbMapFile>();
 
-            CreateMap<Database.Entities.DbWorkplace, WorkplaceResponse>();
-            CreateMap<Models.Workplace, Database.Entities.DbWorkplace>();
+            CreateMap<DbWorkplace, WorkplaceResponse>();
+            CreateMap<Workplace, DbWorkplace>();
         }
     }
 }
