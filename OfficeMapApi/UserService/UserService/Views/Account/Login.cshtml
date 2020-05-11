@@ -2,6 +2,27 @@
 <img class="logo-image__lanit-tercom" src="~/assets/logo-lanit-tercom.png" alt="Lanit-Tercom logo">
 <img class="logo-image__user-icon" src="~/assets/user-icon.png" alt="User icon">
 
+@section scripts
+{
+    <script type="text/javascript">
+        var isVisible = false;
+
+        function showHidePassword() {
+            var img = document.getElementById("eye-image");
+            var input = document.getElementById("password-input-field");
+            if (isVisible) {
+                img.src = "/assets/eye-open.svg";
+                input.type = "text";
+                isVisible = false;
+            } else {
+                img.src = "/assets/eye-close.svg";
+                input.type = "password";
+                isVisible = true;
+            }
+        }
+    </script>
+}
+
 <form asp-controller="Account" asp-action="Login" method="post">
     <input type="hidden" asp-for="ReturnUrl" />
     <div>
@@ -9,7 +30,10 @@
         <span asp-validation-for="Email"></span>
     </div>
     <div class="login-form__password-input" >
-        <input class="login-form__input-field" asp-for="Password" placeholder="Password"/>
+        <input id="password-input-field" class="login-form__input-field" asp-for="Password" placeholder="Password" type="password"/>
+        <button type="button" class="login-form__show-hide-button" onclick="showHidePassword()">
+            <img id="eye-image" src="~/assets/eye-close.svg" alt="Eye">
+        </button>
         <span asp-validation-for="Password"></span>
     </div>
     <div>
