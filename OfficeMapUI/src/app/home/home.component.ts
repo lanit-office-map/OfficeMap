@@ -16,6 +16,10 @@ export class HomeComponent implements OnInit {
   }
 
   public signin() {    
-      this.authService.login(); 
+    this.authService.login(); 
+  }
+
+  public async signout() {    
+    await this.authService.signout(); 
   }
 }

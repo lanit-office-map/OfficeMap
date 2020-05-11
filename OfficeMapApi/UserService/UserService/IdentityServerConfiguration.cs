@@ -49,6 +49,7 @@ namespace UserService
         AccessTokenLifetime =
           (int)TimeSpan.FromDays(1).TotalSeconds,
         RedirectUris = { "http://localhost:4200/auth-callback" },
+        PostLogoutRedirectUris = { "http://localhost:4200/home" },
         AllowedScopes = new List<string>
         {
           IdentityServerConstants.StandardScopes.OpenId,

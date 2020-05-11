@@ -1,11 +1,9 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
-using IdentityServer4.Models;
-using Microsoft.AspNetCore.Authentication;
+using IdentityServer4.Services;
 using UserService.Models;
 using UserService.Database.Entities;
-using Microsoft.AspNetCore.Authorization;
 
 namespace UserService.Controllers
 {
@@ -14,16 +12,18 @@ namespace UserService.Controllers
   {
     private readonly SignInManager<DbUser> _signInManager;
     private readonly UserManager<DbUser> _userManager;
+    private readonly IIdentityServerInteractionService _interactionService;
 
     /// <param name="userManager">Allows you to manage users.</param>
     /// <param name="signInManager">Provides the APIs for user sign in.</param>
     public AccountController(
         UserManager<DbUser> userManager,
-        SignInManager<DbUser> signInManager
-        )
+        SignInManager<DbUser> signInManager,
+        IIdentityServerInteractionService interactionService)
     {
       _userManager = userManager;
       _signInManager = signInManager;
+      _interactionService = interactionService;
     }
 
     [HttpGet]
@@ -66,15 +66,19 @@ namespace UserService.Controllers
     /// <summary>
     /// Attempts to sign out the user
     /// </summary>
-    /// <returns></returns>
-    /// <response code="200">Successfully logout.</response>
-    [HttpPost]
-    [ProducesResponseType(200)]
-    public async Task<IActionResult> Logout()
+    [HttpGet]
+    public async Task<IActionResult> Logout(string logoutId)
     {
-      HttpContext.Session.Clear();
       await _signInManager.SignOutAsync();
-      return Ok();
+
+      var logoutRequest = await _interactionService.GetLogoutContextAsync(logoutId);
+
+      if (string.IsNullOrEmpty(logoutRequest.PostLogoutRedirectUri))
+      {
+        return Redirect("http://localhost:4200/home");
+      }
+
+      return Redirect(logoutRequest.PostLogoutRedirectUri);
     }
 
     /// <summary>
