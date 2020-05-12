@@ -7,13 +7,12 @@ namespace SpaceService.Database.Entities
     {
         public DbSpace()
         {
-            InverseParent = new HashSet<DbSpace>();
+            Spaces = new HashSet<DbSpace>();
         }
 
         public int SpaceId { get; set; }
         public int OfficeId { get; set; }
-        public int? ParentId { get; set; }
-        public int? MapId { get; set; }
+        public int MapId { get; set; }
         public int? TypeId { get; set; }
         public string SpaceName { get; set; }
         public string Description { get; set; }
@@ -21,11 +20,10 @@ namespace SpaceService.Database.Entities
         public int? Floor { get; set; }
         public Guid SpaceGuid { get; set; }
         public bool Obsolete { get; set; }
-
-        public DbMapFile MapFiles { get; set; }
-        public DbOffice Offices { get; set; }
-        public DbSpace Parents { get; set; }
-        public DbSpaceType SpaceTypes { get; set; }
-        public ICollection<DbSpace> InverseParent { get; set; }
+        public int? ParentId { get; set; }
+        public DbSpace Parent { get; set; }
+        public DbMapFile MapFile { get; set; }
+        public DbSpaceType SpaceType { get; set; }
+        public ICollection<DbSpace> Spaces { get; set; }
     }
 }

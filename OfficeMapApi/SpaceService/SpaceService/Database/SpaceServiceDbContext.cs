@@ -1,6 +1,4 @@
-﻿using System;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata;
+﻿using Microsoft.EntityFrameworkCore;
 
 namespace SpaceService.Database.Entities
 {
@@ -16,16 +14,7 @@ namespace SpaceService.Database.Entities
         }
         public virtual DbSet<DbSpace> Spaces { get; set; }
         public virtual DbSet<DbMapFile> MapFiles { get; set; }
-        public virtual DbSet<DbOffice> Offices { get; set; }
         public virtual DbSet<DbSpaceType> SpaceTypes { get; set; }
-
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            if (!optionsBuilder.IsConfigured)
-            {
-                optionsBuilder.UseSqlServer("Server=localhost;Database=DOM;Trusted_Connection=True;");
-            }
-        }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -43,38 +32,8 @@ namespace SpaceService.Database.Entities
                 entity.Property(e => e.MapGuid)
                     .HasColumnName("MapGUID")
                     .HasDefaultValueSql("(newid())");
-            });
 
-            modelBuilder.Entity<DbOffice>(entity =>
-            {
-                entity.HasKey(e => e.OfficeId);
-
-                entity.Property(e => e.OfficeId).ValueGeneratedOnAdd();
-
-                entity.Property(e => e.Building)
-                    .HasMaxLength(50)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.City)
-                    .HasMaxLength(50)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.House)
-                    .HasMaxLength(50)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.OfficeGuid)
-                    .HasColumnName("OfficeGUID")
-                    .HasDefaultValueSql("(newid())");
-
-                entity.Property(e => e.PhoneNumber)
-                    .HasColumnName("Phone_Number")
-                    .HasMaxLength(50)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.Street)
-                    .HasMaxLength(50)
-                    .IsUnicode(false);
+                entity.HasQueryFilter(s => s.Obsolete == false);
             });
 
             modelBuilder.Entity<DbSpaceType>(entity =>
@@ -94,6 +53,8 @@ namespace SpaceService.Database.Entities
                 entity.Property(e => e.SpaceTypeGuid)
                     .HasColumnName("SpaceTypeGUID")
                     .HasDefaultValueSql("(newid())");
+
+                entity.HasQueryFilter(s => s.Obsolete == false);
             });
 
             modelBuilder.Entity<DbSpace>(entity =>
@@ -115,23 +76,20 @@ namespace SpaceService.Database.Entities
                     .HasMaxLength(50)
                     .IsUnicode(false);
 
-                entity.HasOne(d => d.MapFiles)
-                    .WithMany(p => p.Spaces)
-                    .HasForeignKey(d => d.MapId);
+                entity.HasOne(d => d.MapFile)
+                    .WithOne()
+                    .HasForeignKey<DbSpace>(d => d.MapId);
 
-                entity.HasOne(d => d.Offices)
-                    .WithMany(p => p.Spaces)
-                    .HasForeignKey(d => d.OfficeId)
-                    .OnDelete(DeleteBehavior.ClientSetNull);
+                entity.HasMany(s => s.Spaces)
+                    .WithOne(s => s.Parent)
+                    .HasForeignKey(s => s.ParentId);
 
-                entity.HasOne(d => d.Parents)
-                    .WithMany(p => p.InverseParent)
-                    .HasForeignKey(d => d.ParentId);
-
-                entity.HasOne(d => d.SpaceTypes)
-                    .WithMany(p => p.Spaces)
-                    .HasForeignKey(d => d.TypeId)
+                entity.HasOne(d => d.SpaceType)
+                    .WithOne()
+                    .HasForeignKey<DbSpace>(d => d.TypeId)
                     .OnDelete(DeleteBehavior.SetNull);
+
+                entity.HasQueryFilter(s => s.Obsolete == false);
             });
 
             OnModelCreatingPartial(modelBuilder);
