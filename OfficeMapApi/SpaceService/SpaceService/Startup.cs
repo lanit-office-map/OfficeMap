@@ -42,6 +42,7 @@ namespace SpaceService
             {
                 return new ConnectionFactory()
                 {
+                    Uri = new System.Uri(Configuration["CLOUDAMQP_URL"]),
                     HostName = Configuration["RabbitMQConnection"],
                     UserName = Configuration["RabbitMQUsername"],
                     Password = Configuration["RabbitMQPassword"]
