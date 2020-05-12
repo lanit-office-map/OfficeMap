@@ -13,7 +13,6 @@ pool:
 variables:
   project: 'OfficeService/OfficeService.csproj'
   tests: '**/*.Tests.csproj' 
-  buildPlatform: 'Any CPU'
   buildConfiguration: 'Release'
 
 steps:
@@ -28,7 +27,7 @@ steps:
   inputs:
     command: 'build'
     arguments: '--no-restore --configuration $(buildConfiguration)'
-    projects: $(solution)
+    projects: $(project)
 
 - task: DotNetCoreCLI@2
   displayName: 'Test project'
