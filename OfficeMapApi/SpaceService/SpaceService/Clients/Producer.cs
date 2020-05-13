@@ -34,7 +34,7 @@ namespace SpaceService.Clients
             workplaceservice_replyQueueName = channel.QueueDeclare().QueueName;
             consumer = new EventingBasicConsumer(channel);
 
-            channel.ExchangeDeclare("IDs", ExchangeType.Topic);
+            channel.ExchangeDeclare("IDs", ExchangeType.Direct);
 
             channel.QueueBind("officeservice_queue", "IDs", "officeguid");
             channel.QueueBind("workplaceservice_queue", "IDs", "spaceid");
