@@ -32,7 +32,7 @@ steps:
 #    workingDir: '$(System.DefaultWorkingDirectory)/OfficeMapUI/'
 #    customCommand: 'run build'
 
-- script: ng build --prod --output $(Build.ArtifactStagingDirectory)/$(buildConfiguration)
+- script: ng build --prod --output $(Build.ArtifactStagingDirectory)/Release
   displayName: 'npm build'
 
 - task: PublishBuildArtifacts@1
