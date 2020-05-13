@@ -13,13 +13,8 @@ pool:
 variables:
   solution: '**/*.sln'
   buildConfiguration: 'Release'
-
-jobs:
-- job: UserService_Build
-  displayName: 'Build UserService'
-  variables:
-    project: '**/UserService.csproj'
-  steps:
+  
+steps:
   - task: NuGetToolInstaller@1
 
   - task: NuGetCommand@2
@@ -32,46 +27,12 @@ jobs:
     inputs:
       command: 'build'
       arguments: '--no-restore --configuration $(buildConfiguration)'
-      projects: $(project)
+      projects: $(solution)
 
   - task: DotNetCoreCLI@2
     displayName:  'Publish the project - $(buildConfiguration)'
     inputs:
       command: 'publish'
-      publishWebProjects: true
-      zipAfterPublish: true
-      arguments: '--no-build --configuration $(buildConfiguration) --output $(Build.ArtifactStagingDirectory)/$(buildConfiguration)'
-
-  - task: PublishBuildArtifacts@1
-    displayName: 'Publish artifacts.'
-    inputs:
-     pathtoPublish: $(Build.ArtifactStagingDirectory)
-     artifactName: 'UserService.Drop'
- 
-- job: OfficeService_Build
-  displayName: 'Build OfficeService'
-  variables:
-    project: '**/OfficeService.csproj'
-  steps:
-  - task: NuGetToolInstaller@1
-
-  - task: NuGetCommand@2
-    displayName: 'Nuget restore'
-    inputs:
-      restoreSolution: '$(solution)'
-
-  - task: DotNetCoreCLI@2
-    displayName: 'Build project'
-    inputs:
-      command: 'build'
-      arguments: '--no-restore --configuration $(buildConfiguration)'
-      projects: $(project)
-
-  - task: DotNetCoreCLI@2
-    displayName:  'Publish the project - $(buildConfiguration)'
-    inputs:
-      command: 'publish'
-      publishWebProjects: true
       zipAfterPublish: true
       arguments: '--no-build --configuration $(buildConfiguration) --output $(Build.ArtifactStagingDirectory)/$(buildConfiguration)'
 
@@ -80,3 +41,4 @@ jobs:
     inputs:
      pathtoPublish: $(Build.ArtifactStagingDirectory)
      artifactName: 'OfficeService.Drop' 
+
