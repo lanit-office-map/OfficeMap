@@ -34,12 +34,9 @@ steps:
     
 - task: CopyFiles@2
   inputs:
-    Contents: '$(System.DefaultWorkingDirectory)/OfficeMapUI/dist' # Pull the build directory 
+    Contents: '$(System.DefaultWorkingDirectory)/OfficeMapUI/dist/**' # Pull the build directory 
     TargetFolder: '$(Build.ArtifactStagingDirectory)'
-#- script: ng build --prod --output-path $(Build.ArtifactStagingDirectory)/Release
-#  inputs:
-#    workingDir: '$(System.DefaultWorkingDirectory)/OfficeMapUI/'
-#  displayName: 'npm build'
+
 
 - task: PublishBuildArtifacts@1
   displayName: 'Publish artifacts.'
