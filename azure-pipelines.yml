@@ -31,6 +31,7 @@ steps:
     command: 'custom'
     workingDir: '$(System.DefaultWorkingDirectory)/OfficeMapUI/'
     customCommand: 'run build'
+  displayName: 'npm build'
     
 - task: CopyFiles@2
   inputs:
