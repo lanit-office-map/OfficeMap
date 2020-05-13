@@ -8,7 +8,7 @@ trigger:
 - develop
 
 pool:
-  vmImage: 'windows-latest'
+  vmImage: 'vs2017-win2016'
 
 steps:
 - task: NodeTool@0
@@ -18,18 +18,18 @@ steps:
 - task: Npm@1
   inputs:
     command: 'custom'
-    workingDir: '/OfficeMapUI/'
+    workingDir: '$(System.DefaultWorkingDirectory)/OfficeMapUI/'
     customCommand: 'install -g @angular/cli'
   displayName: 'npm install -g @angular/cli'
 - task: Npm@1
   inputs:
     command: 'install'
-    workingDir: '/OfficeMapUI/'
+    workingDir: '$(System.DefaultWorkingDirectory)/OfficeMapUI/'
   displayName: 'npm install'
 - task: Npm@1
   inputs:
     command: 'custom'
-    workingDir: '/OfficeMapUI/'
+    workingDir: '$(System.DefaultWorkingDirectory)/OfficeMapUI/'
     customCommand: 'run build'
 
 - task: AzureRmWebAppDeployment@4
