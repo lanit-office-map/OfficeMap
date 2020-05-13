@@ -8,7 +8,7 @@ trigger:
 - develop
 
 pool:
-  vmImage: 'Hosted VS2017'
+  vmImage: 'windows-latest'
 
 steps:
 - task: NodeTool@0
@@ -16,13 +16,12 @@ steps:
     versionSpec: '10.x'
   displayName: 'Install Node.js'
 
-- script: |
-    npm install -g @angular/cli
-    npm install
-    ng build --prod
-  displayName: 'npm install and build'
+- script: npm install -g @angular/cli
+  displayName: 'angular cli install'
+- script: npm install
+  displayName: 'npm install'
+- script: ng build --prod
+  displayName: 'npm build'
 - task: PublishBuildArtifacts@1
-  displayName: 'Publish Artifact: app'
   inputs:
-    PathtoPublish: $(Build.ArtifactStagingDirectory)
-    ArtifactName: app
+    PathtoPublish: '$(System.DefaultWorkingDirectory)'
