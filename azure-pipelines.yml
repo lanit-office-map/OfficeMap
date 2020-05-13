@@ -26,14 +26,20 @@ steps:
     command: 'install'
     workingDir: '$(System.DefaultWorkingDirectory)/OfficeMapUI/'
   displayName: 'npm install'
-#- task: Npm@1
+- task: Npm@1
+  inputs:
+    command: 'custom'
+    workingDir: '$(System.DefaultWorkingDirectory)/OfficeMapUI/'
+    customCommand: 'run build'
+    
+- task: CopyFiles@2
+  inputs:
+    Contents: '$(System.DefaultWorkingDirectory)/OfficeMapUI/dist/**' # Pull the build directory 
+    TargetFolder: '$(Build.ArtifactStagingDirectory)'
+#- script: ng build --prod --output-path $(Build.ArtifactStagingDirectory)/Release
 #  inputs:
-#    command: 'custom'
 #    workingDir: '$(System.DefaultWorkingDirectory)/OfficeMapUI/'
-#    customCommand: 'run build'
-
-- script: ng build --prod --output-path $(Build.ArtifactStagingDirectory)/Release
-  displayName: 'npm build'
+#  displayName: 'npm build'
 
 - task: PublishBuildArtifacts@1
   displayName: 'Publish artifacts.'
