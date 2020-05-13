@@ -35,4 +35,4 @@ steps:
   displayName: 'Publish artifacts.'
   inputs:
    pathtoPublish: $(Build.ArtifactStagingDirectory)
-   artifactName: 'OfficeMap.Drop'
+   artifactName: 'OfficeMap.DropFront'
