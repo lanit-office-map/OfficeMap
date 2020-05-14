@@ -47,8 +47,6 @@ namespace UserService
         .AddEntityFrameworkStores<UserServiceDbContext>()
         .AddDefaultTokenProviders();
 
-
-
       //Add authentication and authorization
       services.AddIdentityServer(
           options =>
@@ -57,7 +55,6 @@ namespace UserService
             {
               LogoutUrl = "/UserService/Account/Logout",
               LoginUrl = "/UserService/Account/Login",
-              //LoginReturnUrlParameter = "ReturnUrl",
             };
           })
         .AddOperationalStore(
@@ -74,7 +71,6 @@ namespace UserService
         .AddInMemoryClients(IdentityServerConfiguration.Clients)
         .AddAspNetIdentity<DbUser>();
 
-      //services.AddTransient<IProfileService, IdentityClaimsProfileService>();
 
       services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         .AddJwtBearer(options =>
