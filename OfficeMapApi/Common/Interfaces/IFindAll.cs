@@ -3,9 +3,10 @@ using System.Threading.Tasks;
 
 namespace Common.Interfaces
 {
-    public interface IFindAll<TEntity>
+    public interface IFindAll<TEntity, TFilter>
         where TEntity : class
+        where TFilter : class
     {
-        Task<IEnumerable<TEntity>> FindAllAsync();
+        Task<IEnumerable<TEntity>> FindAllAsync(TFilter filter = null);
     }
 }

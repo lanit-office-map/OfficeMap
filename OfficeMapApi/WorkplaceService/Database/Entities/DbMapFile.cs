@@ -1,6 +1,5 @@
 ﻿using Common.Repositories;
 using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace WorkplaceService.Database.Entities

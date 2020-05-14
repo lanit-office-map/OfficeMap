@@ -1,27 +1,29 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Hosting;
-using WorkplaceService.Messaging.RabbitMQ.Interface;
-using RabbitMQ.Client;
-using RabbitMQ.Client.Events;
-using RabbitMQ.Client.Exceptions;
-using System;
+﻿using System;
 using System.IO;
 using System.Threading;
-using System.Threading.Tasks;
+using Microsoft.Extensions.Logging;
+using Common.RabbitMQ.Interface;
+using RabbitMQ.Client;
+using Microsoft.AspNetCore.Mvc;
+using RabbitMQ.Client.Exceptions;
+using RabbitMQ.Client.Events;
 
-namespace WorkplaceService.Messaging.RabbitMQ
+namespace Common.RabbitMQ
 {
-    public class RabbitMQPersistentConnection : IRabbitMQPersistentConnection, IHostedService
+    public class RabbitMQPersistentConnection : IRabbitMQPersistentConnection
     {
         private readonly IConnectionFactory connectionFactory;
+        private readonly ILogger<RabbitMQPersistentConnection> logger;
         private IConnection connection;
         private bool disposed;
 
         public RabbitMQPersistentConnection(
-            [FromServices] IConnectionFactory connectionFactory)
+            [FromServices] IConnectionFactory connectionFactory,
+            [FromServices] ILogger<RabbitMQPersistentConnection> logger)
         {
             this.connectionFactory = connectionFactory;
-            Console.WriteLine("WorkplaceService: Connection is established");
+            this.logger = logger;
+            logger.LogInformation("Connection is established");
             if (!IsConnected)
             {
                 TryConnect();
@@ -64,7 +66,7 @@ namespace WorkplaceService.Messaging.RabbitMQ
             }
             catch (IOException ex)
             {
-                Console.WriteLine(ex.ToString());
+                logger.LogInformation(ex.ToString());
             }
         }
 
@@ -73,13 +75,13 @@ namespace WorkplaceService.Messaging.RabbitMQ
 
             try
             {
-                Console.WriteLine("RabbitMQ Client is trying to connect");
+                logger.LogInformation("RabbitMQ Client is trying to connect");
                 connection = connectionFactory.CreateConnection();
             }
             catch (BrokerUnreachableException e)
             {
                 Thread.Sleep(5000);
-                Console.WriteLine("RabbitMQ Client is trying to reconnect");
+                logger.LogInformation("RabbitMQ Client is trying to reconnect");
                 connection = connectionFactory.CreateConnection();
             }
 
@@ -89,13 +91,13 @@ namespace WorkplaceService.Messaging.RabbitMQ
                 connection.CallbackException += OnCallbackException;
                 connection.ConnectionBlocked += OnConnectionBlocked;
 
-                Console.WriteLine($"RabbitMQ persistent connection acquired a connection {connection.Endpoint.HostName} and is subscribed to officeguid_queue");
+                logger.LogInformation($"RabbitMQ persistent connection acquired a connection {connection.Endpoint.HostName} and is subscribed to officeguid_queue");
 
                 return true;
             }
             else
             {
-                Console.WriteLine("FATAL ERROR: RabbitMQ connections could not be created and opened");
+                logger.LogInformation("FATAL ERROR: RabbitMQ connections could not be created and opened");
                 return false;
             }
 
@@ -104,33 +106,22 @@ namespace WorkplaceService.Messaging.RabbitMQ
         private void OnConnectionBlocked(object sender, ConnectionBlockedEventArgs e)
         {
             if (disposed) return;
-            Console.WriteLine("A RabbitMQ connection is shutdown. Trying to re-connect...");
+            logger.LogInformation("A RabbitMQ connection is shutdown. Trying to re-connect...");
             TryConnect();
         }
 
         void OnCallbackException(object sender, CallbackExceptionEventArgs e)
         {
             if (disposed) return;
-            Console.WriteLine("A RabbitMQ connection throw exception. Trying to re-connect...");
+            logger.LogInformation("A RabbitMQ connection throw exception. Trying to re-connect...");
             TryConnect();
         }
 
         void OnConnectionShutdown(object sender, ShutdownEventArgs reason)
         {
             if (disposed) return;
-            Console.WriteLine("A RabbitMQ connection is on shutdown. Trying to re-connect...");
+            logger.LogInformation("A RabbitMQ connection is on shutdown. Trying to re-connect...");
             TryConnect();
-        }
-
-        public Task StartAsync(CancellationToken cancellationToken)
-        {
-            
-            return Task.CompletedTask;
-        }
-
-        public Task StopAsync(CancellationToken cancellationToken)
-        {
-            return Task.CompletedTask;
         }
     }
 }

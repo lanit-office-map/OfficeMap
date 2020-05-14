@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
+using WorkplaceService.Models;
 
 namespace WorkplaceService.Clients
 {
-    interface ISpaceServiceClient
+    public interface ISpaceServiceClient
     {
-        Task<IQueryable<Guid>> GetSpaceGuidsAsync(Guid officeGuid);
+        Task<Space> GetSpaceGuidsAsync(Guid officeGuid, Guid spaceGuid);
     }
 }

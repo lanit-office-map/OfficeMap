@@ -7,6 +7,6 @@ namespace WorkplaceService.Repository.Interfaces
 {
     public interface IWorkplaceRepository : ICrudRepository<DbWorkplace, Guid>
     {
-        public IEnumerable<DbWorkplace> GetBySpaceGuidAsync();
+        public IEnumerable<DbWorkplace> GetAllAsync(int OfficeId);
     }
 }

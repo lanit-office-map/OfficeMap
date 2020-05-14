@@ -1,4 +1,6 @@
 using AutoMapper;
+using Common.RabbitMQ;
+using Common.RabbitMQ.Interface;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -8,10 +10,9 @@ using Microsoft.Extensions.Hosting;
 using RabbitMQ.Client;
 using WorkplaceService.Database;
 using WorkplaceService.Mappers;
-using WorkplaceService.Messaging.RabbitMQ;
-using WorkplaceService.Messaging.RabbitMQ.Interface;
 using WorkplaceService.Repository;
 using WorkplaceService.Repository.Interfaces;
+using WorkplaceService.Servers;
 using WorkplaceService.Services;
 
 namespace WorkplaceService
@@ -39,6 +40,7 @@ namespace WorkplaceService
             {
                 return new ConnectionFactory()
                 {
+                    Uri = new System.Uri(Configuration["CLOUDAMQP_URL"]),
                     HostName = Configuration["RabbitMQConnection"],
                     UserName = Configuration["RabbitMQUsername"],
                     Password = Configuration["RabbitMQPassword"]

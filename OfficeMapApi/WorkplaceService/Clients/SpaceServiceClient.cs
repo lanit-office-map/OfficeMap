@@ -6,8 +6,9 @@ using System.Threading.Tasks;
 using RabbitMQ.Client.Events;
 using System.Collections.Concurrent;
 using Newtonsoft.Json;
-using WorkplaceService.Messaging.RabbitMQ.Interface;
-using System.Linq;
+using WorkplaceService.Models;
+using Microsoft.Extensions.Logging;
+using Common.RabbitMQ.Interface;
 
 namespace WorkplaceService.Clients
 {
@@ -18,9 +19,15 @@ namespace WorkplaceService.Clients
         private readonly IBasicProperties props;
         private readonly EventingBasicConsumer consumer;
         private readonly IRabbitMQPersistentConnection rabbitMQPersistentConnection;
-        private readonly BlockingCollection<IQueryable<Guid>> respQueue = new BlockingCollection<IQueryable<Guid>>();
-        public SpaceServiceClient([FromServices] IRabbitMQPersistentConnection rabbitMQPersistentConnection)
+        private readonly BlockingCollection<Space> respQueue = new BlockingCollection<Space>();
+        private readonly ILogger<SpaceServiceClient> logger;
+
+        public SpaceServiceClient(
+            [FromServices] IRabbitMQPersistentConnection rabbitMQPersistentConnection,
+            [FromServices] ILogger<SpaceServiceClient> logger)
         {
+            this.logger = logger;
+
             this.rabbitMQPersistentConnection = rabbitMQPersistentConnection;
             channel = rabbitMQPersistentConnection.CreateModel();
             replyQueueName = channel.QueueDeclare().QueueName;
@@ -35,26 +42,29 @@ namespace WorkplaceService.Clients
             {
                 var body = ea.Body;
                 var response = Encoding.UTF8.GetString(body.ToArray());
-                var feedback = JsonConvert.DeserializeObject<IQueryable<Guid>>(response);
+                var feedback = JsonConvert.DeserializeObject<Space>(response);
                 if (ea.BasicProperties.CorrelationId == correlationId)
                 {
                     respQueue.Add(feedback);
                 }
             };
         }
-        public Task<IQueryable<Guid>> GetSpaceGuidsAsync(Guid officeGuid)
+
+        public Task<Space> GetSpaceGuidsAsync(Guid officeGuid, Guid spaceGuid)
         {
-            Console.WriteLine("HTTP-request is sent");
-            var item = Message(officeGuid);
+            var spaceRequest = new GetSpaceRequest { OfficeGuid = officeGuid, SpaceGuid = spaceGuid };
+            logger.LogInformation("HTTP-request is sent");
+            var item = Message(spaceRequest);
             return Task.FromResult(item);
         }
 
-        public IQueryable<Guid> Message(Guid officeguid)
+        private Space Message(GetSpaceRequest spaceRequest)
         {
-            var message = Encoding.UTF8.GetBytes(officeguid.ToString());
+            var spaceRequestJson = JsonConvert.SerializeObject(spaceRequest);
+            var message = Encoding.UTF8.GetBytes(spaceRequestJson);
             channel.BasicPublish(
                 exchange: "",
-                routingKey: "officeguid_queue",
+                routingKey: "spaceService_queue",
                 basicProperties: props,
                 body: message);
 
@@ -64,16 +74,6 @@ namespace WorkplaceService.Clients
                 autoAck: true);
             var item = respQueue.Take();
             return item;
-        }
-
-        public void Close()
-        {
-            rabbitMQPersistentConnection.Close();
-        }
-
-        public void Dispose()
-        {
-            rabbitMQPersistentConnection.Dispose();
         }
     }
 }

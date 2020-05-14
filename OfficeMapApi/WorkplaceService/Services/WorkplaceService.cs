@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using WorkplaceService.Database.Entities;
+using WorkplaceService.Filters;
 using WorkplaceService.Models;
 using WorkplaceService.Repository.Interfaces;
 
@@ -25,9 +26,9 @@ namespace WorkplaceService.Services
             this.automapper = automapper;
         }
 
-        public Task<IEnumerable<WorkplaceResponse>> FindAllAsync()
+        public Task<IEnumerable<WorkplaceResponse>> FindAllAsync(WorkplaceFilter filter)
         {
-            var result = workplaceRepository.FindAllAsync(entity => entity.Obsolete == false);
+            var result = workplaceRepository.FindAllAsync(entity => entity.SpaceId == filter.SpaceId && entity.Obsolete == false);
 
             return Task.FromResult(automapper.Map<IEnumerable<WorkplaceResponse>>(result));
         }

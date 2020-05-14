@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
+using WorkplaceService.Clients;
 using WorkplaceService.Models;
 using WorkplaceService.Services;
 
@@ -12,21 +14,26 @@ namespace WorkplaceService.Controllers
     {
         #region private fields
         private readonly IWorkplaceService workplaceService;
+        private readonly ISpaceServiceClient spaceServiceClient;
         #endregion
 
         #region public methods
         public WorkplaceController(
-        [FromServices] IWorkplaceService workplaceService)
+        [FromServices] IWorkplaceService workplaceService,
+        [FromServices] ISpaceServiceClient spaceServiceClient)
         {
             this.workplaceService = workplaceService;
+            this.spaceServiceClient = spaceServiceClient;
         }
 
         [HttpGet("offices/{officeGuid}/spaces/{spaceGuid}/workplaces")]
-        public async Task<ActionResult> GetWorkplacesBySpaceGuid(
+        public async Task<ActionResult<IEnumerable<WorkplaceResponse>>> GetWorkplaces(
             [FromRoute] Guid officeGuid, 
             [FromRoute] Guid spaceGuid)
         {
-            var result = await workplaceService.GetAllBySpaceGuid(officeGuid, spaceGuid);
+            var space = spaceServiceClient.GetSpaceGuidsAsync(officeGuid, spaceGuid).Result;
+
+            var result = await workplaceService.(space.SpaceId);
 
             return Ok(result);
         }
@@ -42,12 +49,12 @@ namespace WorkplaceService.Controllers
         }
 
         [HttpGet("offices/{officeGuid}/spaces/{spaceGuid}/workplaces/{workplaceGuid}")]
-        public async Task<ActionResult<WorkplaceResponse>> GetWorkplaceByGuid(
+        public async Task<ActionResult<WorkplaceResponse>> GetWorkplace(
             [FromRoute] Guid officeGuid,
             [FromRoute] Guid spaceGuid,
             [FromRoute] Guid workplaceGuid)
         {
-            var result = await workplaceService.GetAsync(officeGuid, spaceGuid, workplaceGuid);
+            var result = await workplaceService.GetAsync(workplaceGuid);
             if (result == null)
             {
                 return NoContent();
@@ -56,7 +63,7 @@ namespace WorkplaceService.Controllers
         }
 
         [HttpPut("offices/{officeGuid}/spaces/{spaceGuid}/workplaces/{workplaceGuid}")]
-        public async Task<ActionResult<WorkplaceResponse>> PutWorkplaceByGuid(
+        public async Task<ActionResult<WorkplaceResponse>> PutWorkplace(
             [FromRoute] Guid officeGuid,
             [FromRoute] Guid spaceGuid,
             [FromRoute] Guid workplaceGuid,
@@ -68,7 +75,7 @@ namespace WorkplaceService.Controllers
         }
 
         [HttpDelete("offices/{officeGuid}/spaces/{spaceGuid}/workplaces/{workplaceGuid}")]
-        public async Task<ActionResult> DeleteWorkplaceByGuid(
+        public async Task<ActionResult> DeleteWorkplace(
             [FromRoute] Guid officeGuid,
             [FromRoute] Guid spaceGuid,
             [FromRoute] Guid workplaceGuid)
