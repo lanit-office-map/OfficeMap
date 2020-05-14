@@ -22,7 +22,7 @@ namespace UserService.Database
             {
                 entity.HasOne(d => d.Employee)
                     .WithOne(p => p.User)
-                    .OnDelete(DeleteBehavior.ClientSetNull);
+                    .OnDelete(DeleteBehavior.Cascade);
             });
 
             modelBuilder.Entity<DbEmployee>(entity =>

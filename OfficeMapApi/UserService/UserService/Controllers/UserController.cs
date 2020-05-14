@@ -37,7 +37,18 @@ namespace UserService.Controllers
         {
             var users = await _userManager.Users
                 .Include(u => u.Employee)
-                .Where(u => u.Employee != null && u.Employee.Obsolete == false).ToListAsync();
+                .Where(u => u.Employee != null && u.Employee.Obsolete == false)
+                .Select(u => new User()
+                {
+                  UserGuid = Guid.Parse(u.Id),
+                  Email = u.Email,
+                  Employee = new Employee
+                  {
+                    FirstName = u.Employee.FirstName,
+                    SecondName = u.Employee.SecondName
+                  }
+                })
+                .ToListAsync();
 
             return Ok(_mapper.Map<IEnumerable<User>>(users));
         }

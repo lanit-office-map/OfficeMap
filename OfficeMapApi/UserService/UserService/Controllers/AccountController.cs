@@ -39,28 +39,24 @@ namespace UserService.Controllers
     /// Attempts to sign in the email of user and password combination.
     /// </summary>
     /// <param name="model">Contains mail, password, and whether to remember.</param>
-    /// <returns></returns>
-    /// <response code="200">Successfully login.</response>
-    /// <response code="204">User is not logged in.</response>
-    /// <response code="400">Invalid fields.</response>
     [HttpPost]
     public async Task<IActionResult> Login(LoginUserModel model)
     {
       if (!ModelState.IsValid)
       {
-        return BadRequest(model);
+        return View(model);
       }
 
       var user = await _userManager.FindByEmailAsync(model.Email);
       var result = await _signInManager.PasswordSignInAsync(
-       user.UserName, model.Password, false, false);
+       user, model.Password, false, false);
 
       if (result.Succeeded)
       {
         return Redirect(model.ReturnUrl);
       }
-
-      return NoContent();
+      ModelState.AddModelError(string.Empty, "Invalid email or password");
+      return View(model);
     }
 
     /// <summary>
