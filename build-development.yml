@@ -9,44 +9,36 @@ trigger:
 
 pool:
   vmImage: 'windows-latest'
-
+  
 variables:
   solution: '**/*.sln'
-  tests: '**/*.Tests.csproj' 
-  buildPlatform: 'Any CPU'
   buildConfiguration: 'Release'
-
+  
 steps:
-- task: NuGetToolInstaller@1
+  - task: NuGetToolInstaller@1
 
-- task: NuGetCommand@2
-  displayName: 'Nuget restore'
-  inputs:
-    restoreSolution: '$(solution)'
+  - task: NuGetCommand@2
+    displayName: 'Nuget restore'
+    inputs:
+      restoreSolution: '$(solution)'
 
-- task: DotNetCoreCLI@2
-  displayName: 'Build solution'
-  inputs:
-    command: 'build'
-    arguments: '--no-restore --configuration $(buildConfiguration)'
-    projects: $(solution)
+  - task: DotNetCoreCLI@2
+    displayName: 'Build project'
+    inputs:
+      command: 'build'
+      arguments: '--no-restore --configuration $(buildConfiguration)'
+      projects: $(solution)
 
-- task: DotNetCoreCLI@2
-  displayName: 'Test solution'
-  inputs:
-    command: 'test'
-    projects: $(tests)
-    
-- task: DotNetCoreCLI@2
-  displayName:  'Publish the project - $(buildConfiguration)'
-  inputs:
-    command: 'publish'
-    publishWebProjects: true
-    zipAfterPublish: true
-    arguments: '--no-build --configuration $(buildConfiguration) --output $(Build.ArtifactStagingDirectory)/$(buildConfiguration)'
+  - task: DotNetCoreCLI@2
+    displayName:  'Publish the project - $(buildConfiguration)'
+    inputs:
+      command: 'publish'
+      zipAfterPublish: true
+      arguments: '--no-build --configuration $(buildConfiguration) --output $(Build.ArtifactStagingDirectory)/$(buildConfiguration)'
 
-- task: PublishBuildArtifacts@1
-  displayName: 'Publish artifacts.'
-  inputs:
-   pathtoPublish: $(Build.ArtifactStagingDirectory)
-   artifactName: 'OfficeMap.Drop'
+  - task: PublishBuildArtifacts@1
+    displayName: 'Publish artifacts.'
+    inputs:
+     pathtoPublish: $(Build.ArtifactStagingDirectory)
+     artifactName: 'OfficeService.Drop' 
+
