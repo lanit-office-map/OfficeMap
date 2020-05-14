@@ -1,17 +1,15 @@
 ﻿using System;
 using OfficeService.Models;
-using OfficeService.Repository.Filters;
-using OfficeService.Interfaces;
+using Common.Interfaces;
 
 namespace OfficeService.Services.Interface
 {
-  public interface IOfficeService:
-        IGet<Office, Guid>,
-        IDelete<Guid>,
-        IFind<Office, OfficeFilter>,
-        ICreate<Office>,
-        IUpdate<Office>
+    public interface IOfficeService :
+          IGet<OfficeResponse, Guid>,
+          IDelete<Guid>,
+          IFindAll<OfficeResponse>,
+          ICreate<Office>,
+          IUpdate<Office>
     {
-
     }
 }

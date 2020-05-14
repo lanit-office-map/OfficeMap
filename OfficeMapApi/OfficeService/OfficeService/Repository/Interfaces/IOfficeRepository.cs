@@ -1,17 +1,10 @@
 ﻿using System;
-using OfficeService.Repository.Filters;
 using OfficeService.Database.Entities;
-using OfficeService.Interfaces;
+using Common.Repositories;
 
 namespace OfficeService.Repository.Interfaces
 {
-    public interface IOfficeRepository:
-        IGet<DbOffice, Guid>,
-        IDelete<DbOffice>,
-        IFind<DbOffice, OfficeFilter>,
-        ICreate<DbOffice>,
-        IUpdate<DbOffice>
-    { 
-
-    } 
+    public interface IOfficeRepository : ICrudRepository<DbOffice, Guid>
+    {
+    }
 }

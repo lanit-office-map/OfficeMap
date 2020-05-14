@@ -7,9 +7,5 @@ namespace UserService.Database.Entities
         public int EmployeeId { get; set; }
 
         public virtual DbEmployee Employee { get; set; }
-
-        public DbUser()
-        {
-        }
     }
 }
