@@ -15,29 +15,30 @@ using System.Threading.Tasks;
 
 namespace SpaceService.Clients
 {
-    public class WorkplaceServiceClient : IWorkplaceServiceClient
+    public class OfficeServiceClient : IOfficeServiceClient
     {
         #region RabbitMQ Fields
         private readonly IModel channel;
         private readonly IBasicProperties properties;
         private readonly EventingBasicConsumer consumer;
         #endregion
-        private const string RequestQueueName = "WorkplaceService_RequestQueue";
-        private const string ReplyQueueName = "WorkplaceService_ReplyQueue";
-        private const string RequestBindingKey = "WorkplacesRequest";
+        #region Constants
+        private const string RequestQueueName = "OfficeService_RequestQueue";
+        private const string ReplyQueueName = "OfficeService_ReplyQueue";
+        private const string RequestBindingKey = "OfficeRequest";
         private readonly StringCollection ReplyBindingKeys = new StringCollection()
         {
-            "workplaces_data", "workplaces_error"
+            "office_data", "office_error"
         };
-
         private const string RequestExchange = "requests";
         private const string ReplyExchange = "replies";
-        private readonly BlockingCollection<IEnumerable<WorkplaceResponse>> Replies = new BlockingCollection<IEnumerable<WorkplaceResponse>>();
+        #endregion
+        private readonly BlockingCollection<Office> Replies = new BlockingCollection<Office>();
 
         #region Private Methods
-        private IEnumerable<WorkplaceResponse> Message(int spaceId)
+        private Office Message(Guid officeGuid)
         {
-            var message = Encoding.UTF8.GetBytes(spaceId.ToString());
+            var message = Encoding.UTF8.GetBytes(officeGuid.ToString());
 
             channel.BasicPublish(
                 exchange: RequestExchange,
@@ -52,12 +53,14 @@ namespace SpaceService.Clients
             var item = Replies.Take();
             return item;
         }
-        #endregion
+        #endregion 
+
 
         #region Constructor
-        public WorkplaceServiceClient([FromServices] IRabbitMQPersistentConnection rabbitMQPersistentConnection)
+        public OfficeServiceClient([FromServices] IRabbitMQPersistentConnection rabbitMQPersistentConnection)
         {
-            Console.WriteLine("WorkplaceServiceClient is created");
+            Console.WriteLine("OfficeServiceClient is created");
+            
             channel = rabbitMQPersistentConnection.CreateModel();
 
             var correlationId = Guid.NewGuid().ToString();
@@ -85,27 +88,26 @@ namespace SpaceService.Clients
                 {
                     var body = ea.Body;
                     var response = Encoding.UTF8.GetString(body.ToArray());
-                    var feedback = JsonConvert.DeserializeObject<IEnumerable<WorkplaceResponse>>(response);
+                    var feedback = JsonConvert.DeserializeObject<Office>(response);
                     if (ea.BasicProperties.CorrelationId == correlationId)
                     {
                         Replies.Add(feedback);
                     }
-                    Console.WriteLine("Workplaces are received");
+                    Console.WriteLine("Office is received. OfficeId:" + feedback.OfficeId.ToString());
                 }
                 if (ea.RoutingKey == ReplyBindingKeys[1])
                 {
-                    Console.WriteLine("404: No Workplaces found");
+                    Console.WriteLine("404: No Office is Found");
                 }
             };
         }
         #endregion
-        public Task<IEnumerable<WorkplaceResponse>> GetWorkplacesAsync(int spaceId)
+    
+        public Task<Office> GetOfficeAsync(Guid officeGuid)
         {
-            Console.WriteLine("Request for Workplaces is sent");
-            var item = Message(spaceId);
+            Console.WriteLine("Request for Office is sent");
+            var item = Message(officeGuid);
             return Task.FromResult(item);
         }
-
-        
     }
 }
