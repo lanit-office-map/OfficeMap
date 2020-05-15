@@ -11,7 +11,7 @@ namespace SpaceService.Repository.Interfaces
         ICreate<DbSpace>,
         IDelete<DbSpace>,
         IFind<DbSpace, SpaceFilter>,
-        IGet<DbSpace, Guid>,
+        IGet<DbSpace, SpaceFilter, Guid>,
         IUpdate<DbSpace>
 
 

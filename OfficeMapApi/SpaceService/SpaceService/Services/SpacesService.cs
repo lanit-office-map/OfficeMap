@@ -28,37 +28,17 @@ namespace SpaceService.Services
         }
         public Task<Space> CreateAsync(Space space)
         {
-
                 var Space = automapper.Map<DbSpace>(space);
                 Space.TypeId = spaceTypeRepository.GetAsync(space.SpaceTypeGuid).Result.TypeId;
                 var result = spaceRepository.CreateAsync(Space).Result;
                 return Task.FromResult(automapper.Map<Space>(result));
         }
 
-        public Task<SpaceResponse> GetAsync(Guid spaceguid)
+        public Task<SpaceResponse> GetAsync(Guid spaceguid, SpaceFilter filter = null)
         {
-            var spaces = spaceRepository.FindAsync().Result;
-            var result = automapper.Map<IEnumerable<SpaceResponse>>(spaces);
-            // TODO Make a better implementation
-            int k = 0;
-            foreach (var space in result)
-            {
-                if (space.SpaceGuid == spaceguid)
-                {
-                    k = k + 1;
-                    return Task.FromResult(space);
-                }
-            }
-            if (k > 0)
-            {
-                var _space = spaceRepository.GetAsync(spaceguid).Result;
-                var _result = automapper.Map<SpaceResponse>(_space);
-                return Task.FromResult(_result);
-            }
-            else
-            {
-                throw new NotImplementedException();
-            }
+            var space = spaceRepository.GetAsync(spaceguid, filter).Result;
+            var result = automapper.Map<SpaceResponse>(space);
+            return Task.FromResult(result);
         }
 
         public Task DeleteAsync(Guid spaceguid)
@@ -93,8 +73,5 @@ namespace SpaceService.Services
             var result = automapper.Map<IEnumerable<SpaceResponse>>(spaces);
             return Task.FromResult(result);
         }
-         
-
-
     }
 }

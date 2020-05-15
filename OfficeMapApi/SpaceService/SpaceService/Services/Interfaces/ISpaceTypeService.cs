@@ -6,7 +6,7 @@ using SpaceService.Interfaces;
 namespace SpaceService.Services.Interfaces
 {
     public interface ISpaceTypeService :
-        IGet<SpaceTypeResponse, Guid>,
+        IGet<SpaceTypeResponse, SpaceTypeFilter, Guid>,
         IDelete<Guid>,
         IFind<SpaceTypeResponse, SpaceTypeFilter>,
         ICreate<SpaceType>,

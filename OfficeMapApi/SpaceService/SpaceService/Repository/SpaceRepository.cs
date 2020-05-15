@@ -9,7 +9,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Z.EntityFramework.Plus;
 
 namespace SpaceService.Repository
 {
@@ -17,21 +16,45 @@ namespace SpaceService.Repository
     {
         private readonly SpaceServiceDbContext dbContext;
 
+        private void LoadNestedSpaces(DbSpace parent)
+        {
+            foreach (var space in parent.Spaces)
+            {
+                dbContext.Entry(space).Collection(s => s.Spaces).Load();
+                dbContext.Entry(space).Reference(s => s.MapFile).Load();
+                dbContext.Entry(space).Reference(s => s.SpaceType).Load();
+                LoadNestedSpaces(space);    
+            }
+        }
+
         public SpaceRepository(
             [FromServices] SpaceServiceDbContext dbContext)
         {
             this.dbContext = dbContext;
         }
 
-        public Task<DbSpace> GetAsync(Guid spaceguid)
+
+        public Task<DbSpace> GetAsync(Guid spaceguid, SpaceFilter filter = null)
         {
-            var result = dbContext.Spaces
-                .IncludeFilter(s => s.InverseParent.Where(i => i.Obsolete == false))
-                .IncludeFilter(s => s.SpaceTypes)
-                .IncludeFilter(s => s.MapFiles)
-                .Single(s => 
-                        s.Obsolete == false && 
-                        s.SpaceGuid == spaceguid);
+            DbSpace result = null;
+            if (filter != null)
+            {
+                result = dbContext.Spaces
+                    .Include(s => s.Spaces)
+                    .Include(s => s.MapFile)
+                    .Include(s => s.SpaceType)
+                    .Single(s =>
+                            s.SpaceGuid == spaceguid && s.OfficeId == filter.OfficeId);
+                LoadNestedSpaces(result);
+                return Task.FromResult(result);
+            }
+            result = dbContext.Spaces
+                    .Include(s => s.Spaces)
+                    .Include(s => s.MapFile)
+                    .Include(s => s.SpaceType)
+                    .Single(s =>
+                            s.SpaceGuid == spaceguid);
+            LoadNestedSpaces(result);
             return Task.FromResult(result);
         }
 
@@ -57,26 +80,33 @@ namespace SpaceService.Repository
 
         public Task<IEnumerable<DbSpace>> FindAsync(SpaceFilter filter = null)
         {
+            IEnumerable<DbSpace> result = null;
             if (filter != null)
             {
-                var result = dbContext.Spaces
-                    .IncludeFilter(s => s.InverseParent.Where(i => i.Obsolete == false))
-                    .IncludeFilter(s => s.SpaceTypes)
-                    .IncludeFilter(s => s.MapFiles)
-                .Where(s => s.Obsolete == false && s.OfficeId == filter.OfficeId)
-                .AsEnumerable();
+                 result = dbContext.Spaces
+                .Include(s => s.Spaces)
+                .Include(s => s.MapFile)
+                .Include(s => s.SpaceType)
+                .Where(s =>
+                        s.OfficeId == filter.OfficeId && s.Parent == null)
+                .ToList();
+                foreach (var space in result)
+                {
+                    LoadNestedSpaces(space);
+                }
                 return Task.FromResult(result);
             }          
-            else
+            result = dbContext.Spaces
+                .Include(s => s.Spaces)
+                .Include(s => s.MapFile)
+                .Include(s => s.SpaceType)
+                .Where  (s => s.Parent == null)
+            .ToList();
+            foreach (var space in result)
             {
-                var result = dbContext.Spaces
-                   .IncludeFilter(s => s.InverseParent.Where(i => i.Obsolete == false))
-                   .IncludeFilter(s => s.SpaceTypes)
-                   .IncludeFilter(s => s.MapFiles)
-               .Where(s => s.Obsolete == false)
-               .AsEnumerable();
-                return Task.FromResult(result);
+                LoadNestedSpaces(space);
             }
+            return Task.FromResult(result);
         }
 
     }

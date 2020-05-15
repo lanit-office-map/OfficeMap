@@ -6,7 +6,7 @@ using System;
 namespace SpaceService.Repository.Interfaces
 {
     public interface ISpaceTypeRepository :
-        IGet<DbSpaceType, Guid>,
+        IGet<DbSpaceType, SpaceTypeFilter, Guid>,
         IDelete<DbSpaceType>,
         IFind<DbSpaceType, SpaceTypeFilter>,
         ICreate<DbSpaceType>,

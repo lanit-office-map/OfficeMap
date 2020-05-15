@@ -21,11 +21,10 @@ namespace SpaceService.Repository
             this.dbContext = dbContext;
         }
 
-        public Task<DbSpaceType> GetAsync(Guid spacetypeguid)
+        public Task<DbSpaceType> GetAsync(Guid spacetypeguid, SpaceTypeFilter filter = null)
         {
             return Task.FromResult(dbContext.SpaceTypes
-                .Include(s => s.Spaces)
-                .FirstOrDefault(x => x.Obsolete == false && x.SpaceTypeGuid == spacetypeguid));
+                .FirstOrDefault(x => x.SpaceTypeGuid == spacetypeguid));
         }
 
         public Task<DbSpaceType> UpdateAsync(DbSpaceType spacetype)
@@ -55,9 +54,7 @@ namespace SpaceService.Repository
                 throw new NotImplementedException();
             }
 
-            return Task.FromResult(dbContext.SpaceTypes
-                .Include(x => x.Spaces)
-                .Where(x => x.Obsolete == false).AsEnumerable());
+            return Task.FromResult(dbContext.SpaceTypes.AsEnumerable());
         }
     }
 }

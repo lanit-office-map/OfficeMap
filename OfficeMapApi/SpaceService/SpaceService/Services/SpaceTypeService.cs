@@ -31,9 +31,9 @@ namespace SpaceService.Services
             return Task.FromResult(automapper.Map<SpaceType>(result));
         }
 
-        public Task<SpaceTypeResponse> GetAsync(Guid spacetypeguid)
+        public Task<SpaceTypeResponse> GetAsync(Guid spacetypeguid, SpaceTypeFilter filter = null)
         {
-            var result = spacetypeRepository.GetAsync(spacetypeguid).Result;
+            var result = spacetypeRepository.GetAsync(spacetypeguid, filter).Result;
 
             return Task.FromResult(automapper.Map<SpaceTypeResponse>(result));
         }
