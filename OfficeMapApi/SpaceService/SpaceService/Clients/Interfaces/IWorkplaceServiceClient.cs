@@ -8,6 +8,6 @@ namespace SpaceService.Clients.Interfaces
 {
     public interface IWorkplaceServiceClient
     {
-        Task<IEnumerable<WorkplaceResponse>> GetWorkplacesAsync(Guid spaceGuid);
+        Task<IEnumerable<WorkplaceResponse>> GetWorkplacesAsync(int spaceId);
     }
 }
