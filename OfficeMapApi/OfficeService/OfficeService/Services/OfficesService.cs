@@ -7,6 +7,7 @@ using OfficeService.Models;
 using OfficeService.Repository.Interfaces;
 using OfficeService.Services.Interface;
 using AutoMapper;
+using OfficeService.Filters;
 
 namespace OfficeService.Services
 {
@@ -26,8 +27,13 @@ namespace OfficeService.Services
             this.automapper = automapper;
         }
 
-        public Task<IEnumerable<OfficeResponse>> FindAllAsync()
+        public Task<IEnumerable<OfficeResponse>> FindAllAsync(OfficeFilter filter = null)
         {
+            if (filter != null)
+            {
+                throw new NotImplementedException();
+            }
+
             var result = officeRepository.FindAllAsync(office => office.Obsolete == false);
 
             return Task.FromResult(automapper.Map<IEnumerable<OfficeResponse>>(result));

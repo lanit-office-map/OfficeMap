@@ -8,11 +8,15 @@ namespace WorkplaceService.Mappers
     {
         public WorkplaceModelsProfile()
         {
+            #region Map
             CreateMap<DbMapFile, MapResponse>();
             CreateMap<Map, DbMapFile>();
+            #endregion
 
+            #region Workplace
             CreateMap<DbWorkplace, WorkplaceResponse>();
             CreateMap<Workplace, DbWorkplace>();
+            #endregion
         }
     }
 }

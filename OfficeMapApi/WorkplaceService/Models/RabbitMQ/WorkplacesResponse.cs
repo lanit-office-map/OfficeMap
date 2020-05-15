@@ -1,12 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
-namespace WorkplaceService.Models
+namespace WorkplaceService.Models.RabbitMQ
 {
     //Model for getting workplaces by externial services with RabbitMQ
-    public class GetWorkplacesRequest
+    public class WorkplacesResponse
     {
         public Guid OfficeGuid { get; set; }
         public Guid SpaceGuid { get; set; }

@@ -1,4 +1,4 @@
-﻿namespace WorkplaceService.Models
+﻿namespace WorkplaceService.Models.RabbitMQ
 {
     public class Space
     {

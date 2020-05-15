@@ -1,10 +1,13 @@
-﻿namespace WorkplaceService.Models
+﻿using System;
+
+namespace WorkplaceService.Models
 {
     public class Workplace
     {
-        public int? EmployeeId { get; set; }
-        public int? SpaceId { get; set; }
-        public int? MapId { get; set; }
+        public Guid EmployeeGuid { get; set; }
+        internal Guid Guid { get; set; }
+        internal int SpaceId { get; set; }
+        internal int EmployeeId { get; set; }
 
         public Map Map { get; set; }
     }

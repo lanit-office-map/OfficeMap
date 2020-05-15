@@ -28,13 +28,20 @@ namespace WorkplaceService.Services
 
         public Task<IEnumerable<WorkplaceResponse>> FindAllAsync(WorkplaceFilter filter)
         {
-            var result = workplaceRepository.FindAllAsync(entity => entity.SpaceId == filter.SpaceId && entity.Obsolete == false);
+            var result = workplaceRepository.FindAllAsync(e => e.SpaceId == filter.SpaceId && e.Obsolete == false);
 
             return Task.FromResult(automapper.Map<IEnumerable<WorkplaceResponse>>(result));
         }
 
         public Task<Workplace> CreateAsync(Workplace entity)
         {
+            //If a person sits at another workplace
+            var workplace = workplaceRepository.FindAllAsync(e => e.EmployeeId == entity.EmployeeId && e.Obsolete == false);
+            if (workplace != null)
+            {
+                //??
+            }
+
             var result = workplaceRepository.CreateAsync(automapper.Map<DbWorkplace>(entity)).Result;
 
             return Task.FromResult(automapper.Map<Workplace>(result));

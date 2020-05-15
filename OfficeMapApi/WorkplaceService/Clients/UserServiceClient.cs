@@ -12,19 +12,19 @@ using WorkplaceService.Models.RabbitMQ;
 
 namespace WorkplaceService.Clients
 {
-    public class SpaceServiceClient : ISpaceServiceClient
+    public class UserServiceClient : IUserServiceClient
     {
         private readonly IModel channel;
         private readonly string replyQueueName;
         private readonly IBasicProperties props;
         private readonly EventingBasicConsumer consumer;
         private readonly IRabbitMQPersistentConnection rabbitMQPersistentConnection;
-        private readonly BlockingCollection<Space> respQueue = new BlockingCollection<Space>();
-        private readonly ILogger<SpaceServiceClient> logger;
+        private readonly BlockingCollection<Employee> respQueue = new BlockingCollection<Employee>();
+        private readonly ILogger<UserServiceClient> logger;
 
-        public SpaceServiceClient(
+        public UserServiceClient(
             [FromServices] IRabbitMQPersistentConnection rabbitMQPersistentConnection,
-            [FromServices] ILogger<SpaceServiceClient> logger)
+            [FromServices] ILogger<UserServiceClient> logger)
         {
             this.logger = logger;
 
@@ -42,7 +42,7 @@ namespace WorkplaceService.Clients
             {
                 var body = ea.Body;
                 var response = Encoding.UTF8.GetString(body.ToArray());
-                var feedback = JsonConvert.DeserializeObject<Space>(response);
+                var feedback = JsonConvert.DeserializeObject<Employee>(response);
                 if (ea.BasicProperties.CorrelationId == correlationId)
                 {
                     respQueue.Add(feedback);
@@ -50,21 +50,21 @@ namespace WorkplaceService.Clients
             };
         }
 
-        public Task<Space> GetSpaceGuidsAsync(Guid officeGuid, Guid spaceGuid)
+        public Task<Employee> GetUserIdAsync(Guid employeeGuid)
         {
-            var spaceRequest = new GetSpaceRequest { OfficeGuid = officeGuid, SpaceGuid = spaceGuid };
+            var employeeRequest = new GetEmployeeRequest { EmployeeGuid = employeeGuid };
             logger.LogInformation("HTTP-request is sent");
-            var item = Message(spaceRequest);
+            var item = Message(employeeRequest);
             return Task.FromResult(item);
         }
 
-        private Space Message(GetSpaceRequest spaceRequest)
+        private Employee Message(GetEmployeeRequest employeeRequest)
         {
-            var spaceRequestJson = JsonConvert.SerializeObject(spaceRequest);
-            var message = Encoding.UTF8.GetBytes(spaceRequestJson);
+            var employeeRequestJson = JsonConvert.SerializeObject(employeeRequest);
+            var message = Encoding.UTF8.GetBytes(employeeRequestJson);
             channel.BasicPublish(
                 exchange: "",
-                routingKey: "spaceService_queue",
+                routingKey: "userService_queue",
                 basicProperties: props,
                 body: message);
 

@@ -1,14 +1,13 @@
 ﻿using Newtonsoft.Json;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
-using System;
 using System.Text;
 using WorkplaceService.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Common.RabbitMQ.Interface;
 using WorkplaceService.Controllers;
-using WorkplaceService.Models;
+using WorkplaceService.Models.RabbitMQ;
 
 namespace WorkplaceService.Servers
 {
@@ -65,7 +64,7 @@ namespace WorkplaceService.Servers
             replyProps.CorrelationId = props.CorrelationId;
 
             var message = Encoding.UTF8.GetString(body.ToArray());
-            var request = JsonConvert.DeserializeObject<GetWorkplacesRequest>(message);
+            var request = JsonConvert.DeserializeObject<WorkplacesResponse>(message);
             logger.LogInformation("OfficeGUID: " + message);
             var workplaces = (await workplaceController.GetWorkplaces(request.OfficeGuid, request.SpaceGuid)).Value;
 

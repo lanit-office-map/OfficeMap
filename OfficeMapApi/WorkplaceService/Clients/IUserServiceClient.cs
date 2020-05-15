@@ -4,8 +4,8 @@ using WorkplaceService.Models.RabbitMQ;
 
 namespace WorkplaceService.Clients
 {
-    public interface ISpaceServiceClient
+    public interface IUserServiceClient
     {
-        Task<Space> GetSpaceGuidsAsync(Guid officeGuid, Guid spaceGuid);
+        Task<Employee> GetUserIdAsync(Guid UserGuid);
     }
 }
