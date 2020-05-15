@@ -21,11 +21,5 @@ namespace SpaceService.Models
         public int? Capacity { get; set; }
         public int? Floor { get; set; }
 
-
-        //public Space Parents { get; set; }
-
-        //public SpaceType SpaceTypes { get; set; }
-        //public ICollection<Space> InverseParent { get; set; }
-
     }
 }

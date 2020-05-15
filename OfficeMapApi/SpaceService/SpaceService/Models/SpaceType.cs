@@ -11,7 +11,5 @@ namespace SpaceService.Models
         public bool Bookable { get; set; }
         public string Name { get; set; }
         public string Description { get; set; }
-       // public ICollection<Space> Spaces { get; set; }
-
     }
 }

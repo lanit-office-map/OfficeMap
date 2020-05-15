@@ -6,10 +6,8 @@ namespace SpaceService.Models
 {
     public class SpaceResponse
     {
-        // GET/spaces
-        // GET/spaces/{spaceGuid}
-
         public Guid SpaceGuid { get; set; }
+        public int SpaceId { get; set; }
         public ICollection<SpaceResponse> Spaces { get; set; }
         public MapResponse Map { get; set; }
         public SpaceTypeResponse SpaceType { get; set; }
