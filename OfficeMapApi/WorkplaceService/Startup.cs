@@ -47,7 +47,7 @@ namespace WorkplaceService
                 };
             });
             services.AddSingleton<IRabbitMQPersistentConnection, RabbitMQPersistentConnection>();
-            services.AddHostedService<ConsumeScopedServiceHostedService>();
+            services.AddHostedService<ConsumeScopedWorkplaceServiceHostedService>();
 
             services.AddControllers();
         }

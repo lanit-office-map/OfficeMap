@@ -35,13 +35,13 @@ namespace WorkplaceService.Controllers
             [FromRoute] Guid officeGuid,
             [FromRoute] Guid spaceGuid)
         {
-            var space = spaceServiceClient.GetSpaceGuidsAsync(officeGuid, spaceGuid).Result;
-            if (space == null)
+            var spaceId = spaceServiceClient.GetSpaceIdAsync(officeGuid, spaceGuid).Result;
+            if (spaceId == 0)
             {
                 return BadRequest();
             }
 
-            var filter = new WorkplaceFilter(space.SpaceId);
+            var filter = new WorkplaceFilter(spaceId);
             var result = await workplaceService.FindAllAsync(filter);
 
             return Ok(result);
@@ -53,8 +53,8 @@ namespace WorkplaceService.Controllers
             [FromRoute] Guid spaceGuid, 
             [FromBody] Workplace workplace)
         {
-            var space = spaceServiceClient.GetSpaceGuidsAsync(officeGuid, spaceGuid).Result;
-            if (space == null)
+            var spaceId = spaceServiceClient.GetSpaceIdAsync(officeGuid, spaceGuid).Result;
+            if (spaceId == 0)
             {
                 return BadRequest();
             }
@@ -65,7 +65,7 @@ namespace WorkplaceService.Controllers
                 return BadRequest();
             }
 
-            workplace.SpaceId = space.SpaceId;
+            workplace.SpaceId = spaceId;
             workplace.EmployeeId = employee.EmployeeId;
 
             var result = await workplaceService.CreateAsync(workplace);
@@ -78,12 +78,13 @@ namespace WorkplaceService.Controllers
             [FromRoute] Guid spaceGuid,
             [FromRoute] Guid workplaceGuid)
         {
-            var space = spaceServiceClient.GetSpaceGuidsAsync(officeGuid, spaceGuid).Result;
-            if (space == null)
+            var spaceId = spaceServiceClient.GetSpaceIdAsync(officeGuid, spaceGuid).Result;
+            if (spaceId == 0)
             {
                 return BadRequest();
             }
-
+            // Implement filter on the Guid level
+            WorkplaceFilter filter = new WorkplaceFilter(spaceId);
             var result = await workplaceService.GetAsync(workplaceGuid);
 
             if (result == null)
@@ -101,8 +102,8 @@ namespace WorkplaceService.Controllers
             [FromBody] Workplace workplace)
 
         {
-            var space = spaceServiceClient.GetSpaceGuidsAsync(officeGuid, spaceGuid).Result;
-            if (space == null)
+            var spaceId = spaceServiceClient.GetSpaceIdAsync(officeGuid, spaceGuid).Result;
+            if (spaceId == 0)
             {
                 return BadRequest();
             }
@@ -119,7 +120,7 @@ namespace WorkplaceService.Controllers
                 return BadRequest();
             }
 
-            workplace.SpaceId = space.SpaceId;
+            workplace.SpaceId = spaceId;
             workplace.Guid = currentWorkplace.Guid;
             workplace.EmployeeId = employee.EmployeeId;
 
@@ -133,8 +134,8 @@ namespace WorkplaceService.Controllers
             [FromRoute] Guid spaceGuid,
             [FromRoute] Guid workplaceGuid)
         {
-            var space = spaceServiceClient.GetSpaceGuidsAsync(officeGuid, spaceGuid).Result;
-            if (space == null)
+            var spaceId = spaceServiceClient.GetSpaceIdAsync(officeGuid, spaceGuid).Result;
+            if (spaceId == 0)
             {
                 return BadRequest();
             }

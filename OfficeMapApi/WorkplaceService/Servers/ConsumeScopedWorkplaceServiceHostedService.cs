@@ -7,16 +7,16 @@ using System.Threading.Tasks;
 
 namespace WorkplaceService.Servers
 {
-    public class ConsumeScopedServiceHostedService : IHostedService
+    public class ConsumeScopedWorkplaceServiceHostedService : IHostedService
     {
-        private readonly ILogger<ConsumeScopedServiceHostedService> logger;
+        private readonly ILogger<ConsumeScopedWorkplaceServiceHostedService> logger;
         private readonly IServiceProvider services;
 
         private IServiceScope scope;
 
-        public ConsumeScopedServiceHostedService(
+        public ConsumeScopedWorkplaceServiceHostedService(
             IServiceProvider services,
-            ILogger<ConsumeScopedServiceHostedService> logger)
+            ILogger<ConsumeScopedWorkplaceServiceHostedService> logger)
         {
             this.services = services;
             this.logger = logger;
