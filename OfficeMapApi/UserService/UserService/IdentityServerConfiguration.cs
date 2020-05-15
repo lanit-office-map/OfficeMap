@@ -21,19 +21,11 @@ namespace UserService
 
     public static ApiResource[] ApiResources => new[]
     {
-        new ApiResource
-        {
-          Name = "OfficeMapAPIs",
-          Scopes = new List<Scope>
-          {
-            new Scope
-            {
-              Name = "officemapapis",
-              DisplayName = "Access to OfficeMap APIs"
-            }
-          }
-        }
-      };
+        new ApiResource("UserService"),
+        new ApiResource("OfficeService"),
+        new ApiResource("SpaceService"),
+        new ApiResource("WorkplaceService"),
+    };
 
     public static Client[] Clients => new []
     {
@@ -48,15 +40,18 @@ namespace UserService
         AllowOfflineAccess = true,
         AccessTokenLifetime =
           (int)TimeSpan.FromDays(1).TotalSeconds,
-        RedirectUris = { "http://localhost:4200/auth-callback" },
-        PostLogoutRedirectUris = { "http://localhost:4200/home" },
+        RedirectUris = { "https://digitalofficemap.azurewebsites.net/auth-callback" },
+        PostLogoutRedirectUris = { "https://digitalofficemap.azurewebsites.net/home" },
         AllowedScopes = new List<string>
         {
           IdentityServerConstants.StandardScopes.OpenId,
           IdentityServerConstants.StandardScopes.Email,
-          "officemapapis"
+          "UserService",
+          "OfficeService",
+          "SpaceService",
+          "WorkplaceService"
         },
-        AllowedCorsOrigins = { "http://localhost:4200" },
+        AllowedCorsOrigins = { "https://digitalofficemap.azurewebsites.net" },
         AllowAccessTokensViaBrowser = true,
         //AlwaysIncludeUserClaimsInIdToken = true,
         RequireConsent = false,
@@ -72,7 +67,13 @@ namespace UserService
         AllowOfflineAccess = true,
         AccessTokenLifetime =
           (int)TimeSpan.FromDays(1).TotalSeconds,
-        AllowedScopes = { "officemapapis"}
+        AllowedScopes =
+        {
+          "UserService",
+          "OfficeService",
+          "SpaceService",
+          "WorkplaceService"
+        }
       }
     };
     #endregion

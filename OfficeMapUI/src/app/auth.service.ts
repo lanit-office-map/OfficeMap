@@ -41,12 +41,12 @@ export class AuthService {
 
 export function getClientSettings(): UserManagerSettings {
   return {
-      authority: 'http://localhost:5000',
+      authority: 'https://officemap-userservice.azurewebsites.net',
       client_id: 'angular.client',
-      redirect_uri: 'http://localhost:4200/auth-callback',   
-      post_logout_redirect_uri: 'http://localhost:4200/home',
+      redirect_uri: 'https://digitalofficemap.azurewebsites.net/auth-callback',   
+      post_logout_redirect_uri: 'https://digitalofficemap.azurewebsites.net/home',
       response_type:"id_token token",
-      scope:"openid email offline_access officemapapis" ,
+      scope:"openid email offline_access UserService OfficeService SpaceService WorkplaceService",
       userStore: new WebStorageStateStore({ store: window.localStorage })    
   };
 }

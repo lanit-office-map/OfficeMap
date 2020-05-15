@@ -3,11 +3,13 @@ using Microsoft.AspNetCore.Mvc;
 using OfficeService.Models;
 using OfficeService.Services.Interface;
 using System;
+using Microsoft.AspNetCore.Authorization;
 
 namespace OfficeService.Controllers
 {
     [Route("OfficeService/[controller]")]
     [ApiController]
+    [Authorize]
     public class OfficeController : ControllerBase
     {
         #region private fields

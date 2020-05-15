@@ -31,7 +31,7 @@ namespace UserService
     {
       //Add db settings
       var migrationsAssembly = typeof(Startup).GetTypeInfo().Assembly.GetName().Name;
-      var connectionString = Configuration.GetConnectionString("DefaultConnection");
+      var connectionString = Configuration["DefaultConnection"];
       services.AddDbContext<UserServiceDbContext>(options =>
           options.UseSqlServer(connectionString));
 
@@ -53,8 +53,8 @@ namespace UserService
           {
             options.UserInteraction = new UserInteractionOptions()
             {
-              LogoutUrl = "/UserService/Account/Logout",
-              LoginUrl = "/UserService/Account/Login",
+              LogoutUrl = "/Account/Logout",
+              LoginUrl = "/Account/Login",
             };
           })
         .AddOperationalStore(
@@ -75,8 +75,8 @@ namespace UserService
       services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         .AddJwtBearer(options =>
         {
-          options.Authority = "http://localhost:5000";
-          options.Audience = "OfficeMapAPIs";
+          options.Authority = Configuration["UserService_URL"];
+          options.Audience = "UserService";
           options.RequireHttpsMetadata = false;
           options.SaveToken = true;
         });
@@ -87,7 +87,7 @@ namespace UserService
 
       services.AddCors(confg =>
         confg.AddPolicy("AllowAngularClient",
-          p => p.WithOrigins("http://localhost:4200")
+          p => p.WithOrigins(Configuration["OfficeMapUI_URL"])
             .AllowAnyMethod()
             .AllowAnyHeader()));
 

@@ -12,7 +12,7 @@ using UserService.Models;
 
 namespace UserService.Controllers
 {
-    [Route("UserService/[controller]")]
+    [Route("[controller]")]
     [ApiController]
     public class UserController : ControllerBase
     {
@@ -33,6 +33,7 @@ namespace UserService.Controllers
         /// <response code="200">Successfully returned users.</response>
         [HttpGet("users")]
         [ProducesResponseType(typeof(List<User>), 200)]
+        [Authorize]
         public async Task<IActionResult> GetUsers()
         {
             var users = await _userManager.Users
@@ -61,6 +62,7 @@ namespace UserService.Controllers
         [HttpGet("users/{userGuid}")]
         [ProducesResponseType(typeof(User), 200)]
         [ProducesResponseType(204)]
+        [Authorize]
         public async Task<IActionResult> GetUser([FromRoute] Guid userGuid)
         {
             var user = await _userManager.Users

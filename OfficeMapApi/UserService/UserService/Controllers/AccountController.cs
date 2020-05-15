@@ -2,12 +2,14 @@
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 using IdentityServer4.Services;
+using Microsoft.AspNetCore.Authorization;
 using UserService.Models;
 using UserService.Database.Entities;
 
 namespace UserService.Controllers
 {
-  [Route("UserService/[controller]/[action]")]
+  [Route("[controller]/[action]")]
+  [Authorize]
   public class AccountController : Controller
   {
     private readonly SignInManager<DbUser> _signInManager;
@@ -27,6 +29,7 @@ namespace UserService.Controllers
     }
 
     [HttpGet]
+    [AllowAnonymous]
     public IActionResult Login([FromQuery]string returnUrl)
     {
       return View(new LoginUserModel
@@ -40,6 +43,7 @@ namespace UserService.Controllers
     /// </summary>
     /// <param name="model">Contains mail, password, and whether to remember.</param>
     [HttpPost]
+    [AllowAnonymous]
     public async Task<IActionResult> Login(LoginUserModel model)
     {
       if (!ModelState.IsValid)
@@ -89,7 +93,6 @@ namespace UserService.Controllers
     [ProducesResponseType(204)]
     [ProducesResponseType(typeof(DbUser), 400)]
     [ProducesResponseType(401)]
-    [HttpPost]
     public async Task<IActionResult> ChangePassword(ChangePasswordModel model)
     {
       if (!ModelState.IsValid)
