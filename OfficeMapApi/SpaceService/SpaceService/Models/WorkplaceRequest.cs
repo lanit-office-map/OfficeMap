@@ -5,9 +5,9 @@ using System.Threading.Tasks;
 
 namespace SpaceService.Models
 {
-    public class WorkplaceResponse
+    public class WorkplaceRequest
     {
-        public Guid Guid { get; set; }
-        public MapResponse WorkplaceMap { get; set; }
+        public Guid OfficeGuid { get; set; }
+        public Guid SpaceGuid { get; set; }
     }
 }

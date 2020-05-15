@@ -38,18 +38,14 @@ namespace SpaceService.Controllers
                 return NotFound();
             }
             else
-            { 
+            {
                 SpaceFilter filter = new SpaceFilter(response.OfficeId, response.Guid);
                 var result = await spaceService.FindAsync(filter);
-                
-                foreach (var space in result)
+                Parallel.ForEach(result, async (_response) =>
                 {
-                    var _response = workplaceServiceClient.GetWorkplacesAsync(space.SpaceGuid).Result;
-                    space.Workplaces = _response;
-                    space.OfficeGuid = filter.OfficeGuid;
-                    InnerSpaces(space.Spaces, officeGuid);
-                }
-                return Ok(result);
+                    _response.Workplaces = await workplaceServiceClient.GetWorkplacesAsync(_response.SpaceId);
+                });
+                    return Ok(result);
             }
         }
 
@@ -74,7 +70,7 @@ namespace SpaceService.Controllers
         
         [HttpGet("spaces/{spaceGuid}")]
 
-        public async Task<ActionResult> GetSpace(
+        public async Task<ActionResult<SpaceResponse>> GetSpace(
             [FromRoute] Guid officeGuid, 
             [FromRoute] Guid spaceGuid)
         {
@@ -83,16 +79,10 @@ namespace SpaceService.Controllers
             {
                 return NotFound();
             }
-            else
-            {
-
-                var result = await spaceService.GetAsync(spaceGuid);
-                var _response = workplaceServiceClient.GetWorkplacesAsync(spaceGuid).Result;
-                result.Workplaces = _response;
-                result.OfficeGuid = officeGuid;
-                InnerSpaces(result.Spaces, officeGuid);
+            SpaceFilter filter = new SpaceFilter(response.OfficeId, response.Guid);
+            var result = await spaceService.GetAsync(spaceGuid, filter);
+            result.Workplaces = await workplaceServiceClient.GetWorkplacesAsync(result.SpaceId);
                 return Ok(result);
-            }
         }
 
         [HttpPut("spaces/{spaceGuid}")]
@@ -134,19 +124,5 @@ namespace SpaceService.Controllers
                 return Ok(result);
             }
         }
-
-        public void InnerSpaces(ICollection<SpaceResponse> innerSpaces, Guid officeGuid)
-        {
-            foreach (var space in innerSpaces)
-            {
-                while (space.OfficeGuid != officeGuid)
-                {
-                    space.OfficeGuid = officeGuid;
-                    InnerSpaces(space.Spaces, officeGuid);
-                }
-            }
-            return;
-        }
-
     }
 }
