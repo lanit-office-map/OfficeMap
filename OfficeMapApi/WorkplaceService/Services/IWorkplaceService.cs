@@ -7,7 +7,7 @@ namespace WorkplaceService.Services
 {
     public interface IWorkplaceService :
         IGet<WorkplaceResponse, Guid>,
-        IDelete<Guid>,
+        IDelete<Workplace, Guid>,
         IFindAll<WorkplaceResponse, WorkplaceFilter>,
         ICreate<Workplace>,
         IUpdate<Workplace>
