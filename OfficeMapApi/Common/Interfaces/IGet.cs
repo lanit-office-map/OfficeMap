@@ -1,10 +1,11 @@
-﻿using System.Threading.Tasks;
+﻿using Common.Response;
+using System.Threading.Tasks;
 
 namespace Common.Interfaces
 {
     public interface IGet<TEntity, in TKey>
         where TEntity : class
     {
-        Task<TEntity> GetAsync(TKey id);
+        Task<Response<TEntity>> GetAsync(TKey id);
     }
 }

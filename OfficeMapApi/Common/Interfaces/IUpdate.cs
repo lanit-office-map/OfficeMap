@@ -1,10 +1,11 @@
-﻿using System.Threading.Tasks;
+﻿using Common.Response;
+using System.Threading.Tasks;
 
 namespace Common.Interfaces
 {
     public interface IUpdate<TEntity>
         where TEntity : class
     {
-        Task<TEntity> UpdateAsync(TEntity entity);
+        Task<Response<TEntity>> UpdateAsync(TEntity entity);
     }
 }
