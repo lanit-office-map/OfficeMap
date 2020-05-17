@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 
 namespace OfficeService
@@ -7,7 +8,7 @@ namespace OfficeService
     {
         public static void Main(string[] args)
         {
-            
+
             CreateHostBuilder(args).Build().Run();
         }
 
@@ -15,7 +16,15 @@ namespace OfficeService
             Host.CreateDefaultBuilder(args)
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
-                    webBuilder.UseStartup<Startup>();
+                  webBuilder.ConfigureAppConfiguration((hostingContext, config) =>
+                  {
+                    var settings = config.Build();
+                    if (!string.IsNullOrWhiteSpace(settings["AppConfig"]))
+                    {
+                      config.AddAzureAppConfiguration(settings["AppConfig"]);
+                    }
+                  });
+                  webBuilder.UseStartup<Startup>();
                 });
     }
 }

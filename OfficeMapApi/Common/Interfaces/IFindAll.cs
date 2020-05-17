@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using Common.Response;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace Common.Interfaces
@@ -7,6 +8,6 @@ namespace Common.Interfaces
         where TEntity : class
         where TFilter : class
     {
-        Task<IEnumerable<TEntity>> FindAllAsync(TFilter filter = null);
+        Task<Response<IEnumerable<TEntity>>> FindAllAsync();
     }
 }

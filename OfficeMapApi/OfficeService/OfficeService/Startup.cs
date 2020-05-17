@@ -1,4 +1,7 @@
+using System;
+using System.Security.Policy;
 using AutoMapper;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -17,50 +20,64 @@ using RabbitMQ.Client;
 
 namespace OfficeService
 {
-    public class Startup
+  public class Startup
+  {
+    public Startup(IConfiguration configuration)
     {
-        public Startup(IConfiguration configuration)
-        {
-            Configuration = configuration;
-        }
-        public IConfiguration Configuration { get; }
-
-        public void ConfigureServices(IServiceCollection services)
-        {
-            var connectionString = Configuration.GetConnectionString("DefaultConnection");
-            services.AddDbContext<OfficeServiceDbContext>(options => options.UseSqlServer(connectionString));
-            services.AddAutoMapper(typeof(OfficeModelsProfile));
-            services.AddScoped<IOfficeRepository, OfficeRepository>();
-            services.AddScoped<IOfficeService, OfficesService>();
-            services.AddScoped<OfficeServiceServer>();
-            services.AddSingleton<IConnectionFactory, ConnectionFactory>(sp =>
-            {
-                return new ConnectionFactory()
-                {
-                    HostName = Configuration["RabbitMQConnection"],
-                    UserName = Configuration["RabbitMQUsername"],
-                    Password = Configuration["RabbitMQPassword"]
-                };
-            });
-            services.AddSingleton<IRabbitMQPersistentConnection, RabbitMQPersistentConnection>();
-            services.AddHostedService<ConsumeScopedServiceHostedService>();
-            
-            services.AddControllers();
-        } 
-
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
-        {
-            if (env.IsDevelopment())
-            {
-                app.UseDeveloperExceptionPage();
-            }
-
-            app.UseRouting();
-
-            app.UseEndpoints(endpoints =>
-            {
-                endpoints.MapControllers();
-            });
-        }
+      Configuration = configuration;
     }
+    public IConfiguration Configuration { get; }
+
+    public void ConfigureServices(IServiceCollection services)
+    {
+      var connectionString = Configuration["DefaultConnection"];
+      services.AddDbContext<OfficeServiceDbContext>(options => options.UseSqlServer(connectionString));
+      services.AddAutoMapper(typeof(OfficeModelsProfile));
+      services.AddScoped<IOfficeRepository, OfficeRepository>();
+      services.AddScoped<IOfficeService, OfficesService>();
+      services.AddScoped<OfficeServiceServer>();
+      services.AddSingleton<IConnectionFactory, ConnectionFactory>(sp =>
+      {
+        return new ConnectionFactory()
+        {
+          Uri = new Uri(Configuration["Cloud_AMQP_URL"]),
+          HostName = Configuration["RabbitMQConnection"],
+          UserName = Configuration["RabbitMQUsername"],
+          Password = Configuration["RabbitMQPassword"]
+        };
+      });
+      services.AddSingleton<IRabbitMQPersistentConnection, RabbitMQPersistentConnection>();
+      services.AddHostedService<ConsumeScopedServiceHostedService>();
+
+      services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+        .AddJwtBearer(options =>
+        {
+          options.Authority = Configuration["UserService_URL"];
+          options.Audience = "OfficeService";
+          options.RequireHttpsMetadata = false;
+          options.SaveToken = true;
+        });
+
+      services.AddControllers();
+    }
+
+    public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+    {
+      if (env.IsDevelopment())
+      {
+        app.UseDeveloperExceptionPage();
+      }
+
+      app.UseRouting();
+
+      app.UseAuthentication();
+
+      app.UseAuthorization();
+
+      app.UseEndpoints(endpoints =>
+      {
+        endpoints.MapControllers();
+      });
+    }
+  }
 }

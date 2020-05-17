@@ -1,9 +1,11 @@
-﻿using System.Threading.Tasks;
+﻿using Common.Response;
+using System.Threading.Tasks;
 
 namespace Common.Interfaces
 {
-    public interface IDelete<in TEntity>
+    public interface IDelete<TEntity>
+        where TEntity : class
     {
-        Task DeleteAsync(TEntity entity);
+        Task<Response<TEntity>> DeleteAsync(TEntity entity);
     }
 }

@@ -1,15 +1,17 @@
-﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+﻿using IdentityServer4.EntityFramework.Options;
+using Microsoft.AspNetCore.ApiAuthorization.IdentityServer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using UserService.Database.Entities;
 
 namespace UserService.Database
 {
-    public class UserServiceDBContext : IdentityDbContext<DbUser>
+    public class UserServiceDbContext : ApiAuthorizationDbContext<DbUser>
     {
-        public UserServiceDBContext(DbContextOptions<UserServiceDBContext> options)
-            : base(options)
+        public UserServiceDbContext(
+            DbContextOptions<UserServiceDbContext> options,
+            IOptions<OperationalStoreOptions> operationalStoreOptions) : base(options, operationalStoreOptions)
         {
-            Database.EnsureCreated();
         }
 
         public virtual DbSet<DbEmployee> Employees { get; set; }
@@ -19,14 +21,13 @@ namespace UserService.Database
             modelBuilder.Entity<DbUser>(entity =>
             {
                 entity.HasOne(d => d.Employee)
-                    .WithMany(p => p.Users)
-                    .HasForeignKey(d => d.EmployeeId)
-                    .OnDelete(DeleteBehavior.ClientSetNull);
+                    .WithOne(p => p.User)
+                    .OnDelete(DeleteBehavior.Cascade);
             });
 
             modelBuilder.Entity<DbEmployee>(entity =>
             {
-                entity.ToTable("Employees");
+                entity.ToTable("Employees", "dbo");
 
                 entity.HasKey(e => e.EmployeeId);
 
@@ -36,9 +37,9 @@ namespace UserService.Database
                     .HasColumnName("EmployeeGUID")
                     .HasDefaultValueSql("(newid())");
 
-                entity.HasOne(d => d.Manager)
-                    .WithMany(p => p.InverseManager)
-                    .HasForeignKey(d => d.ManagerId);
+                entity.HasOne(e => e.User)
+                    .WithOne(au => au.Employee)
+                    .HasForeignKey<DbUser>(u => u.EmployeeId);
             });
 
             base.OnModelCreating(modelBuilder);
