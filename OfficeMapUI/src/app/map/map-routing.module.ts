@@ -7,7 +7,7 @@ import {MapViewComponent} from './map-view/map-view.component';
 
 
 const routes: Routes = [
-  { path: '', component: NotFoundComponent},
+  { path: '', component: NotFoundComponent },
   {
     path: ':id',
     component: MapViewComponent,
@@ -17,12 +17,13 @@ const routes: Routes = [
       pathMatch: 'full',
       children: [{path: ':roomId', component: ModalBookComponent}]
     }, {
-      path: 'book_room',
+      path: 'user_info',
       redirectTo: '',
       pathMatch: 'full',
       children: [{path: ':userId', component: ModalUserComponent}]
     }]
   },
+  { path: '**', component: NotFoundComponent }
 ];
 
 @NgModule({

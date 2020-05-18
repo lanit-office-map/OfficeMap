@@ -3,8 +3,7 @@ import { Routes, RouterModule } from '@angular/router';
 import { NotFoundComponent } from '../not-found/not-found.component';
 import { EmployeeListComponent } from './employee-list/employee-list.component';
 import { OfficeListComponent } from './office-list/office-list.component';
-import {MapEditorComponent} from './map-editor/map-editor.component';
-
+import { MapEditorComponent } from './map-editor/map-editor.component';
 
 const routes: Routes = [
   { path: '', component: NotFoundComponent },
@@ -12,7 +11,8 @@ const routes: Routes = [
   { path: 'offices',
     component: OfficeListComponent,
     children: [{ path: ':id', component: MapEditorComponent }]
-  }
+  },
+  { path: '**', component: NotFoundComponent }
 ];
 
 @NgModule({
