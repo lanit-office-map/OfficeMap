@@ -12,14 +12,14 @@ export class HomeComponent implements OnInit {
   }
 
   ngOnInit(){
-    
+
   }
 
-  public signin() {    
-    this.authService.login(); 
+  public signin() {
+    this.authService.login();
   }
 
-  public async signout() {    
-    await this.authService.signout(); 
+  public async signout() {
+    await this.authService.signout();
   }
 }
