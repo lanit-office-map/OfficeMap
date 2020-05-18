@@ -18,9 +18,11 @@ namespace UserService
 {
   public class Startup
   {
+    private readonly IdentityServerConfiguration identityServerConfiguration;
     public Startup(IConfiguration configuration)
     {
       Configuration = configuration;
+      identityServerConfiguration = new IdentityServerConfiguration(configuration);
     }
 
     public IConfiguration Configuration { get; }
@@ -31,7 +33,7 @@ namespace UserService
     {
       //Add db settings
       var migrationsAssembly = typeof(Startup).GetTypeInfo().Assembly.GetName().Name;
-      var connectionString = Configuration["DefaultConnection"];
+      var connectionString = Configuration["ConnectionString:DefaultConnection"];
       services.AddDbContext<UserServiceDbContext>(options =>
           options.UseSqlServer(connectionString));
 
@@ -66,16 +68,16 @@ namespace UserService
           })
         .AddDeveloperSigningCredential()
         .AddInMemoryIdentityResources(
-          IdentityServerConfiguration.IdentityResources)
-        .AddInMemoryApiResources(IdentityServerConfiguration.ApiResources)
-        .AddInMemoryClients(IdentityServerConfiguration.Clients)
+          identityServerConfiguration.IdentityResources)
+        .AddInMemoryApiResources(identityServerConfiguration.ApiResources)
+        .AddInMemoryClients(identityServerConfiguration.Clients)
         .AddAspNetIdentity<DbUser>();
 
 
       services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         .AddJwtBearer(options =>
         {
-          options.Authority = Configuration["UserService_URL"];
+          options.Authority = Configuration["Addresses:Backend:UserService"];
           options.Audience = "UserService";
           options.RequireHttpsMetadata = false;
           options.SaveToken = true;
@@ -87,7 +89,7 @@ namespace UserService
 
       services.AddCors(confg =>
         confg.AddPolicy("AllowAngularClient",
-          p => p.WithOrigins(Configuration["OfficeMapUI_URL"])
+          p => p.WithOrigins(Configuration["Addresses:Frontend:OfficeMapUI"])
             .AllowAnyMethod()
             .AllowAnyHeader()));
 

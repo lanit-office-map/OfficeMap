@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Configuration.AzureAppConfiguration;
 using Microsoft.Extensions.Hosting;
 
 namespace OfficeService
@@ -21,7 +22,13 @@ namespace OfficeService
                     var settings = config.Build();
                     if (!string.IsNullOrWhiteSpace(settings["AppConfig"]))
                     {
-                      config.AddAzureAppConfiguration(settings["AppConfig"]);
+                      config.AddAzureAppConfiguration(
+                        options =>
+                        {
+                          options.Connect(settings["AppConfig"])
+                            .Select(KeyFilter.Any, LabelFilter.Null)
+                            .Select(KeyFilter.Any, hostingContext.HostingEnvironment.EnvironmentName);
+                        });
                     }
                   });
                   webBuilder.UseStartup<Startup>();
