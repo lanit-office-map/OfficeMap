@@ -8,6 +8,7 @@ using OfficeService.Repository.Interfaces;
 using OfficeService.Services.Interface;
 using AutoMapper;
 using Common.Response;
+using System.Net;
 
 namespace OfficeService.Services
 {
@@ -16,6 +17,13 @@ namespace OfficeService.Services
         #region private fields
         private readonly IOfficeRepository officeRepository;
         private readonly IMapper automapper;
+
+        private static class Responses<T>
+            where T : class
+        {
+            public static readonly Response<T> OfficeNotFounded =
+                new Response<T>(HttpStatusCode.NotFound, $"Office by officeGuid not founded");
+        }
         #endregion
 
         #region public methods
@@ -46,6 +54,10 @@ namespace OfficeService.Services
         public Task<Response<OfficeResponse>> GetAsync(Guid officeguid)
         {
             var result = officeRepository.GetAsync(officeguid).Result;
+            if (result == null)
+            {
+                return Task.FromResult(Responses<OfficeResponse>.OfficeNotFounded);
+            }
 
             var response = new Response<OfficeResponse>(automapper.Map<OfficeResponse>(result));
             return Task.FromResult(response);
@@ -54,10 +66,12 @@ namespace OfficeService.Services
         public Task<Response<OfficeResponse>> DeleteAsync(Guid officeguid)
         {
             var source = officeRepository.GetAsync(officeguid).Result;
-            if (source != null)
+            if (source == null)
             {
-                officeRepository.DeleteAsync(source);
+                return Task.FromResult(Responses<OfficeResponse>.OfficeNotFounded);
             }
+
+            officeRepository.DeleteAsync(source);
 
             var response = new Response<OfficeResponse>();
             return Task.FromResult(response);
@@ -68,9 +82,9 @@ namespace OfficeService.Services
             var source = officeRepository.GetAsync(target.Guid).Result;
             if (source == null)
             {
-                // TODO создать ошибку для Not Found
-                throw new NotImplementedException();
+                return Task.FromResult(Responses<Office>.OfficeNotFounded);
             }
+
             source.City = target.City;
             source.Building = target.Building;
             source.House = target.House;
