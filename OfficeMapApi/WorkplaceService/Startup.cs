@@ -8,6 +8,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using RabbitMQ.Client;
+using WorkplaceService.Clients;
 using WorkplaceService.Database;
 using WorkplaceService.Mappers;
 using WorkplaceService.Repository;
@@ -33,6 +34,8 @@ namespace WorkplaceService
             services.AddAutoMapper(typeof(WorkplaceModelsProfile));
             services.AddScoped<IWorkplaceRepository, WorkplaceRepository>();
             services.AddScoped<IWorkplaceService, Services.WorkplaceService>();
+            services.AddScoped<ISpaceServiceClient, SpaceServiceClient>();
+            services.AddScoped<IUserServiceClient, UserServiceClient>();
 
             //RabbitMQ
             services.AddScoped<WorkplaceServiceServer>();

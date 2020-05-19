@@ -54,15 +54,15 @@ namespace WorkplaceService.Services
         public async Task<Response<IEnumerable<WorkplaceResponse>>> FindAllAsync(WorkplaceRequest workplaceRequest)
         {
             //Get and validate space where the workplaces stand.
-            var space = spaceServiceClient.GetSpaceGuidsAsync(
+            var space = spaceServiceClient.GetSpaceIdAsync(
                 workplaceRequest.OfficeGuid, workplaceRequest.SpaceGuid).Result;
-            if (space == null)
+            if (space == 0)
             {
                 return await Task.FromResult(Responses<IEnumerable<WorkplaceResponse>>.WorkplaceNotFounded);
             }
 
             var result = workplaceRepository.FindAllAsync(
-                e => e.SpaceId == space.SpaceId && e.Obsolete == false);
+                e => e.SpaceId == space && e.Obsolete == false);
 
             var response = new Response<IEnumerable<WorkplaceResponse>>(
                 automapper.Map<IEnumerable<WorkplaceResponse>>(result));
@@ -72,9 +72,9 @@ namespace WorkplaceService.Services
         public async Task<Response<WorkplaceResponse>> GetAsync(WorkplaceRequest workplaceRequest)
         {
             //Get and validate space where the workplaces stand.
-            var space = spaceServiceClient.GetSpaceGuidsAsync(
+            var space = spaceServiceClient.GetSpaceIdAsync(
                 workplaceRequest.OfficeGuid, workplaceRequest.SpaceGuid).Result;
-            if (space == null)
+            if (space == 0)
             {
                 return await Task.FromResult(Responses<WorkplaceResponse>.SpaceNotFounded);
             }
@@ -93,9 +93,9 @@ namespace WorkplaceService.Services
         public async Task<Response<Workplace>> CreateAsync(WorkplaceRequest workplaceRequest)
         {
             //Get and validate space where the workplaces will stand.
-            var space = spaceServiceClient.GetSpaceGuidsAsync(
+            var space = spaceServiceClient.GetSpaceIdAsync(
                 workplaceRequest.OfficeGuid, workplaceRequest.SpaceGuid).Result;
-            if (space == null)
+            if (space == 0)
             {
                 return await Task.FromResult(Responses<Workplace>.SpaceNotFounded);
             }
@@ -123,9 +123,9 @@ namespace WorkplaceService.Services
         public async Task<Response<Workplace>> UpdateAsync(WorkplaceRequest workplaceRequest)
         {
             //Get and validate space where the workplaces will stand.
-            var space = spaceServiceClient.GetSpaceGuidsAsync(
+            var space = spaceServiceClient.GetSpaceIdAsync(
                 workplaceRequest.OfficeGuid, workplaceRequest.SpaceGuid).Result;
-            if (space == null)
+            if (space == 0)
             {
                 return await Task.FromResult(Responses<Workplace>.SpaceNotFounded);
             }
@@ -167,9 +167,9 @@ namespace WorkplaceService.Services
         public async Task<Response<WorkplaceResponse>> DeleteAsync(WorkplaceRequest workplaceRequest)
         {
             //Get and validate space where the workplaces stand.
-            var space = spaceServiceClient.GetSpaceGuidsAsync(
+            var space = spaceServiceClient.GetSpaceIdAsync(
                 workplaceRequest.OfficeGuid, workplaceRequest.SpaceGuid).Result;
-            if (space == null)
+            if (space == 0)
             {
                 return await Task.FromResult(Responses<WorkplaceResponse>.SpaceNotFounded);
             }

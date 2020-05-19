@@ -8,6 +8,9 @@ using System.Collections.Specialized;
 using Common.RabbitMQ.Interface;
 using WorkplaceService.Services;
 using WorkplaceService.Filters;
+using System.Collections.Generic;
+using WorkplaceService.Models;
+using System.Collections.ObjectModel;
 
 namespace WorkplaceService.Servers
 {
@@ -29,7 +32,7 @@ namespace WorkplaceService.Servers
         private const string RequestBindingKey = "WorkplacesRequest";
 
         #region Private Methods
-        private async void MessageReceived(object? model, BasicDeliverEventArgs ea, IModel channel)
+        private void MessageReceived(object? model, BasicDeliverEventArgs ea, IModel channel)
         {
             var InboundMessage = ea.Body;
             var InboundProperties = ea.BasicProperties;
@@ -42,8 +45,19 @@ namespace WorkplaceService.Servers
             int spaceId = int.Parse(message);
             Console.WriteLine("SpaceID received: " + message);
 
-            var filter = new WorkplaceFilter(spaceId);
-            var workplaces = await workplaceService.FindAllAsync(filter);
+            ICollection<WorkplaceResponse> workplaces = new Collection<WorkplaceResponse>();
+            WorkplaceResponse workplace1 = new WorkplaceResponse()
+            {
+                WorkplaceId = 1,
+                Name = "mafaka"
+            };
+            WorkplaceResponse workplace2 = new WorkplaceResponse()
+            {
+                WorkplaceId = 2,
+                Name = "mafaka2"
+            };
+            workplaces.Add(workplace1);
+            workplaces.Add(workplace2);
             var response = JsonConvert.SerializeObject(workplaces);
             var responseBytes = Encoding.UTF8.GetBytes(response);
 

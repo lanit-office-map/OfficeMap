@@ -2,6 +2,8 @@
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Threading.Tasks;
+using WorkplaceService.Clients;
+using WorkplaceService.Filters;
 using WorkplaceService.Models;
 using WorkplaceService.Models.Services;
 using WorkplaceService.Services;
@@ -14,13 +16,17 @@ namespace WorkplaceService.Controllers
     {
         #region private fields
         private readonly IWorkplaceService workplaceService;
+        private readonly ISpaceServiceClient spaceServiceClient;
         #endregion
 
         #region public methods
         public WorkplaceController(
-            [FromServices] IWorkplaceService workplaceService)
+            [FromServices] IWorkplaceService workplaceService,
+            [FromServices] ISpaceServiceClient spaceServiceClient)
         {
-            this.workplaceService = workplaceService;        }
+            this.workplaceService = workplaceService;
+            this.spaceServiceClient = spaceServiceClient;
+        }
 
        
 		[HttpGet("offices/{officeGuid}/spaces/{spaceGuid}/workplaces")]
@@ -33,18 +39,14 @@ namespace WorkplaceService.Controllers
             {
                 return BadRequest();
             }
-			
-			var filter = new WorkplaceFilter(spaceId);
-            var response = await workplaceService.FindAllAsync(filter);
-			
+
+            var response = await workplaceService.FindAllAsync(
+                new WorkplaceRequest { OfficeGuid = officeGuid, SpaceGuid = spaceGuid });
+
+
             return response.Status == ResponseResult.Success
             ? Ok(response.Result)
             : StatusCode((int)response.Error.StatusCode, response.Error.Message);
-        }
-
-            
-
-            return Ok(result);
         }
 		
 		[HttpPost("offices/{officeGuid}/spaces/{spaceGuid}/workplaces")]
@@ -59,13 +61,15 @@ namespace WorkplaceService.Controllers
                 return BadRequest();
             }
 			
-			 var employee = userServiceClient.GetUserIdAsync(workplace.EmployeeGuid).Result;
+			/* var employee = userServiceClient.GetUserIdAsync(workplace.EmployeeGuid).Result;
             if (employee == null)
             {
                 return BadRequest();
             }
 			workplace.SpaceId = spaceId;
             workplace.EmployeeId = employee.EmployeeId;
+            */
+
 			
             var response = await workplaceService.CreateAsync(
                 new WorkplaceRequest { OfficeGuid = officeGuid, SpaceGuid = spaceGuid, Workplace = workplace });
@@ -87,8 +91,6 @@ namespace WorkplaceService.Controllers
                 return BadRequest();
             }
             // Implement filter on the Guid level
-            WorkplaceFilter filter = new WorkplaceFilter(spaceId);
-            var result = await workplaceService.GetAsync(workplaceGuid);
             var response = await workplaceService.GetAsync(
                 new WorkplaceRequest { OfficeGuid = officeGuid, SpaceGuid = spaceGuid, WorkplaceGuid = workplaceGuid });
 
@@ -97,6 +99,7 @@ namespace WorkplaceService.Controllers
             : StatusCode((int)response.Error.StatusCode, response.Error.Message);
         }
 
+        /*
         [HttpPut("offices/{officeGuid}/spaces/{spaceGuid}/workplaces/{workplaceGuid}")]
         public async Task<ActionResult> PutWorkplace(
             [FromRoute] Guid officeGuid,
@@ -133,6 +136,7 @@ namespace WorkplaceService.Controllers
             ? Ok(response.Result)
             : StatusCode((int)response.Error.StatusCode, response.Error.Message);
         }
+        */
 
         [HttpDelete("offices/{officeGuid}/spaces/{spaceGuid}/workplaces/{workplaceGuid}")]
         public async Task<ActionResult> DeleteWorkplace(
