@@ -17,6 +17,7 @@ import { AdminModule } from './admin/admin.module';
 import { MapModule} from './map/map.module';
 import { AuthorizationModule } from './authorization/authorization.module';
 import { HomeComponent } from './home/home.component';
+import { HttpClientModule } from '@angular/common/http';
 
 @NgModule({
   declarations: [
@@ -37,7 +38,8 @@ import { HomeComponent } from './home/home.component';
     RouterModule,
     AdminModule,
     MapModule,
-    AuthorizationModule
+    AuthorizationModule,
+    HttpClientModule
   ],
   providers: [],
   bootstrap: [AppComponent]

@@ -32,7 +32,7 @@ export class AuthService {
     this._authNavStatusSource.next(this.isAuthenticated());
 }
 
-async signout() {
+  async signout() {
     await this.manager.signoutRedirect();
   }
 }

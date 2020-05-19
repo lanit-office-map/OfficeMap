@@ -5,6 +5,7 @@ import { MapRoutingModule } from './map-routing.module';
 import { MapViewComponent } from './map-view/map-view.component';
 import { ModalBookComponent } from './modal-book/modal-book.component';
 import { ModalUserComponent } from './modal-user/modal-user.component';
+import {MapsService} from '../maps.service';
 
 
 @NgModule({
@@ -16,6 +17,9 @@ import { ModalUserComponent } from './modal-user/modal-user.component';
   imports: [
     CommonModule,
     MapRoutingModule
+  ],
+  providers: [
+    MapsService
   ]
 })
 export class MapModule { }
