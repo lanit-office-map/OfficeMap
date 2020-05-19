@@ -17,6 +17,8 @@ import { AdminModule } from './admin/admin.module';
 import { MapModule} from './map/map.module';
 import { AuthorizationModule } from './authorization/authorization.module';
 import { HomeComponent } from './home/home.component';
+import { HeaderComponent } from './header/header.component';
+import { SidebarComponent } from './sidebar/sidebar.component';
 
 @NgModule({
   declarations: [
@@ -26,7 +28,9 @@ import { HomeComponent } from './home/home.component';
     SearchComponent,
     SettingsComponent,
     NotFoundComponent,
-    HomeComponent
+    HomeComponent,
+    HeaderComponent,
+    SidebarComponent
   ],
   imports: [
     BrowserModule,
