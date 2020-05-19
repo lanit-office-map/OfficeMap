@@ -1,7 +1,7 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-
+import { MatExpansionModule } from "@angular/material/expansion";
 import { RouterModule } from '@angular/router';
 
 import { AppRoutingModule } from './app-routing.module';
@@ -17,8 +17,6 @@ import { AdminModule } from './admin/admin.module';
 import { MapModule} from './map/map.module';
 import { AuthorizationModule } from './authorization/authorization.module';
 import { HomeComponent } from './home/home.component';
-import { HeaderComponent } from './header/header.component';
-import { SidebarComponent } from './sidebar/sidebar.component';
 
 @NgModule({
   declarations: [
@@ -28,9 +26,7 @@ import { SidebarComponent } from './sidebar/sidebar.component';
     SearchComponent,
     SettingsComponent,
     NotFoundComponent,
-    HomeComponent,
-    HeaderComponent,
-    SidebarComponent
+    HomeComponent
   ],
   imports: [
     BrowserModule,
@@ -41,7 +37,8 @@ import { SidebarComponent } from './sidebar/sidebar.component';
     RouterModule,
     AdminModule,
     MapModule,
-    AuthorizationModule
+    AuthorizationModule,
+    MatExpansionModule
   ],
   providers: [],
   bootstrap: [AppComponent]
