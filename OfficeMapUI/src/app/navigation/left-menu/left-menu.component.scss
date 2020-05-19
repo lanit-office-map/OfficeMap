@@ -2,7 +2,7 @@
   position: absolute;
   width: 256px;
   height: 100%;
-  background: #FFFFFF;
+  background: white;
   box-shadow: 0px 9px 18px rgba(0, 0, 0, 0.18);
 }
 
@@ -13,7 +13,7 @@
     margin: auto;
     padding: 1em;
     width: 100px;
-    left: 65px;
+    left: 78px;
     bottom: 20px;
   }
   &__user-icon
@@ -24,6 +24,10 @@
     padding: 1em;
     width: 42px;
     left: 25px;
+  }
+  &__map-icon
+  {
+    width: 20px;
   }
 }
 
@@ -45,7 +49,7 @@
   font-weight: 500;
   font-size: 13px;
   line-height: 20px;
-  color: #FFFFFF;
+  color: white;
 }
 
 .user h2 {
@@ -65,5 +69,13 @@
   position: absolute;
   width: 256px;
   top: 65px;
-  background: #FFFFFF;
+  background: white;
+
+  &__place-name {
+    position: absolute;
+    left: 63px;
+  }
+  &__expanded-list {
+    margin-left: 39px;
+  }
 }
