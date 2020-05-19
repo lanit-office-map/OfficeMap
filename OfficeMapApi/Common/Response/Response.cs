@@ -31,37 +31,6 @@ namespace Common.Response
             Result = result;
         }
     }
-    /*public class Response
-    {
-        public ResponseResult Status { get; set; }
-        public ResponseException Error { get; set; }
-
-        public Response()
-        {
-            Status = ResponseResult.Success;
-        }
-
-        public Response(HttpStatusCode statusCode, string message)
-        {
-            Status = ResponseResult.Error;
-            Error = new ResponseException(statusCode, message);
-        }
-    }
-
-    public class Response<T> : Response where T : class
-    {
-        public T Result { get; set; }
-
-        public Response(T result) : base()
-        {
-            Result = result;
-        }
-
-        public Response(T result, HttpStatusCode statusCode, string message) : base(statusCode, message)
-        {
-            Result = result;
-        }
-    }*/
 
     public enum ResponseResult
     {

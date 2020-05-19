@@ -1,13 +1,21 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import { HomeComponent } from './home/home.component';
-import { AuthCallbackComponent } from './auth-callback/auth-callback.component';
 
+import { NotFoundComponent } from './not-found/not-found.component';
+import { SearchComponent } from './search/search.component';
+import { SettingsComponent } from './navigation/settings/settings.component';
+import { AppComponent } from './app.component';
+import { HomeComponent } from './home/home.component';
 
 const routes: Routes = [
-  { path: '',   redirectTo: 'home', pathMatch: 'full' },
   { path: 'home', component: HomeComponent },
-  { path: 'auth-callback', component: AuthCallbackComponent},
+  { path: '', component: AppComponent },
+  { path: 'search', component: SearchComponent },
+  { path: 'settings', component: SettingsComponent},
+  { path: 'auth', loadChildren: './authorization/authorization.module#AuthorizationModule' },
+  { path: 'map', loadChildren: './map/map.module#MapModule'},
+  { path: 'admin', loadChildren: './admin/admin.module#AdminModule'},
+  { path: '**', component: NotFoundComponent }
 ];
 
 @NgModule({

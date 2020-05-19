@@ -9,13 +9,3 @@ namespace Common.Interfaces
         Task<Response<TOutput>> DeleteAsync(TInput input);
     }
 }
-
-/*using System.Threading.Tasks;
-
-namespace Common.Interfaces
-{
-    public interface IDelete<in TInput>
-    {
-        Task<Response.Response> DeleteAsync(TInput input);
-    }
-}*/

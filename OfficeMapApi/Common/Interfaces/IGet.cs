@@ -9,13 +9,3 @@ namespace Common.Interfaces
         Task<Response<TOutput>> GetAsync(TKey key);
     }
 }
-
-/*using System.Threading.Tasks;
-
-namespace Common.Interfaces
-{
-    public interface IGet<in TKey>
-    {
-        Task<Response.Response> GetAsync(TKey key);
-    }
-}*/
