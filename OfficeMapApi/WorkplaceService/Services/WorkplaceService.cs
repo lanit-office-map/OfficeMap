@@ -1,11 +1,14 @@
 ﻿using AutoMapper;
+using Common.Response;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
+using System.Net;
 using System.Threading.Tasks;
+using WorkplaceService.Clients;
 using WorkplaceService.Database.Entities;
-using WorkplaceService.Filters;
 using WorkplaceService.Models;
+using WorkplaceService.Models.Services;
 using WorkplaceService.Repository.Interfaces;
 
 namespace WorkplaceService.Services
@@ -15,59 +18,172 @@ namespace WorkplaceService.Services
         #region private fields
         private readonly IWorkplaceRepository workplaceRepository;
         private readonly IMapper automapper;
+        private readonly ISpaceServiceClient spaceServiceClient;
+        private readonly IUserServiceClient userServiceClient;
+
+        private static class Responses<T>
+            where T : class
+        {
+            public static readonly Response<T> SpaceNotFounded =
+                new Response<T>(HttpStatusCode.NotFound, $"Space by spaceGuid not founded");
+
+            public static readonly Response<T> WorkplaceNotFounded =
+                new Response<T>(HttpStatusCode.NotFound, $"Workplace by workplaceGuid not founded");
+
+            public static readonly Response<T> EmployeeNotFounded =
+                new Response<T>(HttpStatusCode.NotFound, $"Employee by employeeGuid not founded");
+
+            public static Response<T> EmployeeIsSittingAtAnotherWorkplace =
+                new Response<T>(HttpStatusCode.BadRequest, $"This employee is sitting at another workplace");
+        }
         #endregion
 
         #region public methods
         public WorkplaceService(
           [FromServices] IWorkplaceRepository workplaceRepository,
-          [FromServices] IMapper automapper)
+          [FromServices] IMapper automapper,
+          [FromServices] ISpaceServiceClient spaceServiceClient,
+          [FromServices] IUserServiceClient userServiceClient)
         {
             this.workplaceRepository = workplaceRepository;
             this.automapper = automapper;
+            this.spaceServiceClient = spaceServiceClient;
+            this.userServiceClient = userServiceClient;
         }
 
-        public Task<IEnumerable<WorkplaceResponse>> FindAllAsync(WorkplaceFilter filter)
+        public async Task<Response<IEnumerable<WorkplaceResponse>>> FindAllAsync(WorkplaceRequest workplaceRequest)
         {
-            var result = workplaceRepository.FindAllAsync(e => e.SpaceId == filter.SpaceId && e.Obsolete == false);
+            //Get and validate space where the workplaces stand.
+            var space = spaceServiceClient.GetSpaceGuidsAsync(
+                workplaceRequest.OfficeGuid, workplaceRequest.SpaceGuid).Result;
+            if (space == null)
+            {
+                return await Task.FromResult(Responses<IEnumerable<WorkplaceResponse>>.WorkplaceNotFounded);
+            }
 
-            return Task.FromResult(automapper.Map<IEnumerable<WorkplaceResponse>>(result));
+            var result = workplaceRepository.FindAllAsync(
+                e => e.SpaceId == space.SpaceId && e.Obsolete == false);
+
+            var response = new Response<IEnumerable<WorkplaceResponse>>(
+                automapper.Map<IEnumerable<WorkplaceResponse>>(result));
+            return await Task.FromResult(response);
         }
 
-        public Task<Workplace> CreateAsync(Workplace entity)
+        public async Task<Response<WorkplaceResponse>> GetAsync(WorkplaceRequest workplaceRequest)
         {
-            //If a person sits at another workplace
-            var workplace = workplaceRepository.FindAllAsync(e => e.EmployeeId == entity.EmployeeId && e.Obsolete == false);
+            //Get and validate space where the workplaces stand.
+            var space = spaceServiceClient.GetSpaceGuidsAsync(
+                workplaceRequest.OfficeGuid, workplaceRequest.SpaceGuid).Result;
+            if (space == null)
+            {
+                return await Task.FromResult(Responses<WorkplaceResponse>.SpaceNotFounded);
+            }
+            //Check that the specified WorkplaceGuid.
+            if (workplaceRequest.WorkplaceGuid == null)
+            {
+                return await Task.FromResult(Responses<WorkplaceResponse>.WorkplaceNotFounded);
+            }
+
+            var result = workplaceRepository.GetAsync(workplaceRequest.WorkplaceGuid).Result;
+
+            var response = new Response<WorkplaceResponse>(automapper.Map<WorkplaceResponse>(result));
+            return await Task.FromResult(response);
+        }
+
+        public async Task<Response<Workplace>> CreateAsync(WorkplaceRequest workplaceRequest)
+        {
+            //Get and validate space where the workplaces will stand.
+            var space = spaceServiceClient.GetSpaceGuidsAsync(
+                workplaceRequest.OfficeGuid, workplaceRequest.SpaceGuid).Result;
+            if (space == null)
+            {
+                return await Task.FromResult(Responses<Workplace>.SpaceNotFounded);
+            }
+            //Check that the specified employee exists.
+            var employeeGuid = workplaceRequest.Workplace.EmployeeGuid; //Not NullReferenceException if Workplase is not null
+            var employee = userServiceClient.GetUserIdAsync(employeeGuid).Result;
+            if (employee == null)
+            {
+                return await Task.FromResult(Responses<Workplace>.EmployeeNotFounded);
+            }
+            //Check that the specified employee is not seated at another workplace.
+            var workplace = workplaceRepository.FindAllAsync(
+                e => e.EmployeeId == employee.EmployeeId && e.Obsolete == false);
             if (workplace != null)
             {
-                //??
+                return await Task.FromResult(Responses<Workplace>.EmployeeIsSittingAtAnotherWorkplace);
             }
 
-            var result = workplaceRepository.CreateAsync(automapper.Map<DbWorkplace>(entity)).Result;
+            var result = workplaceRepository.CreateAsync(automapper.Map<DbWorkplace>(workplaceRequest.Workplace)).Result;
 
-            return Task.FromResult(automapper.Map<Workplace>(result));
+            var response = new Response<Workplace>(automapper.Map<Workplace>(result));
+            return await Task.FromResult(response);
         }
 
-        public Task<WorkplaceResponse> GetAsync(Guid guid)
+        public async Task<Response<Workplace>> UpdateAsync(WorkplaceRequest workplaceRequest)
         {
-            var result = workplaceRepository.GetAsync(guid).Result;
-
-            return Task.FromResult(automapper.Map<WorkplaceResponse>(result));
-        }
-
-        public Task DeleteAsync(Guid guid)
-        {
-            var source = workplaceRepository.GetAsync(guid).Result;
-            if (source != null)
+            //Get and validate space where the workplaces will stand.
+            var space = spaceServiceClient.GetSpaceGuidsAsync(
+                workplaceRequest.OfficeGuid, workplaceRequest.SpaceGuid).Result;
+            if (space == null)
             {
-                workplaceRepository.DeleteAsync(source);
+                return await Task.FromResult(Responses<Workplace>.SpaceNotFounded);
+            }
+            //Check that the specified employee exists.
+            var employeeGuid = workplaceRequest.Workplace.EmployeeGuid; //Not NullReferenceException if Workplase is not null
+            var employee = userServiceClient.GetUserIdAsync(employeeGuid).Result;
+            if (employee == null)
+            {
+                return await Task.FromResult(Responses<Workplace>.EmployeeNotFounded);
+            }
+            //Get current workplace
+            var workplace = workplaceRepository.GetAsync(workplaceRequest.WorkplaceGuid).Result;
+            if (workplace == null)
+            {
+                return await Task.FromResult(Responses<Workplace>.WorkplaceNotFounded);
+            }
+            //If update employee
+            if (workplace.EmployeeId != employee.EmployeeId)
+            {
+                //Check that the specified employee is not seated at another workplace.
+                var hisWorkplace = workplaceRepository.FindAllAsync(
+                    e => e.EmployeeId == employee.EmployeeId && e.Obsolete == false);
+                if (hisWorkplace != null)
+                {
+                    return await Task.FromResult(Responses<Workplace>.EmployeeIsSittingAtAnotherWorkplace);
+                }
             }
 
-            return Task.CompletedTask;
+            workplace.EmployeeId = employee.EmployeeId;
+            workplace.Map = automapper.Map<DbMapFile>(workplaceRequest.Workplace.Map);
+            var result = workplaceRepository.UpdateAsync(workplace).Result;
+
+            var response = new Response<Workplace>(automapper.Map<Workplace>(result));
+            return await Task.FromResult(response);
+
+            throw new NotImplementedException();
         }
 
-        public Task<Workplace> UpdateAsync(Workplace target)
+        public async Task<Response<WorkplaceResponse>> DeleteAsync(WorkplaceRequest workplaceRequest)
         {
-            throw new NotImplementedException();
+            //Get and validate space where the workplaces stand.
+            var space = spaceServiceClient.GetSpaceGuidsAsync(
+                workplaceRequest.OfficeGuid, workplaceRequest.SpaceGuid).Result;
+            if (space == null)
+            {
+                return await Task.FromResult(Responses<WorkplaceResponse>.SpaceNotFounded);
+            }
+            //Get current workplace
+            var workplace = workplaceRepository.GetAsync(workplaceRequest.WorkplaceGuid).Result;
+            if (workplace == null)
+            {
+                return await Task.FromResult(Responses<WorkplaceResponse>.WorkplaceNotFounded);
+            }
+            _ = workplaceRepository.DeleteAsync(workplace);
+
+            var response = new Response<WorkplaceResponse>(automapper.Map<WorkplaceResponse>(workplace));
+
+            return await Task.FromResult(response);
         }
         #endregion
     }

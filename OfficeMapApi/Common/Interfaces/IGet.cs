@@ -3,9 +3,19 @@ using System.Threading.Tasks;
 
 namespace Common.Interfaces
 {
-    public interface IGet<TEntity, in TKey>
-        where TEntity : class
+    public interface IGet<in TKey, TOutput>
+        where TOutput : class
     {
-        Task<Response<TEntity>> GetAsync(TKey id);
+        Task<Response<TOutput>> GetAsync(TKey key);
     }
 }
+
+/*using System.Threading.Tasks;
+
+namespace Common.Interfaces
+{
+    public interface IGet<in TKey>
+    {
+        Task<Response.Response> GetAsync(TKey key);
+    }
+}*/
