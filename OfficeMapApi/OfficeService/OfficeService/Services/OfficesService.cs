@@ -7,7 +7,8 @@ using OfficeService.Models;
 using OfficeService.Repository.Interfaces;
 using OfficeService.Services.Interface;
 using AutoMapper;
-using OfficeService.Filters;
+using Common.Response;
+using System.Net;
 
 namespace OfficeService.Services
 {
@@ -16,6 +17,13 @@ namespace OfficeService.Services
         #region private fields
         private readonly IOfficeRepository officeRepository;
         private readonly IMapper automapper;
+
+        private static class Responses<T>
+            where T : class
+        {
+            public static readonly Response<T> OfficeNotFounded =
+                new Response<T>(HttpStatusCode.NotFound, $"Office by officeGuid not founded");
+        }
         #endregion
 
         #region public methods
@@ -27,58 +35,65 @@ namespace OfficeService.Services
             this.automapper = automapper;
         }
 
-        public Task<IEnumerable<OfficeResponse>> FindAllAsync(OfficeFilter filter = null)
+        public Task<Response<IEnumerable<OfficeResponse>>> FindAllAsync()
         {
-            if (filter != null)
-            {
-                throw new NotImplementedException();
-            }
-
             var result = officeRepository.FindAllAsync(office => office.Obsolete == false);
 
-            return Task.FromResult(automapper.Map<IEnumerable<OfficeResponse>>(result));
+            var response = new Response<IEnumerable<OfficeResponse>>(automapper.Map<IEnumerable<OfficeResponse>>(result));
+            return Task.FromResult(response);
         }
 
-        public Task<Office> CreateAsync(Office office)
+        public Task<Response<Office>> CreateAsync(Office office)
         {
             var result = officeRepository.CreateAsync(automapper.Map<DbOffice>(office)).Result;
 
-            return Task.FromResult(automapper.Map<Office>(result));
+            var response = new Response<Office>(automapper.Map<Office>(result));
+            return Task.FromResult(response);
         }
         
-        public Task<OfficeResponse> GetAsync(Guid officeguid)
+        public Task<Response<OfficeResponse>> GetAsync(Guid officeguid)
         {
             var result = officeRepository.GetAsync(officeguid).Result;
-
-            return Task.FromResult(automapper.Map<OfficeResponse>(result));
-        }
-
-        public Task DeleteAsync(Guid officeguid)
-        {
-            var source = officeRepository.GetAsync(officeguid).Result;
-            if (source != null)
+            if (result == null)
             {
-                officeRepository.DeleteAsync(source);
+                return Task.FromResult(Responses<OfficeResponse>.OfficeNotFounded);
             }
 
-            return Task.CompletedTask;
+            var response = new Response<OfficeResponse>(automapper.Map<OfficeResponse>(result));
+            return Task.FromResult(response);
         }
 
-        public Task<Office> UpdateAsync(Office target)
+        public Task<Response<OfficeResponse>> DeleteAsync(Guid officeguid)
+        {
+            var source = officeRepository.GetAsync(officeguid).Result;
+            if (source == null)
+            {
+                return Task.FromResult(Responses<OfficeResponse>.OfficeNotFounded);
+            }
+
+            officeRepository.DeleteAsync(source);
+
+            var response = new Response<OfficeResponse>();
+            return Task.FromResult(response);
+        }
+
+        public Task<Response<Office>> UpdateAsync(Office target)
         {
             var source = officeRepository.GetAsync(target.Guid).Result;
             if (source == null)
             {
-                // TODO создать ошибку для Not Found
-                throw new NotImplementedException();
+                return Task.FromResult(Responses<Office>.OfficeNotFounded);
             }
+
             source.City = target.City;
             source.Building = target.Building;
             source.House = target.House;
             source.PhoneNumber = target.PhoneNumber;
             source.Street = target.Street;
             var result = officeRepository.UpdateAsync(source).Result;
-            return Task.FromResult(automapper.Map<Office>(result));
+
+            var response = new Response<Office>(automapper.Map<Office>(result));
+            return Task.FromResult(response);
         }
         #endregion
     }

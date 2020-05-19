@@ -1,10 +1,12 @@
-﻿using System.Threading.Tasks;
+﻿using Common.Response;
+using System.Threading.Tasks;
 
 namespace Common.Interfaces
 {
-    public interface ICreate<TEntity>
-        where TEntity : class
+    public interface ICreate<TInput, TOutput>
+        where TInput : class
+        where TOutput : class
     {
-        Task<TEntity> CreateAsync(TEntity entity);
+        Task<Response<TOutput>> CreateAsync(TInput entity);
     }
 }

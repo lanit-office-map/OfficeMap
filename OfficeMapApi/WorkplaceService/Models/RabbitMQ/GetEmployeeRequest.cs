@@ -4,6 +4,6 @@ namespace WorkplaceService.Models.RabbitMQ
 {
     public class GetEmployeeRequest
     {
-        public Guid EmployeeGuid;
+        public Guid EmployeeGuid { get; set; }
     }
 }

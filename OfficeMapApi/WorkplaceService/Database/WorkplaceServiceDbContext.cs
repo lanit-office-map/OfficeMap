@@ -17,14 +17,6 @@ namespace WorkplaceService.Database
         public virtual DbSet<DbMapFile> MapFiles { get; set; }
         public virtual DbSet<DbWorkplace> Workplaces { get; set; }
 
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        {
-            if (!optionsBuilder.IsConfigured)
-            {
-                optionsBuilder.UseSqlServer("Server=localhost;Database=DOM;Trusted_Connection=True;");
-            }
-        }
-
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<DbMapFile>(entity =>

@@ -1,12 +1,7 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Configuration.AzureAppConfiguration;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
-using UserService;
 
 namespace UserService
 {
@@ -21,7 +16,21 @@ namespace UserService
             Host.CreateDefaultBuilder(args)
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
-                    webBuilder.UseStartup<Startup>();
+                  webBuilder.ConfigureAppConfiguration((hostingContext, config) =>
+                  {
+                    var settings = config.Build();
+                    if (!string.IsNullOrWhiteSpace(settings["AppConfig"]))
+                    {
+                      config.AddAzureAppConfiguration(
+                        options =>
+                        {
+                          options.Connect(settings["AppConfig"])
+                            .Select(KeyFilter.Any, LabelFilter.Null)
+                            .Select(KeyFilter.Any, hostingContext.HostingEnvironment.EnvironmentName);
+                        });
+                    }
+                  });
+                  webBuilder.UseStartup<Startup>();
                 });
     }
 }

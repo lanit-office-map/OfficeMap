@@ -1,16 +1,23 @@
 ﻿using Common.Interfaces;
-using System;
-using WorkplaceService.Filters;
 using WorkplaceService.Models;
+using WorkplaceService.Models.Services;
 
 namespace WorkplaceService.Services
 {
     public interface IWorkplaceService :
-        IGet<WorkplaceResponse, Guid>,
-        IDelete<Guid>,
-        IFindAll<WorkplaceResponse, WorkplaceFilter>,
-        ICreate<Workplace>,
-        IUpdate<Workplace>
+        IFindAll<WorkplaceRequest, WorkplaceResponse>,
+        IGet<WorkplaceRequest, WorkplaceResponse>,
+        ICreate<WorkplaceRequest, Workplace>,
+        IUpdate<WorkplaceRequest, Workplace>,
+        IDelete<WorkplaceRequest, WorkplaceResponse>
     {
     }
+    /*public interface IWorkplaceService :
+        IFindAll<WorkplaceRequest>,
+        IGet<WorkplaceRequest>,
+        ICreate<WorkplaceRequest>,
+        IUpdate<WorkplaceRequest>,
+        IDelete<WorkplaceRequest>
+    {
+    }*/
 }

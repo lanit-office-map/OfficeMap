@@ -3,11 +3,14 @@ using Microsoft.AspNetCore.Mvc;
 using OfficeService.Models;
 using OfficeService.Services.Interface;
 using System;
+using Microsoft.AspNetCore.Authorization;
+using Common.Response;
 
 namespace OfficeService.Controllers
 {
     [Route("OfficeService/[controller]")]
     [ApiController]
+
     public class OfficeController : ControllerBase
     {
         #region private fields
@@ -24,27 +27,31 @@ namespace OfficeService.Controllers
         [HttpGet("offices")]
         public async Task<ActionResult> GetOffices()
         {
-            var result = await officeService.FindAllAsync();
+            var response = await officeService.FindAllAsync();
 
-            return Ok(result);
+            return response.Status == ResponseResult.Success
+            ? Ok(response.Result)
+            : StatusCode((int)response.Error.StatusCode, response.Error.Message);
         }
 
         [HttpPost("offices")]
         public async Task<ActionResult<Office>> PostOffices([FromBody] Office office)
         {
-            var result = await officeService.CreateAsync(office);
-            return Ok(result);
+            var response = await officeService.CreateAsync(office);
+
+            return response.Status == ResponseResult.Success
+            ? Ok(response.Result)
+            : StatusCode((int)response.Error.StatusCode, response.Error.Message);
         }
 
         [HttpGet("offices/{officeGuid}")]
         public async Task<ActionResult<Office>> GetOffice([FromRoute] Guid officeGuid)
         {
-            var result = await officeService.GetAsync(officeGuid);
-            if (result == null)
-            {
-                return NotFound();
-            }
-            return Ok(result);
+            var response = await officeService.GetAsync(officeGuid);
+
+            return response.Status == ResponseResult.Success
+            ? Ok(response.Result)
+            : StatusCode((int)response.Error.StatusCode, response.Error.Message);
         }
 
         [HttpPut("offices/{officeGuid}")]
@@ -54,15 +61,21 @@ namespace OfficeService.Controllers
 
         {
             target.Guid = officeGuid;
-            var result = await officeService.UpdateAsync(target);
-            return Ok(result);
+            var response = await officeService.UpdateAsync(target);
+
+            return response.Status == ResponseResult.Success
+            ? Ok(response.Result)
+            : StatusCode((int)response.Error.StatusCode, response.Error.Message);
         }
 
         [HttpDelete("offices/{officeGuid}")]
         public async Task<ActionResult> DeleteOffice([FromRoute] Guid officeGuid)
         {
-            await officeService.DeleteAsync(officeGuid);
-            return Ok();
+            var response = await officeService.DeleteAsync(officeGuid);
+
+            return response.Status == ResponseResult.Success
+            ? Ok(response.Result)
+            : StatusCode((int)response.Error.StatusCode, response.Error.Message);
         }
         #endregion
     }

@@ -6,11 +6,11 @@ using OfficeService.Filters;
 namespace OfficeService.Services.Interface
 {
     public interface IOfficeService :
-          IGet<OfficeResponse, Guid>,
-          IDelete<Guid>,
-          IFindAll<OfficeResponse, OfficeFilter>,
-          ICreate<Office>,
-          IUpdate<Office>
+          IGet<Guid, OfficeResponse>,
+          IDelete<Guid, OfficeResponse>,
+          IFindAll<OfficeResponse>,
+          ICreate<Office, Office>,
+          IUpdate<Office, Office>
     {
     }
 }
