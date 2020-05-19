@@ -1,6 +1,6 @@
 <mat-sidenav class="sidebar">
   <div class="user">
-    <img class="logo-image__user-icon" src="../../../assets/user-icon.png">
+    <img class="logo-image__user-icon" src="../../../assets/user-icon-light.png">
     <h1>Имя Фамилия</h1>
     <h2>Должность</h2>
   </div>
@@ -8,16 +8,30 @@
   <img class="logo-image__lanit-tercom" src="../../../assets/logo-lanit-tercom.png">
 </mat-sidenav>
 
-<mat-expansion-panel class="map-list">
-  <mat-expansion-panel-header>
-    Чернышевская
-  </mat-expansion-panel-header>
+<mat-accordion class="map-list">
+    <mat-expansion-panel>
+      <mat-expansion-panel-header>
+        <img class="logo-image__map-icon" src="../../../assets/map-icon.svg.png">
+        Чернышевская
+      </mat-expansion-panel-header>
 
-  <p>Этаж 2</p>
+      <p>Этаж 2, левое крыло</p>
+      <p>Этаж 2, правое крыло</p>
+      <p>Этаж 3, левое крыло</p>
+      <p>Этаж 3, правое крыло</p>
 
-  <mat-action-row>
-    <p>Этаж 2</p>
-    <p>Этаж 3</p>
-    <p>Этаж 4</p>
-  </mat-action-row>
-</mat-expansion-panel>
+    </mat-expansion-panel>
+
+    <mat-expansion-panel>
+      <mat-expansion-panel-header>
+        <img class="logo-image__map-icon" src="../../../assets/map-icon.svg.png">
+        Василеостровская
+      </mat-expansion-panel-header>
+
+
+      <p>Этаж 2, левое крыло</p>
+      <p>Этаж 2, правое крыло</p>
+      <p>Этаж 3, левое крыло</p>
+      <p>Этаж 3, правое крыло</p>
+    </mat-expansion-panel>
+</mat-accordion>
