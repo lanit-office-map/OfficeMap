@@ -3,9 +3,9 @@ using System.Threading.Tasks;
 
 namespace Common.Interfaces
 {
-    public interface IDelete<TEntity, in TKey>
-        where TEntity : class
+    public interface IDelete<in TInput, TOutput>
+        where TOutput : class
     {
-        Task<Response<TEntity>> DeleteAsync(TKey entity);
+        Task<Response<TOutput>> DeleteAsync(TInput input);
     }
 }

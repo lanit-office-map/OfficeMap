@@ -5,12 +5,12 @@ namespace Common.Response
     public class Response<T> where T : class
     {
         public ResponseResult Status { get; set; }
-        public T Result { get; set; }
         public ResponseException Error { get; set; }
+        public T Result { get; set; }
 
-        public Response(T result)
+        //Without object
+        public Response()
         {
-            Result = result;
             Status = ResponseResult.Success;
         }
 
@@ -20,11 +20,15 @@ namespace Common.Response
             Error = new ResponseException(statusCode, message);
         }
 
-        public Response(T result, HttpStatusCode statusCode, string message)
+        //With object
+        public Response(T result) : this()
         {
             Result = result;
-            Status = ResponseResult.Error;
-            Error = new ResponseException(statusCode, message);
+        }
+
+        public Response(T result, HttpStatusCode statusCode, string message) : this(statusCode, message)
+        {
+            Result = result;
         }
     }
 

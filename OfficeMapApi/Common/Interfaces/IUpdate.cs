@@ -3,9 +3,10 @@ using System.Threading.Tasks;
 
 namespace Common.Interfaces
 {
-    public interface IUpdate<TEntity>
-        where TEntity : class
+    public interface IUpdate<TInput, TOutput>
+        where TInput : class
+        where TOutput : class
     {
-        Task<Response<TEntity>> UpdateAsync(TEntity entity);
+        Task<Response<TOutput>> UpdateAsync(TInput input);
     }
 }

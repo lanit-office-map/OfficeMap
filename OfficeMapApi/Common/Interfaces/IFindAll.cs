@@ -4,9 +4,16 @@ using System.Threading.Tasks;
 
 namespace Common.Interfaces
 {
-    public interface IFindAll<TEntity>
-        where TEntity : class
+    public interface IFindAll<TOutput>
+        where TOutput : class
     {
-        Task<Response<IEnumerable<TEntity>>> FindAllAsync();
+        Task<Response<IEnumerable<TOutput>>> FindAllAsync();
+    }
+
+    public interface IFindAll<TInput, TOutput>
+        where TInput : class
+        where TOutput : class
+    {
+        Task<Response<IEnumerable<TOutput>>> FindAllAsync(TInput input);
     }
 }

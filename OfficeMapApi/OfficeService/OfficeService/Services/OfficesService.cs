@@ -7,6 +7,7 @@ using OfficeService.Models;
 using OfficeService.Repository.Interfaces;
 using OfficeService.Services.Interface;
 using AutoMapper;
+using Common.Response;
 
 namespace OfficeService.Services
 {
@@ -26,28 +27,31 @@ namespace OfficeService.Services
             this.automapper = automapper;
         }
 
-        public Task<IEnumerable<OfficeResponse>> FindAllAsync()
+        public Task<Response<IEnumerable<OfficeResponse>>> FindAllAsync()
         {
             var result = officeRepository.FindAllAsync(office => office.Obsolete == false);
 
-            return Task.FromResult(automapper.Map<IEnumerable<OfficeResponse>>(result));
+            var response = new Response<IEnumerable<OfficeResponse>>(automapper.Map<IEnumerable<OfficeResponse>>(result));
+            return Task.FromResult(response);
         }
 
-        public Task<Office> CreateAsync(Office office)
+        public Task<Response<Office>> CreateAsync(Office office)
         {
             var result = officeRepository.CreateAsync(automapper.Map<DbOffice>(office)).Result;
 
-            return Task.FromResult(automapper.Map<Office>(result));
+            var response = new Response<Office>(automapper.Map<Office>(result));
+            return Task.FromResult(response);
         }
         
-        public Task<OfficeResponse> GetAsync(Guid officeguid)
+        public Task<Response<OfficeResponse>> GetAsync(Guid officeguid)
         {
             var result = officeRepository.GetAsync(officeguid).Result;
 
-            return Task.FromResult(automapper.Map<OfficeResponse>(result));
+            var response = new Response<OfficeResponse>(automapper.Map<OfficeResponse>(result));
+            return Task.FromResult(response);
         }
 
-        public Task DeleteAsync(Guid officeguid)
+        public Task<Response<OfficeResponse>> DeleteAsync(Guid officeguid)
         {
             var source = officeRepository.GetAsync(officeguid).Result;
             if (source != null)
@@ -55,10 +59,11 @@ namespace OfficeService.Services
                 officeRepository.DeleteAsync(source);
             }
 
-            return Task.CompletedTask;
+            var response = new Response<OfficeResponse>();
+            return Task.FromResult(response);
         }
 
-        public Task<Office> UpdateAsync(Office target)
+        public Task<Response<Office>> UpdateAsync(Office target)
         {
             var source = officeRepository.GetAsync(target.Guid).Result;
             if (source == null)
@@ -72,7 +77,9 @@ namespace OfficeService.Services
             source.PhoneNumber = target.PhoneNumber;
             source.Street = target.Street;
             var result = officeRepository.UpdateAsync(source).Result;
-            return Task.FromResult(automapper.Map<Office>(result));
+
+            var response = new Response<Office>(automapper.Map<Office>(result));
+            return Task.FromResult(response);
         }
         #endregion
     }
