@@ -73,11 +73,6 @@ namespace UserService.Controllers
 
       var logoutRequest = await _interactionService.GetLogoutContextAsync(logoutId);
 
-      if (string.IsNullOrEmpty(logoutRequest.PostLogoutRedirectUri))
-      {
-        return Redirect("http://localhost:4200/home");
-      }
-
       return Redirect(logoutRequest.PostLogoutRedirectUri);
     }
 

@@ -30,7 +30,7 @@ namespace OfficeService
 
     public void ConfigureServices(IServiceCollection services)
     {
-      var connectionString = Configuration["DefaultConnection"];
+      var connectionString = Configuration["ConnectionString:DefaultConnection"];
       services.AddDbContext<OfficeServiceDbContext>(options => options.UseSqlServer(connectionString));
       services.AddAutoMapper(typeof(OfficeModelsProfile));
       services.AddScoped<IOfficeRepository, OfficeRepository>();
@@ -40,10 +40,10 @@ namespace OfficeService
       {
         return new ConnectionFactory()
         {
-          Uri = new Uri(Configuration["Cloud_AMQP_URL"]),
-          HostName = Configuration["RabbitMQConnection"],
-          UserName = Configuration["RabbitMQUsername"],
-          Password = Configuration["RabbitMQPassword"]
+          Uri = new Uri(Configuration["RabbitMQ:Cloud_AMQP_URL"]),
+          HostName = Configuration["RabbitMQ:Connection"],
+          UserName = Configuration["RabbitMQ:Username"],
+          Password = Configuration["RabbitMQ:Password"]
         };
       });
       services.AddSingleton<IRabbitMQPersistentConnection, RabbitMQPersistentConnection>();
@@ -52,7 +52,7 @@ namespace OfficeService
       services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         .AddJwtBearer(options =>
         {
-          options.Authority = Configuration["UserService_URL"];
+          options.Authority = Configuration["Addresses:Backend:UserService"];
           options.Audience = "OfficeService";
           options.RequireHttpsMetadata = false;
           options.SaveToken = true;
