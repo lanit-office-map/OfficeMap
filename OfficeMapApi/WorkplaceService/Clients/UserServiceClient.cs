@@ -5,74 +5,101 @@ using System.Text;
 using System.Threading.Tasks;
 using RabbitMQ.Client.Events;
 using System.Collections.Concurrent;
-using Newtonsoft.Json;
-using Microsoft.Extensions.Logging;
 using Common.RabbitMQ.Interface;
 using WorkplaceService.Models.RabbitMQ;
+using System.Collections.Specialized;
+using Newtonsoft.Json;
 
 namespace WorkplaceService.Clients
 {
     public class UserServiceClient : IUserServiceClient
     {
+        #region RabbitMQ Fields
         private readonly IModel channel;
-        private readonly string replyQueueName;
-        private readonly IBasicProperties props;
+        private readonly IBasicProperties properties;
         private readonly EventingBasicConsumer consumer;
-        private readonly IRabbitMQPersistentConnection rabbitMQPersistentConnection;
-        private readonly BlockingCollection<Employee> respQueue = new BlockingCollection<Employee>();
-        private readonly ILogger<UserServiceClient> logger;
-
-        public UserServiceClient(
-            [FromServices] IRabbitMQPersistentConnection rabbitMQPersistentConnection,
-            [FromServices] ILogger<UserServiceClient> logger)
+        #endregion
+        private const string RequestQueueName = "UserService_Queue";
+        private const string ReplyQueueName = "UserService_ReplyQueue";
+        private const string RequestBindingKey = "UserRequest";
+        private readonly StringCollection ReplyBindingKeys = new StringCollection()
         {
-            this.logger = logger;
+            "user_data", "user_error"
+        };
 
-            this.rabbitMQPersistentConnection = rabbitMQPersistentConnection;
+        private const string RequestExchange = "requests";
+        private const string ReplyExchange = "replies";
+        private GetEmployeeRequest Request = new GetEmployeeRequest();
+        private readonly BlockingCollection<Employee> Replies = new BlockingCollection<Employee>();
+
+        #region Constructor
+        public UserServiceClient([FromServices] IRabbitMQPersistentConnection rabbitMQPersistentConnection)
+        {
             channel = rabbitMQPersistentConnection.CreateModel();
-            replyQueueName = channel.QueueDeclare().QueueName;
+
+            var correlationId = Guid.NewGuid().ToString();
+            properties = channel.CreateBasicProperties();
+            properties.CorrelationId = correlationId;
+            properties.ReplyTo = ReplyQueueName;
+
             consumer = new EventingBasicConsumer(channel);
 
-            props = channel.CreateBasicProperties();
-            var correlationId = Guid.NewGuid().ToString();
-            props.CorrelationId = correlationId;
-            props.ReplyTo = replyQueueName;
+            channel.ExchangeDeclare(RequestExchange, ExchangeType.Direct);
+            channel.ExchangeDeclare(ReplyExchange, ExchangeType.Direct);
+
+            channel.QueueDeclare(RequestQueueName, false, false, true);
+            channel.QueueDeclare(ReplyQueueName, false, false, true);
+            channel.QueueBind(ReplyQueueName, ReplyExchange, ReplyBindingKeys[0]);
+            channel.QueueBind(ReplyQueueName, ReplyExchange, ReplyBindingKeys[1]);
+            channel.QueueBind(RequestQueueName, RequestExchange, RequestBindingKey);
 
             consumer.Received += (model, ea) =>
             {
-                var body = ea.Body;
-                var response = Encoding.UTF8.GetString(body.ToArray());
-                var feedback = JsonConvert.DeserializeObject<Employee>(response);
-                if (ea.BasicProperties.CorrelationId == correlationId)
+                if (ea.RoutingKey == "user_data")
                 {
-                    respQueue.Add(feedback);
+                    var body = ea.Body;
+                    var response = Encoding.UTF8.GetString(body.ToArray());
+                    var feedback = JsonConvert.DeserializeObject<Employee>(response);
+                    if (ea.BasicProperties.CorrelationId == correlationId)
+                    {
+                        Replies.Add(feedback);
+                        Console.WriteLine("UserID received: " + body.ToString());
+                    }
+                }
+                if (ea.RoutingKey == "user_error")
+                {
+                    // TODO Implement ErrorHandler
+                    Employee feedback = null;
+                    Console.WriteLine("404: No User is found");
+                    Replies.Add(feedback);
                 }
             };
         }
-
-        public Task<Employee> GetUserIdAsync(Guid employeeGuid)
+        #endregion
+        public Task<Employee> GetUserIdAsync(Guid UserGuid)
         {
-            var employeeRequest = new GetEmployeeRequest { EmployeeGuid = employeeGuid };
-            logger.LogInformation("HTTP-request is sent");
-            var item = Message(employeeRequest);
+            Request.EmployeeGuid = UserGuid;
+            Console.WriteLine("Request for Workplaces is sent");
+            var item = Message(Request);
             return Task.FromResult(item);
         }
 
-        private Employee Message(GetEmployeeRequest employeeRequest)
+        private Employee Message(GetEmployeeRequest Request)
         {
-            var employeeRequestJson = JsonConvert.SerializeObject(employeeRequest);
-            var message = Encoding.UTF8.GetBytes(employeeRequestJson);
+            var message = JsonConvert.SerializeObject(Request);
+            var messageBytes = Encoding.UTF8.GetBytes(message);
+
             channel.BasicPublish(
-                exchange: "",
-                routingKey: "userService_queue",
-                basicProperties: props,
-                body: message);
+                exchange: RequestExchange,
+                routingKey: RequestBindingKey,
+                basicProperties: properties,
+                body: messageBytes);
 
             channel.BasicConsume(
                 consumer: consumer,
-                queue: replyQueueName,
+                queue: ReplyQueueName,
                 autoAck: true);
-            var item = respQueue.Take();
+            var item = Replies.Take();
             return item;
         }
     }

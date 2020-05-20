@@ -6,6 +6,6 @@ namespace WorkplaceService.Clients
 {
     public interface ISpaceServiceClient
     {
-        Task<int> GetSpaceIdAsync(Guid officeGuid, Guid spaceGuid);
+        Task<Space> GetSpaceIdAsync(Guid officeGuid, Guid spaceGuid);
     }
 }

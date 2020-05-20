@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 using RabbitMQ.Client.Events;
 using System.Collections.Concurrent;
 using Newtonsoft.Json;
-using Microsoft.Extensions.Logging;
 using Common.RabbitMQ.Interface;
 using WorkplaceService.Models.RabbitMQ;
 using System.Collections.Specialized;
@@ -31,7 +30,7 @@ namespace WorkplaceService.Clients
         private const string RequestExchange = "requests";
         private const string ReplyExchange = "replies";
         private GetSpaceRequest Request = new GetSpaceRequest();
-        private readonly BlockingCollection<int> Replies = new BlockingCollection<int>();
+        private readonly BlockingCollection<Space> Replies = new BlockingCollection<Space>();
 
         #region Constructor
         public SpaceServiceClient([FromServices] IRabbitMQPersistentConnection rabbitMQPersistentConnection)
@@ -64,7 +63,8 @@ namespace WorkplaceService.Clients
                 if (ea.RoutingKey == "space_data")
                 {
                     var body = ea.Body;
-                    int feedback = int.Parse(body.ToString());
+                    var response = Encoding.UTF8.GetString(body.ToArray());
+                    var feedback = JsonConvert.DeserializeObject<Space>(response);
                     if (ea.BasicProperties.CorrelationId == correlationId)
                     {
                         Replies.Add(feedback);
@@ -73,15 +73,14 @@ namespace WorkplaceService.Clients
                 }
                 if (ea.RoutingKey == "space_error")
                 {
-                    // добавишь обработку 404
-                    int feedback = 0;
+                    Space feedback = null;
                     Console.WriteLine("404: No Space is found");
                     Replies.Add(feedback);
                 }
             };
         }
         #endregion
-        public Task<int> GetSpaceIdAsync(Guid officeGuid, Guid spaceGuid)
+        public Task<Space> GetSpaceIdAsync(Guid officeGuid, Guid spaceGuid)
         {
             Request.OfficeGuid = officeGuid;
             Request.SpaceGuid = spaceGuid;
@@ -90,7 +89,7 @@ namespace WorkplaceService.Clients
             return Task.FromResult(item);
         }
 
-        private int Message(GetSpaceRequest Request)
+        private Space Message(GetSpaceRequest Request)
         {
             var message = JsonConvert.SerializeObject(Request);
             var messageBytes = Encoding.UTF8.GetBytes(message);
