@@ -15,12 +15,12 @@
   font-size: 14px;
   line-height: 8px;
   text-decoration: none;
+  width: 80px;
   color: white;
 }
 :hover {
   background-color: $light-grey;
   color: black;
-  height: 65px;
 }
 
 .search-bar {
@@ -29,9 +29,9 @@
   position: absolute;
   height: 65px;
   top: 65px;
+  background-color: white;
 }
 :hover {
-  background-color: $light-grey;
+  background-color: orange;
   color: black;
-  height: 65px;
 }
