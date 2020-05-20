@@ -9,19 +9,31 @@
   background: $blue-main;
 }
 
-.toolbar a {
+.link {
   text-align: center;
   padding: 30px;
   font-weight: 500;
   font-size: 14px;
-  line-height: 12px;
-  border-radius: 0px;
+  line-height: 8px;
   text-decoration: none;
   color: white;
 }
-
-.toolbar a:hover {
+:hover {
   background-color: $light-grey;
   color: black;
-  height: 5px;
+  height: 65px;
+}
+
+.search-bar {
+  display: inline-flex;
+  flex-direction: row-reverse;
+  position: absolute;
+  width: 100%;
+  height: 65px;
+  top: 65px;
+}
+:hover {
+  background-color: $light-grey;
+  color: black;
+  height: 65px;
 }
