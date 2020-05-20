@@ -5,8 +5,8 @@ namespace OfficeService.Models
 {
     public class OfficeResponse
     {
-        [IgnoreDataMember]
         public Guid Guid { get; set; }
+        public int OfficeId { get; set; }
         public string City { get; set; }
         public string Street { get; set; }
         public string House { get; set; }

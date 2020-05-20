@@ -1,5 +1,6 @@
 using System;
-using System.Security.Policy;
+using Common.RabbitMQ.Interface;
+using Common.RabbitMQ;
 using AutoMapper;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
@@ -11,12 +12,12 @@ using Microsoft.Extensions.Hosting;
 using OfficeService.Database;
 using OfficeService.Mappers;
 using OfficeService.Messaging.RabbitMQ;
-using OfficeService.Messaging.RabbitMQ.Interface;
 using OfficeService.Repository;
 using OfficeService.Repository.Interfaces;
 using OfficeService.Services;
 using OfficeService.Services.Interface;
 using RabbitMQ.Client;
+using Microsoft.Extensions.Logging;
 
 namespace OfficeService
 {
@@ -36,6 +37,7 @@ namespace OfficeService
       services.AddScoped<IOfficeRepository, OfficeRepository>();
       services.AddScoped<IOfficeService, OfficesService>();
       services.AddScoped<OfficeServiceServer>();
+
       services.AddSingleton<IConnectionFactory, ConnectionFactory>(sp =>
       {
         return new ConnectionFactory()
