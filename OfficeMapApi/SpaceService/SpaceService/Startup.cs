@@ -39,7 +39,6 @@ namespace SpaceService
             services.AddScoped<ISpaceTypeRepository, SpaceTypeRepository>();
             services.AddScoped<ISpaceRepository, SpaceRepository>();
             services.AddScoped<ISpacesService, SpacesService>();
-            services.AddScoped<SpaceController>();
             services.AddScoped<ISpaceTypeService, SpaceTypeService>();
             services.AddSingleton<IConnectionFactory, ConnectionFactory>(sp =>
             {
