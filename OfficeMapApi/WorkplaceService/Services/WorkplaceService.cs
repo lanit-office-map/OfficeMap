@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using WorkplaceService.Clients;
 using WorkplaceService.Database.Entities;
 using WorkplaceService.Models;
+using WorkplaceService.Models.RabbitMQ;
 using WorkplaceService.Models.Services;
 using WorkplaceService.Repository.Interfaces;
 
@@ -56,13 +57,13 @@ namespace WorkplaceService.Services
             //Get and validate space where the workplaces stand.
             var space = spaceServiceClient.GetSpaceIdAsync(
                 workplaceRequest.OfficeGuid, workplaceRequest.SpaceGuid).Result;
-            if (space == 0)
+            if (space == null)
             {
                 return await Task.FromResult(Responses<IEnumerable<WorkplaceResponse>>.WorkplaceNotFounded);
             }
 
             var result = workplaceRepository.FindAllAsync(
-                e => e.SpaceId == space && e.Obsolete == false);
+                e => e.SpaceId == space.SpaceId && e.Obsolete == false);
 
             var response = new Response<IEnumerable<WorkplaceResponse>>(
                 automapper.Map<IEnumerable<WorkplaceResponse>>(result));
@@ -74,7 +75,7 @@ namespace WorkplaceService.Services
             //Get and validate space where the workplaces stand.
             var space = spaceServiceClient.GetSpaceIdAsync(
                 workplaceRequest.OfficeGuid, workplaceRequest.SpaceGuid).Result;
-            if (space == 0)
+            if (space == null)
             {
                 return await Task.FromResult(Responses<WorkplaceResponse>.SpaceNotFounded);
             }
@@ -95,13 +96,15 @@ namespace WorkplaceService.Services
             //Get and validate space where the workplaces will stand.
             var space = spaceServiceClient.GetSpaceIdAsync(
                 workplaceRequest.OfficeGuid, workplaceRequest.SpaceGuid).Result;
-            if (space == 0)
+            if (space == null)
             {
                 return await Task.FromResult(Responses<Workplace>.SpaceNotFounded);
             }
             //Check that the specified employee exists.
+            GetEmployeeRequest employeeRequest = new GetEmployeeRequest();
             var employeeGuid = workplaceRequest.Workplace.EmployeeGuid; //Not NullReferenceException if Workplase is not null
-            var employee = userServiceClient.GetUserIdAsync(employeeGuid).Result;
+            employeeRequest.EmployeeGuid = employeeGuid;
+            var employee = userServiceClient.GetUserIdAsync(employeeRequest).Result;
             if (employee == null)
             {
                 return await Task.FromResult(Responses<Workplace>.EmployeeNotFounded);
@@ -125,13 +128,15 @@ namespace WorkplaceService.Services
             //Get and validate space where the workplaces will stand.
             var space = spaceServiceClient.GetSpaceIdAsync(
                 workplaceRequest.OfficeGuid, workplaceRequest.SpaceGuid).Result;
-            if (space == 0)
+            if (space == null)
             {
                 return await Task.FromResult(Responses<Workplace>.SpaceNotFounded);
             }
             //Check that the specified employee exists.
+            GetEmployeeRequest employeeRequest = new GetEmployeeRequest();
             var employeeGuid = workplaceRequest.Workplace.EmployeeGuid; //Not NullReferenceException if Workplase is not null
-            var employee = userServiceClient.GetUserIdAsync(employeeGuid).Result;
+            employeeRequest.EmployeeGuid = employeeGuid;
+            var employee = userServiceClient.GetUserIdAsync(employeeRequest).Result;
             if (employee == null)
             {
                 return await Task.FromResult(Responses<Workplace>.EmployeeNotFounded);
@@ -155,7 +160,7 @@ namespace WorkplaceService.Services
             }
 
             workplace.EmployeeId = employee.EmployeeId;
-            workplace.Map = automapper.Map<DbMapFile>(workplaceRequest.Workplace.Map);
+            workplace.Map = automapper.Map<DbMapFile>(workplaceRequest.Workplace.WorkplaceMap);
             var result = workplaceRepository.UpdateAsync(workplace).Result;
 
             var response = new Response<Workplace>(automapper.Map<Workplace>(result));
@@ -169,7 +174,7 @@ namespace WorkplaceService.Services
             //Get and validate space where the workplaces stand.
             var space = spaceServiceClient.GetSpaceIdAsync(
                 workplaceRequest.OfficeGuid, workplaceRequest.SpaceGuid).Result;
-            if (space == 0)
+            if (space == null)
             {
                 return await Task.FromResult(Responses<WorkplaceResponse>.SpaceNotFounded);
             }

@@ -7,6 +7,7 @@ using WorkplaceService.Filters;
 using WorkplaceService.Models;
 using WorkplaceService.Models.Services;
 using WorkplaceService.Services;
+using WorkplaceService.Models.RabbitMQ;
 
 namespace WorkplaceService.Controllers
 {
@@ -17,15 +18,18 @@ namespace WorkplaceService.Controllers
         #region private fields
         private readonly IWorkplaceService workplaceService;
         private readonly ISpaceServiceClient spaceServiceClient;
+        private readonly IUserServiceClient userServiceClient;
         #endregion
 
         #region public methods
         public WorkplaceController(
             [FromServices] IWorkplaceService workplaceService,
-            [FromServices] ISpaceServiceClient spaceServiceClient)
+            [FromServices] ISpaceServiceClient spaceServiceClient,
+            [FromServices] IUserServiceClient userServiceClient)
         {
             this.workplaceService = workplaceService;
             this.spaceServiceClient = spaceServiceClient;
+            this.userServiceClient = userServiceClient;
         }
 
        
@@ -34,8 +38,8 @@ namespace WorkplaceService.Controllers
             [FromRoute] Guid officeGuid,
             [FromRoute] Guid spaceGuid)
         {
-            var spaceId = spaceServiceClient.GetSpaceIdAsync(officeGuid, spaceGuid).Result;
-            if (spaceId == 0)
+            var space = spaceServiceClient.GetSpaceIdAsync(officeGuid, spaceGuid).Result;
+            if (space == null)
             {
                 return BadRequest();
             }
@@ -55,20 +59,23 @@ namespace WorkplaceService.Controllers
             [FromRoute] Guid spaceGuid, 
             [FromBody] Workplace workplace)
         {
-			var spaceId = spaceServiceClient.GetSpaceIdAsync(officeGuid, spaceGuid).Result;
-            if (spaceId == 0)
+			var space = spaceServiceClient.GetSpaceIdAsync(officeGuid, spaceGuid).Result;
+            if (space == null)
             {
                 return BadRequest();
             }
-			
-			/* var employee = userServiceClient.GetUserIdAsync(workplace.EmployeeGuid).Result;
+            GetEmployeeRequest employeeRequest = new GetEmployeeRequest()
+            {
+                EmployeeGuid = workplace.EmployeeGuid
+            };			
+			 var employee = userServiceClient.GetUserIdAsync(employeeRequest).Result;
             if (employee == null)
             {
                 return BadRequest();
             }
-			workplace.SpaceId = spaceId;
-            workplace.EmployeeId = employee.EmployeeId;
-            */
+            workplace.SpaceGuid = spaceGuid;
+            workplace.EmployeeGuid = employee.EmployeeGuid;
+            
 
 			
             var response = await workplaceService.CreateAsync(
@@ -85,8 +92,8 @@ namespace WorkplaceService.Controllers
             [FromRoute] Guid spaceGuid,
             [FromRoute] Guid workplaceGuid)
         {
-            var spaceId = spaceServiceClient.GetSpaceIdAsync(officeGuid, spaceGuid).Result;
-            if (spaceId == 0)
+            var space = spaceServiceClient.GetSpaceIdAsync(officeGuid, spaceGuid).Result;
+            if (space == null)
             {
                 return BadRequest();
             }
@@ -99,7 +106,7 @@ namespace WorkplaceService.Controllers
             : StatusCode((int)response.Error.StatusCode, response.Error.Message);
         }
 
-        /*
+        
         [HttpPut("offices/{officeGuid}/spaces/{spaceGuid}/workplaces/{workplaceGuid}")]
         public async Task<ActionResult> PutWorkplace(
             [FromRoute] Guid officeGuid,
@@ -108,27 +115,32 @@ namespace WorkplaceService.Controllers
             [FromBody] Workplace workplace)
 
         {
-            var spaceId = spaceServiceClient.GetSpaceIdAsync(officeGuid, spaceGuid).Result;
-            if (spaceId == 0)
+            var space = spaceServiceClient.GetSpaceIdAsync(officeGuid, spaceGuid).Result;
+            if (space == null)
             {
                 return BadRequest();
             }
 
-            var currentWorkplace = await workplaceService.GetAsync(workplaceGuid);
-            if (currentWorkplace == null)
-            {
-                return NotFound();
-            }
+            /*    var currentWorkplace = await workplaceService.GetAsync(workplaceGuid);
+                if (currentWorkplace == null)
+                {
+                    return NotFound();
+                }
+                */
 
-            var employee = userServiceClient.GetUserIdAsync(workplace.EmployeeGuid).Result;
+            GetEmployeeRequest employeeRequest = new GetEmployeeRequest()
+            {
+                EmployeeGuid = workplace.EmployeeGuid
+            };
+            var employee = userServiceClient.GetUserIdAsync(employeeRequest).Result;
             if (employee == null)
             {
                 return BadRequest();
             }
 
-            workplace.SpaceId = spaceId;
-            workplace.Guid = currentWorkplace.Guid;
-            workplace.EmployeeId = employee.EmployeeId;
+            workplace.SpaceGuid = spaceGuid;
+         //   workplace.WorkplaceGuid = currentWorkplace.Guid;
+            workplace.EmployeeGuid = employee.EmployeeGuid;
             var response = await workplaceService.CreateAsync(
                 new WorkplaceRequest { OfficeGuid = officeGuid, SpaceGuid = spaceGuid, WorkplaceGuid = workplaceGuid, Workplace = workplace });
 
@@ -136,7 +148,7 @@ namespace WorkplaceService.Controllers
             ? Ok(response.Result)
             : StatusCode((int)response.Error.StatusCode, response.Error.Message);
         }
-        */
+        
 
         [HttpDelete("offices/{officeGuid}/spaces/{spaceGuid}/workplaces/{workplaceGuid}")]
         public async Task<ActionResult> DeleteWorkplace(
@@ -144,8 +156,8 @@ namespace WorkplaceService.Controllers
             [FromRoute] Guid spaceGuid,
             [FromRoute] Guid workplaceGuid)
         {
-            var spaceId = spaceServiceClient.GetSpaceIdAsync(officeGuid, spaceGuid).Result;
-            if (spaceId == 0)
+            var space = spaceServiceClient.GetSpaceIdAsync(officeGuid, spaceGuid).Result;
+            if (space == null)
             {
                 return BadRequest();
             }

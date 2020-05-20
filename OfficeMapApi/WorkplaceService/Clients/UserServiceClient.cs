@@ -9,6 +9,7 @@ using Common.RabbitMQ.Interface;
 using WorkplaceService.Models.RabbitMQ;
 using System.Collections.Specialized;
 using Newtonsoft.Json;
+using Microsoft.Extensions.Logging;
 
 namespace WorkplaceService.Clients
 {
@@ -22,6 +23,7 @@ namespace WorkplaceService.Clients
         private const string RequestQueueName = "UserService_Queue";
         private const string ReplyQueueName = "UserService_ReplyQueue";
         private const string RequestBindingKey = "UserRequest";
+        private readonly ILogger<UserServiceClient> logger;
         private readonly StringCollection ReplyBindingKeys = new StringCollection()
         {
             "user_data", "user_error"
@@ -33,8 +35,11 @@ namespace WorkplaceService.Clients
         private readonly BlockingCollection<Employee> Replies = new BlockingCollection<Employee>();
 
         #region Constructor
-        public UserServiceClient([FromServices] IRabbitMQPersistentConnection rabbitMQPersistentConnection)
+        public UserServiceClient(
+            [FromServices] IRabbitMQPersistentConnection rabbitMQPersistentConnection,
+            [FromServices] ILogger<UserServiceClient> logger)
         {
+            this.logger = logger;
             channel = rabbitMQPersistentConnection.CreateModel();
 
             var correlationId = Guid.NewGuid().ToString();
@@ -63,27 +68,28 @@ namespace WorkplaceService.Clients
                     if (ea.BasicProperties.CorrelationId == correlationId)
                     {
                         Replies.Add(feedback);
-                        Console.WriteLine("UserID received: " + body.ToString());
+                        logger.LogInformation("UserID received: " + body.ToString());
                     }
                 }
                 if (ea.RoutingKey == "user_error")
                 {
                     // TODO Implement ErrorHandler
                     Employee feedback = null;
-                    Console.WriteLine("404: No User is found");
+                    logger.LogInformation("404: No User is found");
                     Replies.Add(feedback);
                 }
             };
         }
         #endregion
-        public Task<Employee> GetUserIdAsync(Guid UserGuid)
+        public Task<Employee> GetUserIdAsync(GetEmployeeRequest request)
         {
-            Request.EmployeeGuid = UserGuid;
-            Console.WriteLine("Request for Workplaces is sent");
+            Request.EmployeeGuid = request.EmployeeGuid;
+            Request.EmployeeId = request.EmployeeId;
+
+            logger.LogInformation("Request for Employees is sent");
             var item = Message(Request);
             return Task.FromResult(item);
         }
-
         private Employee Message(GetEmployeeRequest Request)
         {
             var message = JsonConvert.SerializeObject(Request);

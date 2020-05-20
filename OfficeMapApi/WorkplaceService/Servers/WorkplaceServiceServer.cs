@@ -1,16 +1,16 @@
 ﻿using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
-using System;
 using System.Text;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using System.Collections.Specialized;
 using Common.RabbitMQ.Interface;
 using WorkplaceService.Services;
-using WorkplaceService.Filters;
 using System.Collections.Generic;
 using WorkplaceService.Models;
 using System.Collections.ObjectModel;
+using Microsoft.Extensions.Logging;
+using WorkplaceService.Models.RabbitMQ;
 
 namespace WorkplaceService.Servers
 {
@@ -19,6 +19,7 @@ namespace WorkplaceService.Servers
         #region private fields
         private readonly IRabbitMQPersistentConnection persistentConnection;
         private readonly IWorkplaceService workplaceService;
+        private readonly ILogger<WorkplaceServiceServer> logger;
         #endregion
         private readonly StringCollection ReplyBindingKeys = new StringCollection()
         {
@@ -42,8 +43,10 @@ namespace WorkplaceService.Servers
             ReplyProperties.ReplyTo = InboundProperties.ReplyTo;
 
             var message = Encoding.UTF8.GetString(InboundMessage.ToArray());
-            int spaceId = int.Parse(message);
-            Console.WriteLine("SpaceID received: " + message);
+            Space space = JsonConvert.DeserializeObject<Space>(message);
+            logger.LogInformation($"SpaceID received: {space.SpaceId}");
+
+        // заглушка. Заменить на GET /workplaces с фильтром по SpaceId.
 
             ICollection<WorkplaceResponse> workplaces = new Collection<WorkplaceResponse>();
             WorkplaceResponse workplace1 = new WorkplaceResponse()
@@ -58,6 +61,9 @@ namespace WorkplaceService.Servers
             };
             workplaces.Add(workplace1);
             workplaces.Add(workplace2);
+
+        // конец заглушки
+
             var response = JsonConvert.SerializeObject(workplaces);
             var responseBytes = Encoding.UTF8.GetBytes(response);
 
@@ -70,7 +76,7 @@ namespace WorkplaceService.Servers
 
                 channel.BasicAck(deliveryTag: ea.DeliveryTag,
                                  multiple: false);
-                Console.WriteLine("Reply is sent via " + ReplyBindingKeys[0] + " BindingKey");
+                logger.LogInformation("Reply is sent via " + ReplyBindingKeys[0] + " BindingKey");
             }
             if (workplaces == null)
             {
@@ -81,7 +87,7 @@ namespace WorkplaceService.Servers
 
                 channel.BasicAck(deliveryTag: ea.DeliveryTag,
                                  multiple: false);
-                Console.WriteLine("Reply is sent via " + ReplyBindingKeys[1] + " BindingKey");
+                logger.LogInformation("Reply is sent via " + ReplyBindingKeys[1] + " BindingKey");
             }
         }
         #endregion
@@ -89,12 +95,14 @@ namespace WorkplaceService.Servers
         #region Constructor
         public WorkplaceServiceServer(
             [FromServices] IRabbitMQPersistentConnection persistentConnection,
-            [FromServices] IWorkplaceService workplaceService)
+            [FromServices] IWorkplaceService workplaceService,
+            [FromServices] ILogger<WorkplaceServiceServer> logger)
         {
+            this.logger = logger;
             this.persistentConnection = persistentConnection;
             this.workplaceService = workplaceService;
             CreateConsumerChannel(RequestQueueName);
-            Console.WriteLine("WorkplaceService: created a queue called [" + RequestQueueName + "]");
+            logger.LogInformation("WorkplaceService: created a queue called [" + RequestQueueName + "]");
         }
         #endregion
 
