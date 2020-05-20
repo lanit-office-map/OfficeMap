@@ -74,15 +74,20 @@ namespace SpaceService.Controllers
             [FromRoute] Guid officeGuid, 
             [FromRoute] Guid spaceGuid)
         {
-            var response = officeServiceClient.GetOfficeAsync(officeGuid).Result;
+            // TODO 
+            // If browser sends a request, then we'll use officeServiceClient and workplaceServiceClient;
+            // If another service sends a request (e.g. WorkplaceService needs a SpaceID)
+            // then we'll use only officeServiceClient (since we don't need to get any workplaces);
+
+            var response = await officeServiceClient.GetOfficeAsync(officeGuid);
             if (response == null)
             {
                 return NotFound();
             }
-            SpaceFilter filter = new SpaceFilter(response.OfficeId, response.Guid);
+            SpaceFilter filter = new SpaceFilter(response.OfficeId, response.Guid);  
             var result = await spaceService.GetAsync(spaceGuid, filter);
             result.Workplaces = await workplaceServiceClient.GetWorkplacesAsync(result.SpaceId);
-                return Ok(result);
+            return Ok(result);
         }
 
         [HttpPut("spaces/{spaceGuid}")]

@@ -3,7 +3,9 @@ using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
+using SpaceService.Clients;
 using SpaceService.Controllers;
+using SpaceService.Filters;
 using SpaceService.Models;
 using SpaceService.RabbitMQ.Interface;
 using SpaceService.Services.Interfaces;
@@ -17,7 +19,8 @@ namespace SpaceService.Servers
     {
         #region private fields
         private readonly IRabbitMQPersistentConnection persistentConnection;
-        private readonly SpaceController spaceController;
+        private readonly ISpacesService spacesService;
+        private readonly OfficeServiceClient officeServiceClient;
         #endregion
         private readonly StringCollection ReplyBindingKeys = new StringCollection()
         {
@@ -45,7 +48,10 @@ namespace SpaceService.Servers
             Console.WriteLine("OfficeGUID received: " + guids.OfficeGuid);
             Console.WriteLine("SpaceGUID received: " + guids.SpaceGuid);
 
-            var space = (await spaceController.GetSpace(guids.OfficeGuid, guids.SpaceGuid)).Value;
+            var office = officeServiceClient.GetOfficeAsync(guids.OfficeGuid).Result;
+            var filter = new SpaceFilter(office.OfficeId, office.Guid);
+            var space = spacesService.GetAsync(guids.SpaceGuid, filter).Result;
+
             var response = space.SpaceId;
             var responseBytes = Encoding.UTF8.GetBytes(response.ToString());
             if (space != null)
@@ -76,10 +82,12 @@ namespace SpaceService.Servers
         #region Constructor
         public SpaceServiceServer(
             [FromServices] IRabbitMQPersistentConnection persistentConnection,
-            [FromServices] SpaceController spaceController)
+            [FromServices] OfficeServiceClient officeServiceClient,
+            [FromServices] ISpacesService spacesService)
         {
+            this.spacesService = spacesService;
+            this.officeServiceClient = officeServiceClient;
             this.persistentConnection = persistentConnection;
-            this.spaceController = spaceController;
             CreateConsumerChannel(RequestQueueName);
             Console.WriteLine("SpaceService: created a queue called [" + RequestQueueName + "]");
         }
