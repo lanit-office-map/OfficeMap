@@ -1,11 +1,16 @@
 @import "../../../colors";
 
 .sidebar {
-  position: absolute;
-  width: 256px;
-  height: 100%;
+  display: flex;
+  width: 257px;
   background: white;
   box-shadow: 0px 0px 10px $grey;
+}
+
+.page {
+  position: absolute;
+  top: 0;
+  bottom: 0;
 }
 
 .logo-image {

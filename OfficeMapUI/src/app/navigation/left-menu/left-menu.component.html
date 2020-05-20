@@ -1,44 +1,46 @@
-<div class="sidebar">
-  <div class="user">
-    <img class="logo-image__user-icon" src="../../../assets/user-icon-light.png">
-    <p class="user__name">Имя Фамилия</p>
-    <p class="user__position">Должность</p>
-  </div>
+<mat-sidenav-container class="page">
+  <mat-sidenav class="sidebar" mode="side" opened>
+    <div class="user">
+      <img class="logo-image__user-icon" src="../../../assets/user-icon-light.png">
+      <p class="user__name">Имя Фамилия</p>
+      <p class="user__position">Должность</p>
+    </div>
 
-  <mat-accordion class="map-list">
-    <mat-expansion-panel>
-      <mat-expansion-panel-header>
-        <img class="logo-image__map-icon" src="../../../assets/map-icon.svg">
-        <div class="map-list__place-name">
-          Чернышевская
+    <mat-accordion class="map-list">
+      <mat-expansion-panel>
+        <mat-expansion-panel-header>
+          <img class="logo-image__map-icon" src="../../../assets/map-icon.svg">
+          <div class="map-list__place-name">
+            Чернышевская
+          </div>
+        </mat-expansion-panel-header>
+
+
+        <div class="map-list__expanded-list">
+          <p>Этаж 2, левое крыло</p>
+          <p>Этаж 2, правое крыло</p>
+          <p>Этаж 3, левое крыло</p>
+          <p>Этаж 3, правое крыло</p>
         </div>
-      </mat-expansion-panel-header>
+      </mat-expansion-panel>
 
+      <mat-expansion-panel>
+        <mat-expansion-panel-header>
+          <img class="logo-image__map-icon" src="../../../assets/map-icon.svg">
+          <div class="map-list__place-name">
+            Василеостровская
+          </div>
+        </mat-expansion-panel-header>
 
-      <div class="map-list__expanded-list">
-        <p>Этаж 2, левое крыло</p>
-        <p>Этаж 2, правое крыло</p>
-        <p>Этаж 3, левое крыло</p>
-        <p>Этаж 3, правое крыло</p>
-      </div>
-    </mat-expansion-panel>
-
-    <mat-expansion-panel>
-      <mat-expansion-panel-header>
-        <img class="logo-image__map-icon" src="../../../assets/map-icon.svg">
-        <div class="map-list__place-name">
-          Василеостровская
+        <div class="map-list__expanded-list">
+          <p>Этаж 3, левое крыло</p>
+          <p>Этаж 3, правое крыло</p>
+          <p>Этаж 4, левое крыло</p>
+          <p>Этаж 4, правое крыло</p>
         </div>
-      </mat-expansion-panel-header>
+      </mat-expansion-panel>
+    </mat-accordion>
 
-      <div class="map-list__expanded-list">
-        <p>Этаж 3, левое крыло</p>
-        <p>Этаж 3, правое крыло</p>
-        <p>Этаж 4, левое крыло</p>
-        <p>Этаж 4, правое крыло</p>
-      </div>
-    </mat-expansion-panel>
-  </mat-accordion>
-
-  <img class="logo-image__lanit-tercom" src="../../../assets/logo-lanit-tercom.png">
-</div>
+    <img class="logo-image__lanit-tercom" src="../../../assets/logo-lanit-tercom.png">
+  </mat-sidenav>
+</mat-sidenav-container>
