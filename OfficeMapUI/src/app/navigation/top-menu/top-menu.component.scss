@@ -1,12 +1,12 @@
+@import "../../../colors";
+
 .toolbar {
-  display: -webkit-inline-flex;
   display: inline-flex;
   flex-direction: row-reverse;
   position: absolute;
   width: 100%;
   height: 65px;
-  top: 0px;
-  background: #009EDF;
+  background: $blue-main;
 }
 
 .toolbar a {
@@ -21,7 +21,7 @@
 }
 
 .toolbar a:hover {
-  background-color: #ddd;
+  background-color: $light-grey;
   color: black;
   height: 5px;
 }
