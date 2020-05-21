@@ -7,7 +7,6 @@ import { HomeComponent } from './home.component';
 
 const routes: Routes = [
   { path: '', component: HomeComponent },
-//  { path: 'settings', loadChildren: () => import('./navigation/settings/settings.module').then(m => m.HomeModule) },
   { path: 'settings', component: SettingsComponent }
 ];
 

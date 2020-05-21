@@ -5,6 +5,9 @@ import { NavigationRoutingModule } from './navigation-routing.module';
 import { LeftMenuComponent } from './left-menu/left-menu.component';
 import { TopMenuComponent } from './top-menu/top-menu.component';
 import { SettingsComponent } from './settings/settings.component';
+import { MatSidenavModule } from '@angular/material/sidenav';
+import { MatExpansionModule } from '@angular/material/expansion';
+import { MatToolbarModule } from '@angular/material/toolbar';
 
 
 @NgModule({
@@ -14,11 +17,15 @@ import { SettingsComponent } from './settings/settings.component';
     SettingsComponent
   ],
   exports: [
-    TopMenuComponent
+    TopMenuComponent,
+    LeftMenuComponent
   ],
   imports: [
     CommonModule,
-    NavigationRoutingModule
+    NavigationRoutingModule,
+    MatSidenavModule,
+    MatExpansionModule,
+    MatToolbarModule
   ]
 })
 export class NavigationModule { }
