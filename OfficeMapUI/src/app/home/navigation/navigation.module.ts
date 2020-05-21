@@ -13,6 +13,9 @@ import { SettingsComponent } from './settings/settings.component';
     TopMenuComponent,
     SettingsComponent
   ],
+  exports: [
+    TopMenuComponent
+  ],
   imports: [
     CommonModule,
     NavigationRoutingModule
