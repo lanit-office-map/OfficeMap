@@ -4,6 +4,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { RouterModule } from '@angular/router';
+import { MatSidenavModule } from '@angular/material/sidenav';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -15,10 +16,9 @@ import { SearchComponent } from './search/search.component';
 import { SettingsComponent } from './navigation/settings/settings.component';
 import { NotFoundComponent } from './not-found/not-found.component';
 import { AdminModule } from './admin/admin.module';
-import { MapModule} from './map/map.module';
+import { MapModule } from './map/map.module';
 import { AuthorizationModule } from './authorization/authorization.module';
 import { HomeComponent } from './home/home.component';
-import {MatSidenavModule} from "@angular/material/sidenav";
 
 @NgModule({
   declarations: [
