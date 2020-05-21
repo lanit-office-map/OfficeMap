@@ -68,10 +68,8 @@ namespace OfficeService.Services
             var source = officeRepository.GetAsync(officeguid).Result;
             if (source == null)
             {
-                return Task.FromResult(Responses<OfficeResponse>.OfficeNotFounded);
+                officeRepository.DeleteAsync(source);
             }
-
-            officeRepository.DeleteAsync(source);
 
             var response = new Response<OfficeResponse>();
             return Task.FromResult(response);
