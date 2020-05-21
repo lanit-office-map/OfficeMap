@@ -66,7 +66,7 @@ namespace OfficeService.Services
         public Task<Response<OfficeResponse>> DeleteAsync(Guid officeguid)
         {
             var source = officeRepository.GetAsync(officeguid).Result;
-            if (source == null)
+            if (source != null)
             {
                 officeRepository.DeleteAsync(source);
             }
