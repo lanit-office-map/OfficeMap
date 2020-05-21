@@ -41,9 +41,9 @@ namespace SpaceService.Controllers
             {
                 SpaceFilter filter = new SpaceFilter(response.OfficeId, response.Guid);
                 var result = await spaceService.FindAsync(filter);
-                Parallel.ForEach(result, async (_response) =>
+                Parallel.ForEach(result, async (space) =>
                 {
-                    _response.Workplaces = await workplaceServiceClient.GetWorkplacesAsync(_response.SpaceId);
+                    space.Workplaces = await workplaceServiceClient.GetWorkplacesAsync(space.SpaceId);
                 });
                     return Ok(result);
             }
