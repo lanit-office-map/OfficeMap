@@ -80,13 +80,6 @@ namespace WorkplaceService.Clients
             channel.QueueBind(ReplyQueueName, ReplyExchange, ReplyBindingKeys[1]);
             channel.QueueBind(RequestQueueName, RequestExchange, RequestBindingKey);
 
-            //TODO заставить сервис отправлять запросы и заменить заглушку на вызов метода GetSpaceIdAsync из контроллера
-            
-            Guid officeGuid = Guid.NewGuid();
-            Guid spaceGuid = Guid.NewGuid();
-      //      GetSpaceIdAsync(officeGuid, spaceGuid);
-
-
             consumer.Received += (model, ea) =>
             {
                 if (ea.RoutingKey == "space_data")
