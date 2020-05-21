@@ -8,11 +8,9 @@ import { AuthorizationComponent } from './authorization/authorization.component'
 
 
 const routes: Routes = [
-//  { path: 'home', component: HomeComponent },
   { path: '', component: AppComponent },
   { path: 'auth', component: AuthorizationComponent },
   { path: 'home', loadChildren: () => import('./home/home.module').then(m => m.HomeModule) },
-//  { path: '', redirectTo: '', pathMatch: 'full'},
   { path: '**', component: NotFoundComponent }
 ];
 
