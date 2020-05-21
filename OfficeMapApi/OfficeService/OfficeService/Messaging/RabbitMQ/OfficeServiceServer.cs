@@ -1,4 +1,5 @@
 ﻿using Common.RabbitMQ.Interface;
+using Common.Response;
 using Newtonsoft.Json;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
@@ -42,7 +43,7 @@ namespace OfficeService.Messaging.RabbitMQ
             Guid officeguid = Guid.Parse(message);
             logger.LogInformation("OfficeGUID received: " + message);
 
-            var office = await officeService.GetAsync(officeguid);
+            var office = (await officeService.GetAsync(officeguid)).Result;
             var response = JsonConvert.SerializeObject(office);
             var responseBytes = Encoding.UTF8.GetBytes(response);
             if (office != null)
@@ -76,6 +77,7 @@ namespace OfficeService.Messaging.RabbitMQ
             [FromServices] IOfficeService officeService,
             [FromServices] ILogger<OfficeServiceServer> logger)
         {
+            this.logger = logger;
             this.persistentConnection = persistentConnection;
             this.officeService = officeService;
             CreateConsumerChannel(RequestQueueName);
