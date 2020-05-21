@@ -4,7 +4,7 @@ import { CommonModule } from '@angular/common';
 import { HomeRoutingModule } from './home-routing.module';
 import { NavigationModule } from './navigation/navigation.module';
 import { ContentModule } from './content/content.module';
-
+import { HttpClientModule } from '@angular/common/http';
 import { HomeComponent } from './home.component';
 
 
@@ -14,6 +14,7 @@ import { HomeComponent } from './home.component';
   ],
   imports: [
     CommonModule,
+    HttpClientModule,
     HomeRoutingModule,
     NavigationModule,
     ContentModule
