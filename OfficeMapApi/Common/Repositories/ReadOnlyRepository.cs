@@ -17,7 +17,6 @@ namespace Common.Repositories
             Context = context;
         }
 
-
         /// <summary>
         /// Returns entities that the change tracker will not track
         /// </summary>
