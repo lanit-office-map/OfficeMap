@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 using RabbitMQ.Client.Exceptions;
@@ -13,12 +14,15 @@ namespace SpaceService.RabbitMQ
     public class RabbitMQPersistentConnection : IRabbitMQPersistentConnection
     {
         private readonly IConnectionFactory connectionFactory;
+        private readonly ILogger<RabbitMQPersistentConnection> logger;
         private IConnection connection;
         private bool disposed;
 
         public RabbitMQPersistentConnection(
-            [FromServices] IConnectionFactory connectionFactory)
+            [FromServices] IConnectionFactory connectionFactory,
+            [FromServices] ILogger<RabbitMQPersistentConnection> logger)
         {
+            this.logger = logger;
             this.connectionFactory = connectionFactory;
             if (!IsConnected)
             {
@@ -74,13 +78,13 @@ namespace SpaceService.RabbitMQ
 
             try
             {
-                Console.WriteLine("RabbitMQ Client is trying to connect");
+                logger.LogInformation("RabbitMQ Client is trying to connect");
                 connection = connectionFactory.CreateConnection();
             }
             catch (BrokerUnreachableException e)
             {
                 Thread.Sleep(5000);
-                Console.WriteLine("RabbitMQ Client is trying to reconnect");
+                logger.LogInformation("RabbitMQ Client is trying to reconnect");
                 connection = connectionFactory.CreateConnection();
             }
 
@@ -90,13 +94,13 @@ namespace SpaceService.RabbitMQ
                 connection.CallbackException += OnCallbackException;
                 connection.ConnectionBlocked += OnConnectionBlocked;
 
-                Console.WriteLine($"RabbitMQ persistent connection acquired a connection {connection.Endpoint.HostName} and is subscribed to failure events");
+                logger.LogInformation($"RabbitMQ persistent connection acquired a connection {connection.Endpoint.HostName}");
 
                 return true;
             }
             else
             {
-                Console.WriteLine("FATAL ERROR: RabbitMQ connections could not be created and opened");
+                logger.LogInformation("FATAL ERROR: RabbitMQ connections could not be created and opened");
                 return false;
             }
 

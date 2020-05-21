@@ -1,9 +1,11 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 using SpaceService.Clients.Interfaces;
 using SpaceService.Models;
+using SpaceService.Models.RabbitMQ;
 using SpaceService.RabbitMQ.Interface;
 using System;
 using System.Collections.Concurrent;
@@ -21,6 +23,7 @@ namespace SpaceService.Clients
         private readonly IModel channel;
         private readonly IBasicProperties properties;
         private readonly EventingBasicConsumer consumer;
+        private readonly ILogger<WorkplaceServiceClient> logger;
         #endregion
         private const string RequestQueueName = "WorkplaceService_RequestQueue";
         private const string ReplyQueueName = "WorkplaceService_ReplyQueue";
@@ -32,12 +35,13 @@ namespace SpaceService.Clients
 
         private const string RequestExchange = "requests";
         private const string ReplyExchange = "replies";
-        private readonly BlockingCollection<IEnumerable<WorkplaceResponse>> Replies = new BlockingCollection<IEnumerable<WorkplaceResponse>>();
+        private readonly BlockingCollection<IEnumerable<WorkplaceResponse>> Replies = new BlockingCollection<IEnumerable<WorkplaceResponse>>(boundedCapacity: 100);
 
         #region Private Methods
-        private IEnumerable<WorkplaceResponse> Message(int spaceId)
+        private IEnumerable<WorkplaceResponse> Message(SpaceRequest space)
         {
-            var message = Encoding.UTF8.GetBytes(spaceId.ToString());
+            var response = JsonConvert.SerializeObject(space);
+            var message = Encoding.UTF8.GetBytes(response.ToArray());
 
             channel.BasicPublish(
                 exchange: RequestExchange,
@@ -55,9 +59,12 @@ namespace SpaceService.Clients
         #endregion
 
         #region Constructor
-        public WorkplaceServiceClient([FromServices] IRabbitMQPersistentConnection rabbitMQPersistentConnection)
+        public WorkplaceServiceClient(
+            [FromServices] IRabbitMQPersistentConnection rabbitMQPersistentConnection,
+            [FromServices] ILogger<WorkplaceServiceClient> logger)
         {
-            Console.WriteLine("WorkplaceServiceClient is created");
+            this.logger = logger;
+            logger.LogInformation("WorkplaceServiceClient is created");
             channel = rabbitMQPersistentConnection.CreateModel();
 
             var correlationId = Guid.NewGuid().ToString();
@@ -90,19 +97,23 @@ namespace SpaceService.Clients
                     {
                         Replies.Add(feedback);
                     }
-                    Console.WriteLine("Workplaces are received");
+                    logger.LogInformation("Workplaces are received");
                 }
                 if (ea.RoutingKey == ReplyBindingKeys[1])
                 {
-                    Console.WriteLine("404: No Workplaces found");
+                    logger.LogInformation("404: No Workplaces found");
                 }
             };
         }
         #endregion
         public Task<IEnumerable<WorkplaceResponse>> GetWorkplacesAsync(int spaceId)
         {
-            Console.WriteLine("Request for Workplaces is sent");
-            var item = Message(spaceId);
+            SpaceRequest space = new SpaceRequest()
+            {
+                SpaceId = spaceId
+            };
+            logger.LogInformation("Request for Workplaces is sent");
+            var item = Message(space);
             return Task.FromResult(item);
         }
 
