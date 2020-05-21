@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import { NotFoundComponent } from '../not-found/not-found.component';
+import { NotFoundComponent } from '../../../not-found/not-found.component';
 import { EmployeeListComponent } from './employee-list/employee-list.component';
 import { OfficeListComponent } from './office-list/office-list.component';
 import { MapEditorComponent } from './map-editor/map-editor.component';

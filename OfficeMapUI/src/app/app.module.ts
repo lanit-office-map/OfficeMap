@@ -7,25 +7,27 @@ import { RouterModule } from '@angular/router';
 import { MatSidenavModule } from '@angular/material/sidenav';
 
 import { AppRoutingModule } from './app-routing.module';
-import { AppComponent } from './app.component';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { LeftMenuComponent } from './navigation/left-menu/left-menu.component';
-import { TopMenuComponent } from './navigation/top-menu/top-menu.component';
-import { SearchComponent } from './search/search.component';
-
-import { SettingsComponent } from './navigation/settings/settings.component';
-import { NotFoundComponent } from './not-found/not-found.component';
-import { AdminModule } from './admin/admin.module';
-import { MapModule } from './map/map.module';
+import { AdminModule } from './home/content/admin/admin.module';
+import { MapModule } from './home/content/map/map.module';
 import { AuthorizationModule } from './authorization/authorization.module';
 import { HomeComponent } from './home/home.component';
+import { ContentModule } from './home/content/content.module';
+import { NavigationModule } from './home/navigation/navigation.module';
+import { HomeModule } from './home/home.module';
+
+import { AppComponent } from './app.component';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { LeftMenuComponent } from './home/navigation/left-menu/left-menu.component';
+import { TopMenuComponent } from './home/navigation/top-menu/top-menu.component';
+import { SettingsComponent } from './home/navigation/settings/settings.component';
+import { NotFoundComponent } from './not-found/not-found.component';
+
 
 @NgModule({
   declarations: [
     AppComponent,
     LeftMenuComponent,
     TopMenuComponent,
-    SearchComponent,
     SettingsComponent,
     NotFoundComponent,
     HomeComponent
@@ -42,7 +44,10 @@ import { HomeComponent } from './home/home.component';
     AuthorizationModule,
     MatExpansionModule,
     MatToolbarModule,
-    MatSidenavModule
+    MatSidenavModule,
+    ContentModule,
+    NavigationModule,
+    HomeModule
   ],
   providers: [],
   bootstrap: [AppComponent]

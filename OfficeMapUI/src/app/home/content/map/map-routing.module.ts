@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import {NotFoundComponent} from '../not-found/not-found.component';
+import {NotFoundComponent} from '../../../not-found/not-found.component';
 import {ModalBookComponent} from './modal-book/modal-book.component';
 import {ModalUserComponent} from './modal-user/modal-user.component';
 import {MapViewComponent} from './map-view/map-view.component';
