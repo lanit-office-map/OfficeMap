@@ -1,5 +1,7 @@
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Configuration.AzureAppConfiguration;
 
 namespace SpaceService
 {
@@ -14,6 +16,20 @@ namespace SpaceService
             Host.CreateDefaultBuilder(args)
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
+                    webBuilder.ConfigureAppConfiguration((hostingContext, config) =>
+                    {
+                        var settings = config.Build();
+                        if (!string.IsNullOrWhiteSpace(settings["AppConfig"]))
+                        {
+                            config.AddAzureAppConfiguration(
+                              options =>
+                              {
+                                  options.Connect(settings["AppConfig"])
+                              .Select(KeyFilter.Any, LabelFilter.Null)
+                              .Select(KeyFilter.Any, hostingContext.HostingEnvironment.EnvironmentName);
+                              });
+                        }
+                    });
                     webBuilder.UseStartup<Startup>();
                 });
     }

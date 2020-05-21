@@ -18,6 +18,7 @@ using SpaceService.Services;
 using SpaceService.Services.Interfaces;
 using SpaceService.Controllers;
 using SpaceService.Servers;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 namespace SpaceService
 {
@@ -33,7 +34,7 @@ namespace SpaceService
 
         public void ConfigureServices(IServiceCollection services)
         {
-            var connectionString = Configuration.GetConnectionString("DefaultConnection");
+            var connectionString = Configuration["ConnectionString:DefaultConnection"];
             services.AddDbContext<SpaceServiceDbContext>(options => options.UseSqlServer(connectionString));
             services.AddAutoMapper(typeof(SpaceModelsProfile));
             services.AddScoped<ISpaceTypeRepository, SpaceTypeRepository>();
@@ -44,10 +45,10 @@ namespace SpaceService
             {
                 return new ConnectionFactory()
                 {
-                    Uri = new System.Uri(Configuration["CLOUDAMQP_URL"]),
-                    HostName = Configuration["RabbitMQConnection"],
-                    UserName = Configuration["RabbitMQUsername"],
-                    Password = Configuration["RabbitMQPassword"]
+                    Uri = new System.Uri(Configuration["RabbitMQ:CLOUD_AMQP_URL"]),
+                    HostName = Configuration["RabbitMQ:Connection"],
+                    UserName = Configuration["RabbitMQ:Username"],
+                    Password = Configuration["RabbitMQ:Password"]
                 };
             });
             services.AddSingleton<IRabbitMQPersistentConnection, RabbitMQPersistentConnection>();
@@ -55,14 +56,22 @@ namespace SpaceService
             services.AddScoped<WorkplaceServiceClient>();
             services.AddScoped<SpaceServiceServer>();
             services.AddHostedService<ConsumeScopedServiceHostedService>();
-           
 
 
 
-            services.AddControllers().AddNewtonsoftJson(options =>
-    options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
-);
+
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+  .AddJwtBearer(options =>
+  {
+      options.Authority = Configuration["Addresses:Backend:UserService"];
+      options.Audience = "SpaceService";
+      options.RequireHttpsMetadata = false;
+      options.SaveToken = true;
+  });
+
+            services.AddControllers();
         }
+
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())
@@ -71,6 +80,10 @@ namespace SpaceService
             }
 
             app.UseRouting();
+
+            app.UseAuthentication();
+
+            app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {
