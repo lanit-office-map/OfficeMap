@@ -7,6 +7,7 @@ using SpaceService.Clients;
 using SpaceService.Controllers;
 using SpaceService.Filters;
 using SpaceService.Models;
+using SpaceService.Models.RabbitMQ;
 using SpaceService.RabbitMQ.Interface;
 using SpaceService.Services.Interfaces;
 using System;
@@ -52,8 +53,12 @@ namespace SpaceService.Servers
             var filter = new SpaceFilter(office.OfficeId, office.Guid);
             var space = spacesService.GetAsync(guids.SpaceGuid, filter).Result;
 
-            var response = space.SpaceId;
-            var responseBytes = Encoding.UTF8.GetBytes(response.ToString());
+            var reply = new SpaceRequest()
+            {
+                SpaceId = space.SpaceId
+            };
+            var response = JsonConvert.SerializeObject(reply);
+            var responseBytes = Encoding.UTF8.GetBytes(response);
             if (space != null)
             {
                 channel.BasicPublish(exchange: ReplyExchange,

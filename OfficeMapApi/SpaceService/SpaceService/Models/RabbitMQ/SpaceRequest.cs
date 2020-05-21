@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace SpaceService.Models.RabbitMQ
 {
-    public class Space
+    public class SpaceRequest
     {
         public int SpaceId { get; set; }
     }
