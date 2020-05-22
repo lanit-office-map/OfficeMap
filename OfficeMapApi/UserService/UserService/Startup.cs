@@ -1,5 +1,4 @@
 using System.Reflection;
-using IdentityServer4.Services;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -12,7 +11,10 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using AutoMapper;
 using IdentityServer4.Configuration;
-using Microsoft.AspNetCore.Http;
+using UserService.RabbitMQ.Servers;
+using RabbitMQ.Client;
+using Common.RabbitMQ.Interface;
+using Common.RabbitMQ;
 
 namespace UserService
 {
@@ -86,8 +88,23 @@ namespace UserService
 
       //Add automapping
       services.AddAutoMapper(typeof(UserModelsProfile));
+            
+            // RabbitMQ
+            services.AddScoped<UserServiceServer>();
+            services.AddSingleton<IConnectionFactory, ConnectionFactory>(sp =>
+            {
+                return new ConnectionFactory()
+                {
+                    Uri = new System.Uri(Configuration["RabbitMQ:CLOUD_AMQP_URL"]),
+                    HostName = Configuration["RabbitMQ:Connection"],
+                    UserName = Configuration["RabbitMQ:Username"],
+                    Password = Configuration["RabbitMQ:Password"]
+                };
+            });
+            services.AddSingleton<IRabbitMQPersistentConnection, RabbitMQPersistentConnection>();
+            services.AddHostedService<ConsumeScopedUserServiceHostedService>();
 
-      services.AddCors(confg =>
+            services.AddCors(confg =>
         confg.AddPolicy("AllowAngularClient",
           p => p.WithOrigins(Configuration["Addresses:Frontend:OfficeMapUI"])
             .AllowAnyMethod()
