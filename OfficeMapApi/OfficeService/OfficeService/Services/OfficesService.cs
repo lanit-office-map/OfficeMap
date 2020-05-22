@@ -21,7 +21,7 @@ namespace OfficeService.Services
         private static class Responses<T>
             where T : class
         {
-            public static readonly Response<T> OfficeNotFounded =
+            public static readonly Response<T> OfficeNotFound =
                 new Response<T>(HttpStatusCode.NotFound, $"Office by officeGuid not founded");
         }
         #endregion
@@ -56,7 +56,7 @@ namespace OfficeService.Services
             var result = officeRepository.GetAsync(officeguid).Result;
             if (result == null)
             {
-                return Task.FromResult(Responses<OfficeResponse>.OfficeNotFounded);
+                return Task.FromResult(Responses<OfficeResponse>.OfficeNotFound);
             }
 
             var response = new Response<OfficeResponse>(automapper.Map<OfficeResponse>(result));
@@ -68,7 +68,7 @@ namespace OfficeService.Services
             var source = officeRepository.GetAsync(officeguid).Result;
             if (source == null)
             {
-                return Task.FromResult(Responses<OfficeResponse>.OfficeNotFounded);
+                return Task.FromResult(Responses<OfficeResponse>.OfficeNotFound);
             }
 
             officeRepository.DeleteAsync(source);
@@ -82,7 +82,7 @@ namespace OfficeService.Services
             var source = officeRepository.GetAsync(target.Guid).Result;
             if (source == null)
             {
-                return Task.FromResult(Responses<Office>.OfficeNotFounded);
+                return Task.FromResult(Responses<Office>.OfficeNotFound);
             }
 
             source.City = target.City;
