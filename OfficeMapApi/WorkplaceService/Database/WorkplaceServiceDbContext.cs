@@ -5,16 +5,11 @@ namespace WorkplaceService.Database
 {
     public partial class WorkplaceServiceDbContext : DbContext
     {
-        public WorkplaceServiceDbContext()
-        {
-        }
-
         public WorkplaceServiceDbContext(DbContextOptions<WorkplaceServiceDbContext> options)
             : base(options)
         {
         }
 
-        public virtual DbSet<DbMapFile> MapFiles { get; set; }
         public virtual DbSet<DbWorkplace> Workplaces { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -26,13 +21,11 @@ namespace WorkplaceService.Database
 
                 entity.Property(e => e.MapId).ValueGeneratedOnAdd();
 
-                entity.Property(e => e.Content)
-                    .HasMaxLength(50)
-                    .IsFixedLength();
-
                 entity.Property(e => e.Guid)
                     .HasColumnName("MapGUID")
                     .HasDefaultValueSql("(newid())");
+
+                entity.HasQueryFilter(e => e.Obsolete == false);
             });
 
             modelBuilder.Entity<DbWorkplace>(entity =>
@@ -50,11 +43,9 @@ namespace WorkplaceService.Database
                     .WithOne(p => p.Workplace)
                     .HasForeignKey<DbWorkplace>(w => w.MapId)
                     .HasConstraintName("FK_Workplaces_MapFiles");
+
+                entity.HasQueryFilter(e => e.Obsolete == false);
             });
-
-            OnModelCreatingPartial(modelBuilder);
         }
-
-        partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
     }
 }

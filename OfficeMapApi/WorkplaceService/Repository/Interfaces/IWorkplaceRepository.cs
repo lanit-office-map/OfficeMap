@@ -1,12 +1,17 @@
-﻿using Common.Repositories;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using System.Linq.Expressions;
+using System.Threading.Tasks;
 using WorkplaceService.Database.Entities;
 
 namespace WorkplaceService.Repository.Interfaces
 {
-    public interface IWorkplaceRepository : ICrudRepository<DbWorkplace, Guid>
+    public interface IWorkplaceRepository
     {
-        public IEnumerable<DbWorkplace> GetAllAsync(int OfficeId);
+        public Task<IEnumerable<DbWorkplace>> FindAllAsync(Expression<Func<DbWorkplace, bool>> expression);
+        public Task<DbWorkplace> GetAsync(Guid workplaceGuid);
+        public Task<DbWorkplace> CreateAsync(DbWorkplace workplace);
+        public Task<DbWorkplace> UpdateAsync(DbWorkplace workplace);
+        public Task DeleteAsync(DbWorkplace workplace);
     }
 }

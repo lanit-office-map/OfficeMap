@@ -61,8 +61,7 @@ namespace WorkplaceService.Services
                 return await Task.FromResult(Responses<IEnumerable<WorkplaceResponse>>.WorkplaceNotFounded);
             }
 
-            var result = workplaceRepository.FindAllAsync(
-                e => e.SpaceId == space.SpaceId && e.Obsolete == false);
+            var result = workplaceRepository.FindAllAsync(w => w.SpaceId == space.SpaceId);
 
             var response = new Response<IEnumerable<WorkplaceResponse>>(
                 automapper.Map<IEnumerable<WorkplaceResponse>>(result));
