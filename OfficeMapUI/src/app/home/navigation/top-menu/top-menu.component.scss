@@ -6,6 +6,10 @@
   position: fixed;
   height: 65px;
   background: $blue-main;
+  :hover {
+    background-color: $light-grey;
+    color: black;
+  }
 }
 
 .link {
@@ -13,25 +17,16 @@
   padding: 30px;
   font-weight: 500;
   font-size: 14px;
-  line-height: 8px;
   text-decoration: none;
   width: 80px;
   color: white;
-}
-:hover {
-  background-color: $light-grey;
-  color: black;
 }
 
 .search-bar {
   display: inline-flex;
   flex-direction: row-reverse;
   position: absolute;
-  height: 65px;
+  height: 90px;
   top: 65px;
   background-color: white;
-}
-:hover {
-  background-color: orange;
-  color: black;
 }

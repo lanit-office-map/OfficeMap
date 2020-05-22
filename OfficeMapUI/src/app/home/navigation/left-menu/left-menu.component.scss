@@ -7,7 +7,7 @@
   box-shadow: 0px 0px 10px $grey;
 }
 
-.page {
+.sidebar-container {
   position: absolute;
   top: 0;
   bottom: 0;
@@ -67,11 +67,23 @@
   top: 65px;
   background: white;
 
-  &__place-name {
-    position: absolute;
-    left: 63px;
+  &__location {
+    position: relative;
+    left: 25px;
+
+    font-weight: 500;
+    font-size: 15px;
   }
   &__expanded-list {
-    margin-left: 39px;
+    //margin-left: 39px;
+  }
+  &__place-button {
+    text-align: left;
+    font-weight: 400;
+
+    //:hover {
+    //  background-color: red;
+    //  color: white;
+    //}
   }
 }

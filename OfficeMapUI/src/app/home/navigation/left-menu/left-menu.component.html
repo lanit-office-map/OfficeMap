@@ -1,45 +1,45 @@
-<mat-sidenav-container class="page">
+<mat-sidenav-container class="sidebar-container">
   <mat-sidenav class="sidebar" mode="side" opened>
     <div class="user">
-      <img class="logo-image__user-icon" src="../../../../assets/user-icon-light.png">
+      <img class="logo-image__user-icon" src="../../../../assets/user-icon-light.png" alt="user-icon">
       <p class="user__name">Имя Фамилия</p>
       <p class="user__position">Должность</p>
     </div>
 
-    <mat-accordion class="map-list">
+    <mat-accordion class="map-list" multi="true">
       <mat-expansion-panel>
-        <mat-expansion-panel-header>
-          <img class="logo-image__map-icon" src="../../../../assets/map-icon.svg">
-          <div class="map-list__place-name">
+        <mat-expansion-panel-header collapsedHeight="65px">
+          <img class="logo-image__map-icon" src="../../../../assets/map-icon.svg" alt="map-icon">
+          <div class="map-list__location">
             Чернышевская
           </div>
         </mat-expansion-panel-header>
 
         <div class="map-list__expanded-list">
-          <p>Этаж 2, левое крыло</p>
-          <p>Этаж 2, правое крыло</p>
-          <p>Этаж 3, левое крыло</p>
-          <p>Этаж 3, правое крыло</p>
+          <button mat-button class="map-list__place-button">Этаж 2, левое крыло</button>
+          <button mat-button class="map-list__place-button">Этаж 2, правое крыло</button>
+          <button mat-button class="map-list__place-button">Этаж 3, левое крыло</button>
+          <button mat-button class="map-list__place-button">Этаж 3, правое крыло</button>
         </div>
       </mat-expansion-panel>
 
       <mat-expansion-panel>
-        <mat-expansion-panel-header>
-          <img class="logo-image__map-icon" src="../../../../assets/map-icon.svg">
-          <div class="map-list__place-name">
+        <mat-expansion-panel-header collapsedHeight="65px">
+          <img class="logo-image__map-icon" src="../../../../assets/map-icon.svg" alt="map-icon">
+          <div class="map-list__location">
             Василеостровская
           </div>
         </mat-expansion-panel-header>
 
         <div class="map-list__expanded-list">
-          <p>Этаж 3, левое крыло</p>
-          <p>Этаж 3, правое крыло</p>
-          <p>Этаж 4, левое крыло</p>
-          <p>Этаж 4, правое крыло</p>
+          <button mat-button class="map-list__place-button">Этаж 3, левое крыло</button>
+          <button mat-button class="map-list__place-button">Этаж 3, правое крыло</button>
+          <button mat-button class="map-list__place-button">Этаж 4, левое крыло</button>
+          <button mat-button class="map-list__place-button">Этаж 4, правое крыло</button>
         </div>
       </mat-expansion-panel>
     </mat-accordion>
 
-    <img class="logo-image__lanit-tercom" src="../../../../assets/logo-lanit-tercom.png">
+    <img class="logo-image__lanit-tercom" src="../../../../assets/logo-lanit-tercom.png" alt="lanit-tercom">
   </mat-sidenav>
 </mat-sidenav-container>

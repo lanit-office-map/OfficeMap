@@ -8,6 +8,7 @@ import { SettingsComponent } from './settings/settings.component';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatButtonModule } from '@angular/material/button';
 
 
 @NgModule({
@@ -25,7 +26,8 @@ import { MatToolbarModule } from '@angular/material/toolbar';
     NavigationRoutingModule,
     MatSidenavModule,
     MatExpansionModule,
-    MatToolbarModule
+    MatToolbarModule,
+    MatButtonModule
   ]
 })
 export class NavigationModule { }
