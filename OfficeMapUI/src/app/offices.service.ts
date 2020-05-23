@@ -13,7 +13,7 @@ export class OfficesService {
 
   // Gets JSON object with offices
   public getOffices(): Observable<JSON> {
-    const url = 'https://4bdc2cf2-5cd5-4837-8dbc-eb1a53e55115.mock.pstmn.io/offices';
+    const url = 'https://dce9e984-09b1-4435-b433-638826db5d31.mock.pstmn.io/offices';
     this.offices = this.http.get(url);
     return this.offices;
   }

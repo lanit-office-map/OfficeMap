@@ -29,24 +29,27 @@
   height: 90px;
   top: 65px;
   background-color: white;
+
+  &__map-name {
+    padding-right: 720px;
+  }
 }
 
 .search-form {
   &__input-field {
     display: block;
-    width: 330px;
+    width: 500px;
     padding: 10px 10px;
     margin: 20px auto;
     box-sizing: border-box;
-    border: 1px solid $light-grey;
+    border: $light-grey;
     border-radius: 20px;
+    background-color: $light-grey;
     color: $dark-grey;
     font-size: 17px;
   }
 }
-::placeholder {
-  color: grey;
-}
+
 .submit__submit-button {
   position: absolute;
   top: 25px;

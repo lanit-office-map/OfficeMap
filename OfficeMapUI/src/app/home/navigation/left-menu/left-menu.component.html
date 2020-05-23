@@ -16,10 +16,7 @@
         </mat-expansion-panel-header>
 
         <div class="map-list__expanded-list">
-          <button mat-button class="map-list__place-button">Этаж 2, левое крыло</button>
-          <button mat-button class="map-list__place-button">Этаж 2, правое крыло</button>
-          <button mat-button class="map-list__place-button">Этаж 3, левое крыло</button>
-          <button mat-button class="map-list__place-button">Этаж 3, правое крыло</button>
+          <button mat-button class="map-list__place-button" *ngFor="let space of office.spaces">{{space.spaceName}}</button>
         </div>
       </mat-expansion-panel>
     </mat-accordion>
