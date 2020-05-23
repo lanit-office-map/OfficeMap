@@ -5,7 +5,20 @@
   </mat-toolbar-row>
 
   <mat-toolbar-row class="search-bar">
-    <p>Search</p>
+
+
+    <form [formGroup]="searchForm" class="search-form">
+      <div class="search-form__input">
+        <label>
+          <input class=search-form__input-field [ngClass]="{'required': isControlInvalid('searchInput')}" type="text" formControlName="searchInput" placeholder="Search"/>
+        </label>
+      </div>
+
+      <div class="submit">
+        <button class="submit__submit-button" type="submit" *ngIf="!isControlInvalid('searchInput')">Search</button>
+      </div>
+    </form>
+
     <p>Карта не выбрана</p>
   </mat-toolbar-row>
 </mat-toolbar>

@@ -74,16 +74,14 @@
     font-weight: 500;
     font-size: 15px;
   }
-  &__expanded-list {
-    //margin-left: 39px;
-  }
   &__place-button {
     text-align: left;
     font-weight: 400;
-
-    //:hover {
-    //  background-color: red;
-    //  color: white;
-    //}
+    padding-left: 45px;
   }
+}
+
+.mat-button:hover{
+  background: $light-grey;
+  color: $blue-main;
 }
