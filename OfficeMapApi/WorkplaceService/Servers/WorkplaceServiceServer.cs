@@ -1,13 +1,11 @@
 ﻿using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
-using System;
 using System.Text;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using System.Collections.Specialized;
 using Common.RabbitMQ.Interface;
 using WorkplaceService.Services;
-using WorkplaceService.Filters;
 using System.Collections.Generic;
 using WorkplaceService.Models;
 using System.Collections.ObjectModel;
