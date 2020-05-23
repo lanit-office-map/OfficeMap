@@ -81,7 +81,13 @@
   }
 }
 
-.mat-button:hover{
+.mat-button:hover {
   background: $light-grey;
   color: $blue-main;
+}
+
+.table {
+  position: absolute;
+  top: 200px;
+  left: 20px;
 }
