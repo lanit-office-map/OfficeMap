@@ -8,7 +8,6 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 })
 export class TopMenuComponent implements OnInit {
   public searchForm: FormGroup;
-  p
 
   constructor() {
     this.createSearchForm();

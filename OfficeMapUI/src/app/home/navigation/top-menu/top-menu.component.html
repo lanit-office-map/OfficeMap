@@ -4,9 +4,7 @@
     <a class="link" routerLink="settings" routerLinkActive="active">Настройки</a>
   </mat-toolbar-row>
 
-  <mat-toolbar-row class="search-bar">
-
-
+  <mat-toolbar-row class="map-search-bar">
     <form [formGroup]="searchForm" class="search-form">
       <div class="search-form__input">
         <label>
@@ -15,10 +13,10 @@
       </div>
 
       <div class="submit">
-        <button mat-button class="submit__submit-button" type="submit" [disabled]="isControlInvalid('searchInput')">Search</button>
+        <button mat-button class="submit__submit-button" src="../../../../assets/search-icon.svg" type="submit" [disabled]="isControlInvalid('searchInput')"></button>
       </div>
     </form>
 
-    <p>Карта не выбрана</p>
+    <p class="map-search-bar__map-name">Карта не выбрана</p>
   </mat-toolbar-row>
 </mat-toolbar>

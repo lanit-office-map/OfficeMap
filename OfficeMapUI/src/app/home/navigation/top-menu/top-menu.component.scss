@@ -22,7 +22,7 @@
   color: white;
 }
 
-.search-bar {
+.map-search-bar {
   display: inline-flex;
   flex-direction: row-reverse;
   position: absolute;
@@ -39,49 +39,27 @@
     margin: 20px auto;
     box-sizing: border-box;
     border: 1px solid $light-grey;
-    border-radius: 5px;
+    border-radius: 20px;
     color: $dark-grey;
     font-size: 17px;
-  }
-  &__show-hide-button {
-    position: absolute;
-    top: 11px;
-    right: 4px;
-    border: none;
-    height: 20px;
-    width: 40px;
-    outline: none;
-    margin: auto;
-    text-align: center;
-    padding: 2px;
-    background-color: transparent;
-    :hover {
-      cursor: pointer;
-    }
-  }
-  &__error {
-    display: block;
-    width: 330px;
-    margin: auto;
-    color: red;
-    font-size: 15px;
   }
 }
 ::placeholder {
   color: grey;
 }
-.required {
-  border: 1px solid red;
-}
 .submit__submit-button {
-  display: block;
-  width: 330px;
-  padding: 10px 10px;
-  margin: 20px auto;
+  position: absolute;
+  top: 25px;
+  right: 6px;
   border: none;
-  border-radius: 5px;
-  color: white;
-  background-color: $blue-main;
-  cursor: pointer;
-  font-size: 17px;
+  height: 40px;
+  width: 40px;
+  outline: none;
+  margin: auto;
+  text-align: center;
+  padding: 2px;
+  background-color: transparent;
+  :hover {
+    cursor: pointer;
+  }
 }
