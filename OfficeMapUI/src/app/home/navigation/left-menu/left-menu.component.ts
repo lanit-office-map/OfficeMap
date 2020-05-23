@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { OfficesService } from '../../../offices.service';
 
 @Component({
   selector: 'app-left-menu',
@@ -7,9 +8,18 @@ import { Component, OnInit } from '@angular/core';
 })
 export class LeftMenuComponent implements OnInit {
 
-  constructor() { }
+  public offices: JSON[];
+
+  constructor(private officesService: OfficesService) {
+    this.offices = new Array<JSON>();
+  }
 
   ngOnInit(): void {
+    this.officesService.getOffices().subscribe(
+      office => {
+        this.offices.push(office);
+      }
+    );
   }
 
 }

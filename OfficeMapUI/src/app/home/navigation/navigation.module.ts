@@ -10,6 +10,7 @@ import { MatExpansionModule } from '@angular/material/expansion';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatButtonModule } from '@angular/material/button';
 import { ReactiveFormsModule } from '@angular/forms';
+import { OfficesService } from '../../offices.service';
 
 
 @NgModule({
@@ -30,6 +31,9 @@ import { ReactiveFormsModule } from '@angular/forms';
     MatToolbarModule,
     MatButtonModule,
     ReactiveFormsModule
+  ],
+  providers: [
+    OfficesService
   ]
 })
 export class NavigationModule { }
