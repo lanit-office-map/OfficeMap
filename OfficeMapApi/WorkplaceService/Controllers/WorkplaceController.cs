@@ -64,7 +64,7 @@ namespace WorkplaceService.Controllers
             {
                 return BadRequest();
             }
-            GetEmployeeRequest employeeRequest = new GetEmployeeRequest()
+            Employee employeeRequest = new Employee()
             {
                 EmployeeGuid = workplace.EmployeeGuid
             };			
@@ -128,7 +128,7 @@ namespace WorkplaceService.Controllers
                 }
                 */
 
-            GetEmployeeRequest employeeRequest = new GetEmployeeRequest()
+            Employee employeeRequest = new Employee()
             {
                 EmployeeGuid = workplace.EmployeeGuid
             };

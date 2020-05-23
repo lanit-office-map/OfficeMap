@@ -101,7 +101,7 @@ namespace WorkplaceService.Services
                 return await Task.FromResult(Responses<Workplace>.SpaceNotFounded);
             }
             //Check that the specified employee exists.
-            GetEmployeeRequest employeeRequest = new GetEmployeeRequest();
+            Employee employeeRequest = new Employee();
             var employeeGuid = workplaceRequest.Workplace.EmployeeGuid; //Not NullReferenceException if Workplase is not null
             employeeRequest.EmployeeGuid = employeeGuid;
             var employee = userServiceClient.GetUserIdAsync(employeeRequest).Result;
@@ -133,7 +133,7 @@ namespace WorkplaceService.Services
                 return await Task.FromResult(Responses<Workplace>.SpaceNotFounded);
             }
             //Check that the specified employee exists.
-            GetEmployeeRequest employeeRequest = new GetEmployeeRequest();
+            Employee employeeRequest = new Employee();
             var employeeGuid = workplaceRequest.Workplace.EmployeeGuid; //Not NullReferenceException if Workplase is not null
             employeeRequest.EmployeeGuid = employeeGuid;
             var employee = userServiceClient.GetUserIdAsync(employeeRequest).Result;

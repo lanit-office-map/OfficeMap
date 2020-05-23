@@ -6,6 +6,6 @@ namespace WorkplaceService.Clients
 {
     public interface IUserServiceClient
     {
-        Task<Employee> GetUserIdAsync(GetEmployeeRequest request);
+        Task<Employee> GetUserIdAsync(Employee Request);
     }
 }

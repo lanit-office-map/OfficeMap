@@ -31,7 +31,7 @@ namespace WorkplaceService.Clients
 
         private const string RequestExchange = "requests";
         private const string ReplyExchange = "replies";
-        private GetEmployeeRequest Request = new GetEmployeeRequest();
+        private Employee Request = new Employee();
         private readonly BlockingCollection<Employee> Replies = new BlockingCollection<Employee>();
 
         #region Constructor
@@ -81,16 +81,13 @@ namespace WorkplaceService.Clients
             };
         }
         #endregion
-        public Task<Employee> GetUserIdAsync(GetEmployeeRequest request)
+        public Task<Employee> GetUserIdAsync(Employee Request)
         {
-            Request.EmployeeGuid = request.EmployeeGuid;
-            Request.EmployeeId = request.EmployeeId;
-
             logger.LogInformation("Request for Employees is sent");
             var item = Message(Request);
             return Task.FromResult(item);
         }
-        private Employee Message(GetEmployeeRequest Request)
+        private Employee Message(Employee Request)
         {
             var message = JsonConvert.SerializeObject(Request);
             var messageBytes = Encoding.UTF8.GetBytes(message);
