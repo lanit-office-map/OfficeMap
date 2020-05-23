@@ -26,6 +26,6 @@ export class TopMenuComponent implements OnInit {
   // Checks if control's input is invalid
   private isControlInvalid(controlName: string): boolean {
     const control = this.searchForm.controls[controlName];
-    return !control.touched && control.invalid;
+    return !control.touched || control.invalid;
   }
 }
