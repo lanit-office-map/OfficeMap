@@ -9,7 +9,6 @@ import { OfficesService } from '../../../offices.service';
 export class LeftMenuComponent implements OnInit {
 
   public offices;
-//  public streets: string[] = [];
 
   constructor(private officesService: OfficesService) {
   }
@@ -18,21 +17,7 @@ export class LeftMenuComponent implements OnInit {
     this.officesService.getOffices().subscribe(
       offices => {
         this.offices = offices;
-        // const officesArray = JSON.parse(JSON.stringify(this.offices));
-        // for (const office of officesArray) {
-        //   this.streets.push(office.street);
-        // }
       }
     );
   }
 }
-
-// interface Office {
-//   guid: string;
-//   officeId: number;
-//   city: string;
-//   street: string;
-//   house: string;
-//   building: string;
-//   phoneNumber: string;
-// }

@@ -70,7 +70,6 @@
   &__location {
     position: relative;
     left: 25px;
-
     font-weight: 500;
     font-size: 15px;
   }
@@ -78,16 +77,11 @@
     text-align: left;
     font-weight: 400;
     padding-left: 45px;
+    width: 100%;
   }
 }
 
 .mat-button:hover {
   background: $light-grey;
   color: $blue-main;
-}
-
-.table {
-  position: absolute;
-  top: 200px;
-  left: 20px;
 }

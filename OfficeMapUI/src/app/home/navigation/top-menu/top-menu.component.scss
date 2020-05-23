@@ -6,6 +6,7 @@
   position: fixed;
   height: 65px;
   background: $blue-main;
+
   :hover {
     background: $light-grey;
     color: black;
@@ -39,30 +40,35 @@
   &__input-field {
     display: block;
     width: 500px;
-    padding: 10px 10px;
+    padding: 10px 20px 10px;
     margin: 20px auto;
     box-sizing: border-box;
-    border: $light-grey;
+    border: none;
     border-radius: 20px;
     background-color: $light-grey;
     color: $dark-grey;
     font-size: 17px;
+    outline: none;
   }
 }
 
 .submit__submit-button {
   position: absolute;
   top: 25px;
-  right: 6px;
+  right: 15px;
   border: none;
+  border-radius: 20px;
   height: 40px;
-  width: 40px;
   outline: none;
   margin: auto;
-  text-align: center;
   padding: 2px;
   background-color: transparent;
+
   :hover {
     cursor: pointer;
   }
+}
+
+.search-icon {
+  width: 20px;
 }

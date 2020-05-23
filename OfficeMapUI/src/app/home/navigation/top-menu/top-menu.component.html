@@ -13,7 +13,9 @@
       </div>
 
       <div class="submit">
-        <button class="submit__submit-button" src="../../../../assets/search-icon.svg" type="submit" [disabled]="isControlInvalid('searchInput')"></button>
+        <button mat-button class="submit__submit-button" type="submit" [disabled]="isControlInvalid('searchInput')">
+          <img class="search-icon" src="../../../../assets/search-icon.svg" alt="search-icon">
+        </button>
       </div>
     </form>
 
