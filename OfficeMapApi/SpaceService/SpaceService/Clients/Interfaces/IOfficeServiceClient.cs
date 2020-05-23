@@ -1,11 +1,11 @@
-﻿using SpaceService.Models;
-using System;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
+using Common.RabbitMQ.Models;
+using Common.Response;
 
 namespace SpaceService.Clients.Interfaces
 {
     public interface IOfficeServiceClient
     {
-        Task<Office> GetOfficeAsync(Guid officeGuid);
+        Task<Response<GetOfficeResponse>> GetOfficeAsync(GetOfficeRequest request);
     }
 }

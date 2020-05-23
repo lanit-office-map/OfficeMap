@@ -1,13 +1,13 @@
 ﻿using SpaceService.Models;
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
+using Common.RabbitMQ.Models;
+using Common.Response;
 
 namespace SpaceService.Clients.Interfaces
 {
-    public interface IWorkplaceServiceClient
-    {
-        Task<IEnumerable<WorkplaceResponse>> GetWorkplacesAsync(int spaceId);
-    }
+  public interface IWorkplaceServiceClient
+  {
+    Task<Response<IEnumerable<GetWorkplaceResponse>>> GetWorkplacesAsync(GetWorkplacesRequest request);
+  }
 }

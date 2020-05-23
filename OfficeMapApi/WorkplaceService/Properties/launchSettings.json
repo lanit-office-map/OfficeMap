@@ -1,7 +1,7 @@
 ﻿{
   "iisSettings": {
-    "windowsAuthentication": false, 
-    "anonymousAuthentication": true, 
+    "windowsAuthentication": false,
+    "anonymousAuthentication": true,
     "iisExpress": {
       "applicationUrl": "http://localhost:65198",
       "sslPort": 44398
@@ -18,7 +18,7 @@
     "WorkplaceService": {
       "commandName": "Project",
       "launchBrowser": true,
-      "applicationUrl": "https://localhost:5020;http://localhost:5021",
+      "applicationUrl": "http://localhost:5003",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       }

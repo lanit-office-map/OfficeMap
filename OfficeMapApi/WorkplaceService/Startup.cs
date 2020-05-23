@@ -9,12 +9,14 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using RabbitMQ.Client;
 using WorkplaceService.Clients;
+using WorkplaceService.Clients.Interfaces;
 using WorkplaceService.Database;
 using WorkplaceService.Mappers;
 using WorkplaceService.Repository;
 using WorkplaceService.Repository.Interfaces;
 using WorkplaceService.Servers;
 using WorkplaceService.Services;
+using WorkplaceService.Services.Interfaces;
 
 namespace WorkplaceService
 {

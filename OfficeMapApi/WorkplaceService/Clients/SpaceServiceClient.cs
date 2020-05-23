@@ -7,105 +7,113 @@ using RabbitMQ.Client.Events;
 using System.Collections.Concurrent;
 using Newtonsoft.Json;
 using Common.RabbitMQ.Interface;
-using WorkplaceService.Models.RabbitMQ;
 using System.Collections.Specialized;
+using Common.RabbitMQ.Models;
+using Common.Response;
+using Microsoft.Extensions.Logging;
+using WorkplaceService.Clients.Interfaces;
 
 namespace WorkplaceService.Clients
 {
-    public class SpaceServiceClient : ISpaceServiceClient
-    {
-        #region RabbitMQ Fields
-        private readonly IModel channel;
-        private readonly IBasicProperties properties;
-        private readonly EventingBasicConsumer consumer;
-        #endregion
-        private const string RequestQueueName = "SpaceService_Queue";
-        private const string ReplyQueueName = "SpaceService_ReplyQueue";
-        private const string RequestBindingKey = "SpaceRequest";
-        private readonly StringCollection ReplyBindingKeys = new StringCollection()
+  public class SpaceServiceClient : ISpaceServiceClient
+  {
+    #region private constants
+    private const string RequestQueueName = "SpaceService_Queue";
+    private const string ResponseQueueName = "SpaceService_ReplyQueue";
+    private const string RequestBindingKey = "SpaceRequest";
+    private const string RequestExchange = "requests";
+    private const string ResponseExchange = "replies";
+    #endregion
+
+    #region private fields
+    private readonly IModel channel;
+    private readonly IBasicProperties properties;
+    private readonly EventingBasicConsumer consumer;
+
+
+    private readonly StringCollection ResponseBindingKeys = new StringCollection()
         {
             "space_data", "space_error"
         };
 
-        private const string RequestExchange = "requests";
-        private const string ReplyExchange = "replies";
-        private GetSpaceRequest Request = new GetSpaceRequest();
-        private readonly BlockingCollection<Space> Replies = new BlockingCollection<Space>();
 
-        #region Constructor
-        public SpaceServiceClient([FromServices] IRabbitMQPersistentConnection rabbitMQPersistentConnection)
-        {
-            channel = rabbitMQPersistentConnection.CreateModel();
+    private readonly BlockingCollection<Response<GetSpaceResponse>> Responses =
+      new BlockingCollection<Response<GetSpaceResponse>>();
 
-            var correlationId = Guid.NewGuid().ToString();
-            properties = channel.CreateBasicProperties();
-            properties.CorrelationId = correlationId;
-            properties.ReplyTo = ReplyQueueName;
+    private readonly ILogger<SpaceServiceClient> logger;
+    #endregion
 
-            consumer = new EventingBasicConsumer(channel);
+    #region private methods
+    private Response<GetSpaceResponse> Message(GetSpaceRequest Request)
+    {
+      var message = JsonConvert.SerializeObject(Request);
+      var messageBytes = Encoding.UTF8.GetBytes(message);
 
-            channel.ExchangeDeclare(RequestExchange, ExchangeType.Direct);
-            channel.ExchangeDeclare(ReplyExchange, ExchangeType.Direct);
+      channel.BasicPublish(
+        exchange: RequestExchange,
+        routingKey: RequestBindingKey,
+        basicProperties: properties,
+        body: messageBytes);
 
-            channel.QueueDeclare(RequestQueueName, false, false, true);
-            channel.QueueDeclare(ReplyQueueName, false, false, true);
-            channel.QueueBind(ReplyQueueName, ReplyExchange, ReplyBindingKeys[0]);
-            channel.QueueBind(ReplyQueueName, ReplyExchange, ReplyBindingKeys[1]);
-            channel.QueueBind(RequestQueueName, RequestExchange, RequestBindingKey);
-
-            Guid officeGuid = Guid.NewGuid();
-            Guid spaceGuid = Guid.NewGuid();
-            GetSpaceIdAsync(officeGuid, spaceGuid);
-
-
-            consumer.Received += (model, ea) =>
-            {
-                if (ea.RoutingKey == "space_data")
-                {
-                    var body = ea.Body;
-                    var response = Encoding.UTF8.GetString(body.ToArray());
-                    var feedback = JsonConvert.DeserializeObject<Space>(response);
-                    if (ea.BasicProperties.CorrelationId == correlationId)
-                    {
-                        Replies.Add(feedback);
-                        Console.WriteLine("SpaceID received: " + body.ToString());
-                    }
-                }
-                if (ea.RoutingKey == "space_error")
-                {
-                    Space feedback = null;
-                    Console.WriteLine("404: No Space is found");
-                    Replies.Add(feedback);
-                }
-            };
-        }
-        #endregion
-        public Task<Space> GetSpaceIdAsync(Guid officeGuid, Guid spaceGuid)
-        {
-            Request.OfficeGuid = officeGuid;
-            Request.SpaceGuid = spaceGuid;
-            Console.WriteLine("Request for Workplaces is sent");
-            var item = Message(Request);
-            return Task.FromResult(item);
-        }
-
-        private Space Message(GetSpaceRequest Request)
-        {
-            var message = JsonConvert.SerializeObject(Request);
-            var messageBytes = Encoding.UTF8.GetBytes(message);
-
-            channel.BasicPublish(
-                exchange: RequestExchange,
-                routingKey: RequestBindingKey,
-                basicProperties: properties,
-                body: messageBytes);
-
-            channel.BasicConsume(
-                consumer: consumer,
-                queue: ReplyQueueName,
-                autoAck: true);
-            var item = Replies.Take();
-            return item;
-        }
+      channel.BasicConsume(
+        consumer: consumer,
+        queue: ResponseQueueName,
+        autoAck: true);
+      var item = Responses.Take();
+      return item;
     }
+    #endregion
+
+    #region public methods
+    public SpaceServiceClient(
+      [FromServices] IRabbitMQPersistentConnection rabbitMQPersistentConnection,
+      [FromServices] ILogger<SpaceServiceClient> logger)
+    {
+      this.logger = logger;
+      channel = rabbitMQPersistentConnection.CreateModel();
+
+      var correlationId = Guid.NewGuid().ToString();
+      properties = channel.CreateBasicProperties();
+      properties.CorrelationId = correlationId;
+      properties.ReplyTo = ResponseQueueName;
+
+      consumer = new EventingBasicConsumer(channel);
+
+      channel.ExchangeDeclare(RequestExchange, ExchangeType.Direct);
+      channel.ExchangeDeclare(ResponseExchange, ExchangeType.Direct);
+
+      channel.QueueDeclare(RequestQueueName, false, false, true);
+      channel.QueueDeclare(ResponseQueueName, false, false, true);
+      channel.QueueBind(ResponseQueueName, ResponseExchange, ResponseBindingKeys[0]);
+      channel.QueueBind(ResponseQueueName, ResponseExchange, ResponseBindingKeys[1]);
+      channel.QueueBind(RequestQueueName, RequestExchange, RequestBindingKey);
+
+
+      consumer.Received += (model, ea) =>
+      {
+        var body = ea.Body;
+        var response = Encoding.UTF8.GetString(body.ToArray());
+        var feedback = JsonConvert.DeserializeObject<Response<GetSpaceResponse>>(response);
+        if (ea.BasicProperties.CorrelationId == correlationId)
+        {
+          Responses.Add(feedback);
+          logger.LogInformation("Space is received.");
+        }
+        else
+        {
+          logger.LogInformation(
+            "Message with correlation id '{CorrelationId}' does not match the space client correlation id.",
+            ea.BasicProperties.CorrelationId);
+        }
+      };
+    }
+
+    public Task<Response<GetSpaceResponse>> GetSpaceAsync(GetSpaceRequest request)
+    {
+      Console.WriteLine("Request for Workplaces is sent");
+      var item = Message(request);
+      return Task.FromResult(item);
+    }
+    #endregion
+  }
 }

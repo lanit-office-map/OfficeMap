@@ -12,90 +12,83 @@ using System.Net;
 
 namespace OfficeService.Services
 {
-    public class OfficesService : IOfficeService
+  public class OfficesService : IOfficeService
+  {
+    #region private fields
+    private readonly IOfficeRepository officeRepository;
+    private readonly IMapper automapper;
+
+    #endregion
+
+    #region public methods
+    public OfficesService(
+      [FromServices] IOfficeRepository officeRepository,
+      [FromServices] IMapper automapper)
     {
-        #region private fields
-        private readonly IOfficeRepository officeRepository;
-        private readonly IMapper automapper;
-
-        private static class Responses<T>
-            where T : class
-        {
-            public static readonly Response<T> OfficeNotFounded =
-                new Response<T>(HttpStatusCode.NotFound, $"Office by officeGuid not founded");
-        }
-        #endregion
-
-        #region public methods
-        public OfficesService(
-          [FromServices] IOfficeRepository officeRepository,
-          [FromServices] IMapper automapper)
-        {
-            this.officeRepository = officeRepository;
-            this.automapper = automapper;
-        }
-
-        public Task<Response<IEnumerable<OfficeResponse>>> FindAllAsync()
-        {
-            var result = officeRepository.FindAllAsync(office => office.Obsolete == false);
-
-            var response = new Response<IEnumerable<OfficeResponse>>(automapper.Map<IEnumerable<OfficeResponse>>(result));
-            return Task.FromResult(response);
-        }
-
-        public Task<Response<Office>> CreateAsync(Office office)
-        {
-            var result = officeRepository.CreateAsync(automapper.Map<DbOffice>(office)).Result;
-
-            var response = new Response<Office>(automapper.Map<Office>(result));
-            return Task.FromResult(response);
-        }
-        
-        public Task<Response<OfficeResponse>> GetAsync(Guid officeguid)
-        {
-            var result = officeRepository.GetAsync(officeguid).Result;
-            if (result == null)
-            {
-                return Task.FromResult(Responses<OfficeResponse>.OfficeNotFounded);
-            }
-
-            var response = new Response<OfficeResponse>(automapper.Map<OfficeResponse>(result));
-            return Task.FromResult(response);
-        }
-
-        public Task<Response<OfficeResponse>> DeleteAsync(Guid officeguid)
-        {
-            var source = officeRepository.GetAsync(officeguid).Result;
-            if (source == null)
-            {
-                return Task.FromResult(Responses<OfficeResponse>.OfficeNotFounded);
-            }
-
-            officeRepository.DeleteAsync(source);
-
-            var response = new Response<OfficeResponse>();
-            return Task.FromResult(response);
-        }
-
-        public Task<Response<Office>> UpdateAsync(Office target)
-        {
-            var source = officeRepository.GetAsync(target.Guid).Result;
-            if (source == null)
-            {
-                return Task.FromResult(Responses<Office>.OfficeNotFounded);
-            }
-
-            source.City = target.City;
-            source.Building = target.Building;
-            source.House = target.House;
-            source.PhoneNumber = target.PhoneNumber;
-            source.Street = target.Street;
-            var result = officeRepository.UpdateAsync(source).Result;
-
-            var response = new Response<Office>(automapper.Map<Office>(result));
-            return Task.FromResult(response);
-        }
-        #endregion
+      this.officeRepository = officeRepository;
+      this.automapper = automapper;
     }
+
+    public async Task<Response<IEnumerable<OfficeResponse>>> FindAllAsync()
+    {
+      var result = await officeRepository.FindAllAsync();
+
+      var response = new Response<IEnumerable<OfficeResponse>>(automapper.Map<IEnumerable<OfficeResponse>>(result));
+      return response;
+    }
+
+    public async Task<Response<OfficeResponse>> CreateAsync(Office office)
+    {
+      var result = await officeRepository.CreateAsync(automapper.Map<DbOffice>(office));
+
+      var response = new Response<OfficeResponse>(automapper.Map<OfficeResponse>(result));
+      return response;
+    }
+
+    public async Task<Response<OfficeResponse>> GetAsync(Guid officeguid)
+    {
+      var result = await officeRepository.GetAsync(officeguid);
+      if (result == null)
+      {
+        return new Response<OfficeResponse>(
+          HttpStatusCode.NotFound,
+          $"Office with guid '{officeguid}' was not found");
+      }
+
+      var response = new Response<OfficeResponse>(automapper.Map<OfficeResponse>(result));
+      return response;
+    }
+
+    public async Task DeleteAsync(Guid officeguid)
+    {
+      var source = await officeRepository.GetAsync(officeguid);
+      if (source != null)
+      {
+        await officeRepository.DeleteAsync(source);
+      }
+    }
+
+    public async Task<Response<OfficeResponse>> UpdateAsync(Office target)
+    {
+      var source = await officeRepository.GetAsync(target.OfficeGuid);
+      if (source == null)
+      {
+        return new Response<OfficeResponse>(
+          HttpStatusCode.NotFound,
+          $"Office with guid '{target.OfficeGuid}' was not found"); ;
+      }
+
+      source.City = target.City;
+      source.Building = target.Building;
+      source.House = target.House;
+      source.PhoneNumber = target.PhoneNumber;
+      source.Street = target.Street;
+      var result = await officeRepository.UpdateAsync(source);
+
+      var response = new Response<OfficeResponse>(automapper.Map<OfficeResponse>(result));
+      return response;
+    }
+    #endregion
+  }
 }
 

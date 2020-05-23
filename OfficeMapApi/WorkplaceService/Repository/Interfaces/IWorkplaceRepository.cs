@@ -1,12 +1,17 @@
-﻿using Common.Repositories;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using Common.Interfaces;
 using WorkplaceService.Database.Entities;
+using WorkplaceService.Filters;
 
 namespace WorkplaceService.Repository.Interfaces
 {
-    public interface IWorkplaceRepository : ICrudRepository<DbWorkplace, Guid>
-    {
-        public IEnumerable<DbWorkplace> GetAllAsync(int OfficeId);
-    }
+  public interface IWorkplaceRepository :
+    IGet<Guid, DbWorkplace>,
+    IFindAll<WorkplaceFilter, IEnumerable<DbWorkplace>>,
+    IUpdate<DbWorkplace, DbWorkplace>,
+    ICreate<DbWorkplace, DbWorkplace>,
+    IDelete<DbWorkplace>
+  {
+  }
 }
