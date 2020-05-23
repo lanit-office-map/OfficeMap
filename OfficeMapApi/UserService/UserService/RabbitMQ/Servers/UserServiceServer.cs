@@ -39,18 +39,28 @@ namespace UserService.RabbitMQ.Servers
             ReplyProperties.ReplyTo = InboundProperties.ReplyTo;
 
             var message = Encoding.UTF8.GetString(InboundMessage.ToArray());
-            logger.LogInformation("SpaceID received: " + message);
-
+            var EmployeeMessage = JsonConvert.DeserializeObject<Employee>(message);
+            if (EmployeeMessage.EmployeeId != 0)
+            {
+                logger.LogInformation($"EmployeeID received: {EmployeeMessage.EmployeeId}");
+            }
+            if (EmployeeMessage.EmployeeGuid != null)
+            {
+                logger.LogInformation($"EmployeeGUID received: {EmployeeMessage.EmployeeGuid}");
+            }
             // Заглушка 
             // TODO заменить на получение модели Employee из БД
+            // e.g.
+            // var Employee = await userService.GetEmployeeAsync(employee).Result;
+            
             Employee employee = new Employee()
             {
                 EmployeeId = 1
             };
-            var response = JsonConvert.SerializeObject(employee);
+            var response = JsonConvert.SerializeObject(EmployeeMessage);
             var responseBytes = Encoding.UTF8.GetBytes(response);
 
-            if (employee != null)
+            if (EmployeeMessage != null)
             {
                 channel.BasicPublish(exchange: ReplyExchange,
                                      routingKey: ReplyBindingKeys[0],
@@ -61,7 +71,7 @@ namespace UserService.RabbitMQ.Servers
                                  multiple: false);
                 logger.LogInformation("Reply is sent via " + ReplyBindingKeys[0] + " BindingKey");
             }
-            if (employee == null)
+            if (EmployeeMessage == null)
             {
                 channel.BasicPublish(exchange: ReplyExchange,
                                     routingKey: ReplyBindingKeys[1],
