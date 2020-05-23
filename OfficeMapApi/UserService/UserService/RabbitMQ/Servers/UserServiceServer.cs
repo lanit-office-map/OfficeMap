@@ -29,7 +29,7 @@ namespace UserService.RabbitMQ.Servers
         private const string RequestBindingKey = "UserRequest";
 
         #region Private Methods
-        private void MessageReceived(object? model, BasicDeliverEventArgs ea, IModel channel)
+        private void MessageReceived(object model, BasicDeliverEventArgs ea, IModel channel)
         {
             var InboundMessage = ea.Body;
             var InboundProperties = ea.BasicProperties;

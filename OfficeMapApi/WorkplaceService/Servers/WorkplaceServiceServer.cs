@@ -1,4 +1,5 @@
-﻿using RabbitMQ.Client;
+﻿using System;
+using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 using System.Text;
 using Microsoft.AspNetCore.Mvc;
@@ -14,6 +15,7 @@ using AutoMapper;
 using Common.RabbitMQ.Models;
 using Common.Response;
 using Microsoft.Extensions.Logging;
+using WorkplaceService.Filters;
 using WorkplaceService.Services.Interfaces;
 
 namespace WorkplaceService.Servers
@@ -70,7 +72,7 @@ namespace WorkplaceService.Servers
 
       channel.BasicAck(deliveryTag: ea.DeliveryTag,
         multiple: false);
-      Console.WriteLine("Reply is sent via " + routingKey + " BindingKey");
+      logger.LogInformation("Reply is sent via " + routingKey + " BindingKey");
     }
     #endregion
 
@@ -110,9 +112,9 @@ namespace WorkplaceService.Servers
                            consumer: consumer);
       #endregion
 
-      consumer.Received += (model, ea) =>
+      consumer.Received += async (model, ea) =>
       {
-        MessageReceived(model, ea, channel);
+        await MessageReceived(model, ea, channel);
       };
     }
   }
