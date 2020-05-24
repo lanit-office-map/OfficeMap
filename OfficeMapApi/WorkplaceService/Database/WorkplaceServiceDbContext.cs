@@ -11,6 +11,7 @@ namespace WorkplaceService.Database
     }
 
     public virtual DbSet<DbWorkplace> Workplaces { get; set; }
+    public virtual DbSet<DbMapFile> MapFiles { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

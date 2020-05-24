@@ -36,7 +36,7 @@ namespace OfficeService.Controllers
         }
 
         [HttpPost("offices")]
-        public async Task<ActionResult<OfficeResponse>> PostOffices([FromBody] Office office)
+        public async Task<ActionResult<OfficeResponse>> PostOffice([FromBody] Office office)
         {
             var response = await officeService.CreateAsync(office);
 

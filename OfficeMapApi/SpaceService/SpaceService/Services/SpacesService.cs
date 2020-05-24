@@ -44,6 +44,7 @@ namespace SpaceService.Services
           $"SpaceType with guid '{space.SpaceTypeGuid}' was not found.");
       }
       var dbSpace = automapper.Map<DbSpace>(space);
+      dbSpace.MapFile = automapper.Map<DbMapFile>(space.Map);
       dbSpace.TypeId = spaceType.TypeId;
       var result = await spaceRepository.CreateAsync(dbSpace);
       return new Response<SpaceResponse>(automapper.Map<SpaceResponse>(result));
@@ -98,6 +99,7 @@ namespace SpaceService.Services
       source.Description = target.Description;
       source.Capacity = target.Capacity;
       source.Floor = target.Floor;
+      source.MapFile = automapper.Map<DbMapFile>(target.Map);
       var result = await spaceRepository.UpdateAsync(source);
       return new Response<SpaceResponse>(automapper.Map<SpaceResponse>(result));
     }
