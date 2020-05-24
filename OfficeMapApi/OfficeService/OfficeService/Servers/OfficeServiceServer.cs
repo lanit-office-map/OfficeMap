@@ -53,15 +53,7 @@ namespace OfficeService.Servers
             logger.LogInformation($"OfficeGUID received: [{officeRequest.OfficeGuid}]");
 
             var office = await officeService.GetAsync(officeRequest.OfficeGuid);
-            string routingKey;
-            if (office.Error == null)
-            {
-                routingKey = ResponseBindingKeys[0];
-            }
-            else
-            {
-                routingKey = ResponseBindingKeys[1];
-            }
+            string routingKey = ResponseBindingKeys[0];
 
             var response = JsonConvert.SerializeObject(
               autoMapper.Map<Response<GetOfficeResponse>>(office));

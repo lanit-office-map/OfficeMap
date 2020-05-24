@@ -33,6 +33,7 @@ namespace SpaceService.Clients
     private readonly IModel channel;
     private IBasicProperties properties;
     private EventingBasicConsumer consumer;
+    private string correlationId;
 
     private readonly BlockingCollection<Response<GetOfficeResponse>> Responses =
       new BlockingCollection<Response<GetOfficeResponse>>();
@@ -47,7 +48,7 @@ namespace SpaceService.Clients
         var jsonRequest = JsonConvert.SerializeObject(request);
         var message = Encoding.UTF8.GetBytes(jsonRequest);
         properties = channel.CreateBasicProperties();
-        var correlationId = Guid.NewGuid().ToString();
+        correlationId = Guid.NewGuid().ToString();
 
         properties.CorrelationId = correlationId;
         properties.ReplyTo = ResponseQueueName;
@@ -57,44 +58,26 @@ namespace SpaceService.Clients
           routingKey: RequestBindingKey,
           basicProperties: properties,
           body: message);
-
-
-            consumer = new EventingBasicConsumer(channel);
-
-            channel.BasicConsume(
-                        consumer: consumer,
-                        queue: ResponseQueueName,
-                        autoAck: true);
-
-            consumer.Received += async (model, ea) =>
-            {
-                await MessageReceived(model, ea, channel, correlationId);
-            };
-
-
-            var item = Responses.Take();
-            return item;
+        var item = Responses.Take();
+        return item;
     }
 
-    private async Task MessageReceived(object model, BasicDeliverEventArgs ea, IModel channel, string correlationId)
+    private async Task MessageReceived(object model, BasicDeliverEventArgs ea, IModel channel)
         {
             var body = ea.Body;
             var response = Encoding.UTF8.GetString(body.ToArray());
             var feedback = JsonConvert.DeserializeObject<Response<GetOfficeResponse>>(response);
-            if (ea.RoutingKey == ResponseBindingKeys[0])
-            {
-                Responses.Add(feedback);
+            if (ea.BasicProperties.CorrelationId == correlationId)
+            {                
                 logger.LogInformation("An Office is received");
             }
             else
             {
-                Responses.Add(feedback);
                 logger.LogInformation("An error is received");
             }
+            Responses.Add(feedback);
         }
     #endregion
-
-
     #region Constructor
     public OfficeServiceClient(
       [FromServices] IRabbitMQPersistentConnection rabbitMQPersistentConnection,
@@ -114,6 +97,18 @@ namespace SpaceService.Clients
         channel.QueueBind(ResponseQueueName, ResponseExchange, ResponseBindingKeys[0]);
         channel.QueueBind(ResponseQueueName, ResponseExchange, ResponseBindingKeys[1]);
         channel.QueueBind(RequestQueueName, RequestExchange, RequestBindingKey);
+
+        consumer = new EventingBasicConsumer(channel);
+
+        channel.BasicConsume(
+                    consumer: consumer,
+                    queue: ResponseQueueName,
+                    autoAck: true);
+
+        consumer.Received += async (model, ea) =>
+        {
+            await MessageReceived(model, ea, channel);
+        };
         }
     #endregion
 

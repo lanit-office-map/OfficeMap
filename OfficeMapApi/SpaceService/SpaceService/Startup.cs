@@ -37,7 +37,11 @@ namespace SpaceService
     {
       var connectionString = Configuration["ConnectionString:DefaultConnection"];
       services.AddDbContext<SpaceServiceDbContext>(options => options.UseSqlServer(connectionString));
-      services.AddAutoMapper(typeof(SpaceModelsProfile));
+      services.AddAutoMapper(options =>
+      {
+        options.ShouldMapProperty = p => p.GetMethod.IsPublic || p.GetMethod.IsAssembly;
+      },
+        typeof(SpaceModelsProfile));
       services.AddScoped<ISpaceTypeRepository, SpaceTypeRepository>();
       services.AddScoped<ISpaceRepository, SpaceRepository>();
       services.AddScoped<ISpacesService, SpacesService>();
@@ -52,7 +56,7 @@ namespace SpaceService
           Password = Configuration["RabbitMQ:Password"]
         };
       });
-      services.AddSingleton<IRabbitMQPersistentConnection, RabbitMQPersistentConnection>();
+      services.AddScoped<IRabbitMQPersistentConnection, RabbitMQPersistentConnection>();
       services.AddScoped<IOfficeServiceClient, OfficeServiceClient>();
       services.AddScoped<IWorkplaceServiceClient, WorkplaceServiceClient>();
       services.AddScoped<SpaceServiceServer>();

@@ -33,8 +33,14 @@ namespace OfficeService
     {
       var connectionString = Configuration["ConnectionString:DefaultConnection"];
       services.AddDbContext<OfficeServiceDbContext>(options => options.UseSqlServer(connectionString));
-      services.AddAutoMapper(typeof(OfficeModelsProfile));
-      services.AddScoped<IOfficeRepository, OfficeRepository>();
+      services.AddAutoMapper(options =>
+      {
+        options.ShouldMapProperty = p => p.GetMethod.IsPublic || p.GetMethod.IsAssembly;
+      },
+        typeof(OfficeModelsProfile));
+
+
+            services.AddScoped<IOfficeRepository, OfficeRepository>();
       services.AddScoped<IOfficeService, OfficesService>();
       services.AddScoped<OfficeServiceServer>();
       services.AddSingleton<IConnectionFactory, ConnectionFactory>(sp =>
@@ -47,7 +53,7 @@ namespace OfficeService
           Password = Configuration["RabbitMQ:Password"]
         };
       });
-      services.AddSingleton<IRabbitMQPersistentConnection, RabbitMQPersistentConnection>();
+      services.AddScoped<IRabbitMQPersistentConnection, RabbitMQPersistentConnection>();
       services.AddHostedService<ConsumeScopedServiceHostedService>();
 
       services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
