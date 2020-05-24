@@ -11,6 +11,7 @@ export class TopMenuComponent implements OnInit {
 
   private searchForm: FormGroup;
   private mapName: string;
+  private searchInput: string;
 
   constructor(private mapNameService: MapNameService) {
     this.createSearchForm();
@@ -31,5 +32,11 @@ export class TopMenuComponent implements OnInit {
   private isControlInvalid(controlName: string): boolean {
     const control = this.searchForm.controls[controlName];
     return !control.touched || control.invalid;
+  }
+
+  // Accepts searchInput and clears it
+  private searchClick(searchInput: string): void {
+    this.searchInput = searchInput;
+    this.searchForm.reset();
   }
 }

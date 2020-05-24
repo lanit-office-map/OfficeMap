@@ -13,7 +13,7 @@
       </div>
 
       <div class="submit">
-        <button mat-button class="submit__submit-button" type="submit" [disabled]="isControlInvalid('searchInput')">
+        <button mat-button class="submit__submit-button" (click)="searchClick(searchInput)" type="submit" [disabled]="isControlInvalid('searchInput')">
           <img class="search-icon" src="../../../../assets/search-icon.svg" alt="search-icon">
         </button>
       </div>
