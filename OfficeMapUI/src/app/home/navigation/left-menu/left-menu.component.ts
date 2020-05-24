@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { OfficesService } from '../../../offices.service';
+import { MapNameService } from '../../../map-name.service';
 
 @Component({
   selector: 'app-left-menu',
@@ -8,9 +9,9 @@ import { OfficesService } from '../../../offices.service';
 })
 export class LeftMenuComponent implements OnInit {
 
-  public offices;
+  private offices;
 
-  constructor(private officesService: OfficesService) {
+  constructor(private officesService: OfficesService, private mapNameService: MapNameService) {
   }
 
   ngOnInit(): void {
@@ -19,5 +20,10 @@ export class LeftMenuComponent implements OnInit {
         this.offices = offices;
       }
     );
+  }
+
+  // Passes map's name after button's click
+  public onClick(mapName: string): void {
+    this.mapNameService.passMapName(mapName);
   }
 }

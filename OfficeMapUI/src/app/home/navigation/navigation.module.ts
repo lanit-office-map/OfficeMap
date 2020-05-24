@@ -11,6 +11,7 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatButtonModule } from '@angular/material/button';
 import { ReactiveFormsModule } from '@angular/forms';
 import { OfficesService } from '../../offices.service';
+import { MapNameService } from '../../map-name.service';
 
 
 @NgModule({
@@ -33,7 +34,8 @@ import { OfficesService } from '../../offices.service';
     ReactiveFormsModule
   ],
   providers: [
-    OfficesService
+    OfficesService,
+    MapNameService
   ]
 })
 export class NavigationModule { }

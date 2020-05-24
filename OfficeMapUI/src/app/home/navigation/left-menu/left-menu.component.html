@@ -16,7 +16,7 @@
         </mat-expansion-panel-header>
 
         <div class="map-list__expanded-list">
-          <button mat-button class="map-list__place-button" *ngFor="let space of office.spaces">{{space.spaceName}}</button>
+          <button mat-button class="map-list__place-button" (click)="onClick(space.spaceName)" *ngFor="let space of office.spaces">{{space.spaceName}}</button>
         </div>
       </mat-expansion-panel>
     </mat-accordion>

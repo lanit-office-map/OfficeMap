@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { MapNameService } from '../../../map-name.service';
 
 @Component({
   selector: 'app-top-menu',
@@ -7,13 +8,16 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
   styleUrls: ['./top-menu.component.scss']
 })
 export class TopMenuComponent implements OnInit {
-  public searchForm: FormGroup;
 
-  constructor() {
+  private searchForm: FormGroup;
+  private mapName: string;
+
+  constructor(private mapNameService: MapNameService) {
     this.createSearchForm();
   }
 
   ngOnInit(): void {
+    this.mapNameService.mapName.subscribe(mapName => this.mapName = mapName);
   }
 
   // Creates a form for search
