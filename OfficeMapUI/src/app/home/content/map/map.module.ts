@@ -13,6 +13,9 @@ import { ModalUserComponent } from './modal-user/modal-user.component';
     ModalBookComponent,
     ModalUserComponent,
   ],
+  exports: [
+    MapViewComponent
+  ],
   imports: [
     CommonModule,
     MapRoutingModule
