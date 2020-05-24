@@ -32,7 +32,9 @@
   background-color: white;
 
   &__map-name {
-    padding-right: 720px;
+    position: absolute;
+    left: 300px;
+    top: 10px;
   }
 }
 
