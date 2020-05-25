@@ -91,7 +91,7 @@ namespace Common.RabbitMQ
                 connection.CallbackException += OnCallbackException;
                 connection.ConnectionBlocked += OnConnectionBlocked;
 
-                logger.LogInformation($"RabbitMQ persistent connection acquired a connection {connection.Endpoint.HostName} and is subscribed to officeguid_queue");
+                logger.LogInformation($"RabbitMQ persistent connection acquired a {connection.Endpoint.HostName} connection");
 
                 return true;
             }

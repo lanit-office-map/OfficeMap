@@ -33,7 +33,7 @@ namespace OfficeService.Database
                   .HasMaxLength(50)
                   .IsUnicode(false);
 
-                entity.Property(e => e.Guid)
+                entity.Property(e => e.OfficeGuid)
                   .HasColumnName("OfficeGUID")
                   .HasDefaultValueSql("(newid())");
 
@@ -45,33 +45,8 @@ namespace OfficeService.Database
                 entity.Property(e => e.Street)
                   .HasMaxLength(50)
                   .IsUnicode(false);
+                entity.HasQueryFilter(e => e.Obsolete == false);
             });
-
-            modelBuilder.Entity<DbSpace>(entity =>
-            {
-                entity.ToTable("Spaces", "dbo");
-                entity.HasKey(e => e.SpaceId)
-                    .HasName("PK__Spaces");
-
-                entity.Property(e => e.SpaceId).ValueGeneratedOnAdd();
-
-                entity.Property(e => e.Guid)
-                    .HasColumnName("SpaceGUID")
-                    .HasDefaultValueSql("(newid())");
-
-                entity.HasOne(d => d.Office)
-                    .WithMany(p => p.Spaces)
-                    .HasForeignKey(d => d.OfficeId)
-                    .OnDelete(DeleteBehavior.ClientSetNull);
-
-                entity.HasOne(d => d.Parent)
-                    .WithMany(p => p.InverseParent)
-                    .HasForeignKey(d => d.ParentId);
-            });
-
-            OnModelCreatingPartial(modelBuilder);
         }
-
-        partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
     }
 }

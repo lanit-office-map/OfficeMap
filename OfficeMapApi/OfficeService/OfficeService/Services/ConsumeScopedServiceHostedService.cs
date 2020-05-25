@@ -1,10 +1,10 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using OfficeService.Messaging.RabbitMQ;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
+using OfficeService.Servers;
 
 public class ConsumeScopedServiceHostedService : IHostedService
 {
@@ -18,7 +18,6 @@ public class ConsumeScopedServiceHostedService : IHostedService
         this.services = services;
         this.logger = logger;
     }
-    
 
     public async Task StartAsync(CancellationToken stoppingToken)
     {
@@ -33,7 +32,7 @@ public class ConsumeScopedServiceHostedService : IHostedService
     public async Task StopAsync(CancellationToken stoppingToken)
     {
         scope.Dispose();
-        
+
         logger.LogInformation(
             "Consume Scoped Service Hosted Service is stopping.");
 

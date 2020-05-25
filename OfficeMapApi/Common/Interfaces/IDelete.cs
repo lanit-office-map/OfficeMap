@@ -6,6 +6,11 @@ namespace Common.Interfaces
     public interface IDelete<in TInput, TOutput>
         where TOutput : class
     {
-        Task<Response<TOutput>> DeleteAsync(TInput input);
+        Task<TOutput> DeleteAsync(TInput input);
+    }
+
+    public interface IDelete<in TInput>
+    {
+      Task DeleteAsync(TInput input);
     }
 }
