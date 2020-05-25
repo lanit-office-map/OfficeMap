@@ -1,1 +1,27 @@
-<p>authorization works!</p>
+<img class="logo-image__lanit-tercom" src="../../../assets/logo-lanit-tercom.png" alt="Lanit-Tercom logo">
+<img class="logo-image__user-icon" src="../../../assets/user-icon.png" alt="User icon">
+
+<form [formGroup]="loginForm" class="login-form">
+  <div class="login-form__input">
+    <label>
+      <input class=login-form__input-field [ngClass]="{'required': isControlInvalid('username')}" type="text" formControlName="username" placeholder="Логин"/>
+    </label>
+    <div class="login-form__error" *ngIf="isControlInvalid('username')">
+      Поле не может быть пустым
+    </div>
+  </div>
+  <div class="login-form__password-input">
+    <label>
+      <input class=login-form__input-field [ngClass]="{'required': isControlInvalid('password')}" [type]="isVisible ? 'text' : 'password'" formControlName="password" placeholder="Пароль">
+      <button class="login-form__show-hide-button" (click)="showHidePassword()">
+        <img class="eye-image" [src]="isVisible ? '../../../assets/eye-close.svg' : '../../../assets/eye-open.svg'" alt="Eye">
+      </button>
+    </label>
+    <div class="login-form__error" *ngIf="isControlInvalid('password')">
+      Поле не может быть пустым
+    </div>
+  </div>
+  <div class="submit">
+    <button mat-button class="submit__submit-button" [disabled]="isSubmitButtonDisabled()" type="submit">Войти</button>
+  </div>
+</form>
