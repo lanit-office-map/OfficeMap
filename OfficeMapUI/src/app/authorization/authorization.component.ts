@@ -9,7 +9,7 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 export class AuthorizationComponent implements OnInit {
 
   public loginForm: FormGroup;
-  private isVisible = false;
+  public isVisible = false;
 
   constructor() {
     this.createLoginForm();
@@ -26,20 +26,20 @@ export class AuthorizationComponent implements OnInit {
   }
 
   // Checks if control's input is invalid
-  private isControlInvalid(controlName: string): boolean {
+  public isControlInvalid(controlName: string): boolean {
     const control = this.loginForm.controls[controlName];
     return control.invalid && control.touched;
   }
 
   // Shows/hides password
-  private showHidePassword() {
+  public showHidePassword() {
     this.isVisible = !this.isVisible;
   }
 
   // Checks if submit button must be disabled
-  private isSubmitButtonDisabled() {
+  public isSubmitButtonDisabled() {
     const usernameControl = this.loginForm.controls.username;
     const passwordControl = this.loginForm.controls.password;
     return usernameControl.invalid || !usernameControl.touched || passwordControl.invalid || !passwordControl.touched;
-  };
+  }
 }

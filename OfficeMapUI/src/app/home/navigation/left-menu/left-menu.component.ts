@@ -9,7 +9,7 @@ import { MapNameService } from '../../../map-name.service';
 })
 export class LeftMenuComponent implements OnInit {
 
-  private offices;
+  public offices;
 
   constructor(private officesService: OfficesService, private mapNameService: MapNameService) {
   }
