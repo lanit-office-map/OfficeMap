@@ -84,7 +84,7 @@ namespace WorkplaceService.Clients
 
       consumer.Received += (model, ea) =>
       {
-        if (ea.RoutingKey == "user_data")
+        if (ea.RoutingKey == ResponseBindingKeys[0])
         {
           var body = ea.Body;
           var response = Encoding.UTF8.GetString(body.ToArray());

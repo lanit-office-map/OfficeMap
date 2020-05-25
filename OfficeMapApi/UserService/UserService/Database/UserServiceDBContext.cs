@@ -40,6 +40,7 @@ namespace UserService.Database
                 entity.HasOne(e => e.User)
                     .WithOne(au => au.Employee)
                     .HasForeignKey<DbUser>(u => u.EmployeeId);
+                entity.HasQueryFilter(e => e.Obsolete == false);
             });
 
             base.OnModelCreating(modelBuilder);

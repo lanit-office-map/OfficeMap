@@ -53,6 +53,12 @@ namespace SpaceService.Services
     public async Task<Response<SpaceResponse>> GetAsync(Guid spaceguid)
     {
       var space = await spaceRepository.GetAsync(spaceguid);
+      if (space == null)
+      {
+        return new Response<SpaceResponse>(
+          HttpStatusCode.NotFound,
+          $"Space with guid '{spaceguid}' was not found.");
+      }
       var result = automapper.Map<SpaceResponse>(space);
       var response = await workplaceServiceClient.GetWorkplacesAsync(
         new GetWorkplacesRequest
@@ -62,7 +68,7 @@ namespace SpaceService.Services
 
       if (response.Status == ResponseResult.Success)
       {
-        result.Workplaces = response.Result;
+        result.Workplaces = automapper.Map<IEnumerable<WorkplaceResponse>>(response.Result);
       }
 
       return new Response<SpaceResponse>(result);
@@ -119,7 +125,8 @@ namespace SpaceService.Services
 
         if (response.Status == ResponseResult.Success)
         {
-          space.Workplaces = response.Result;
+          space.Workplaces =
+            automapper.Map<IEnumerable<WorkplaceResponse>>(response.Result);
         }
       });
       return new Response<IEnumerable<SpaceResponse>>(spaceResponses);

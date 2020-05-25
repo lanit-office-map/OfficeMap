@@ -11,10 +11,15 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using AutoMapper;
 using IdentityServer4.Configuration;
-using UserService.RabbitMQ.Servers;
+using UserService.Servers;
+using UserService.Services;
+using UserService.Mappers;
 using RabbitMQ.Client;
 using Common.RabbitMQ.Interface;
 using Common.RabbitMQ;
+using UserService.Repositories;
+using UserService.Repositories.Interfaces;
+using UserService.Services.Interfaces;
 
 namespace UserService
 {
@@ -86,33 +91,37 @@ namespace UserService
         });
       services.AddAuthorization();
 
-            //Add automapping
+      //Add services and repositories
+      services.AddScoped<IUserService, Services.UserService>();
+      services.AddScoped<IUserRepository, UserRepository>();
+
+      //Add automapping
       services.AddAutoMapper(options =>
-            {
-                options.ShouldMapProperty = p => p.GetMethod.IsPublic || p.GetMethod.IsAssembly;
-            },
-              typeof(UserModelsProfile));
+        {
+          options.ShouldMapProperty = p => p.GetMethod.IsPublic || p.GetMethod.IsAssembly;
+        },
+        typeof(UserModelsProfile));
 
-            // RabbitMQ
-            services.AddScoped<UserServiceServer>();
-            services.AddSingleton<IConnectionFactory, ConnectionFactory>(sp =>
-            {
-                return new ConnectionFactory()
-                {
-                    Uri = new System.Uri(Configuration["RabbitMQ:CLOUD_AMQP_URL"]),
-                    HostName = Configuration["RabbitMQ:Connection"],
-                    UserName = Configuration["RabbitMQ:Username"],
-                    Password = Configuration["RabbitMQ:Password"]
-                };
-            });
-            services.AddSingleton<IRabbitMQPersistentConnection, RabbitMQPersistentConnection>();
-            services.AddHostedService<ConsumeScopedUserServiceHostedService>();
+      // RabbitMQ
+      services.AddScoped<UserServiceServer>();
+      services.AddSingleton<IConnectionFactory, ConnectionFactory>(sp =>
+      {
+        return new ConnectionFactory()
+        {
+          Uri = new System.Uri(Configuration["RabbitMQ:CLOUD_AMQP_URL"]),
+          HostName = Configuration["RabbitMQ:Connection"],
+          UserName = Configuration["RabbitMQ:Username"],
+          Password = Configuration["RabbitMQ:Password"]
+        };
+      });
+      services.AddScoped<IRabbitMQPersistentConnection, RabbitMQPersistentConnection>();
+      services.AddHostedService<ConsumeScopedUserServiceHostedService>();
 
-            services.AddCors(confg =>
+      services.AddCors(confg =>
         confg.AddPolicy("AllowAngularClient",
-          p => p.WithOrigins(Configuration["Addresses:Frontend:OfficeMapUI"])
-            .AllowAnyMethod()
-            .AllowAnyHeader()));
+        p => p.WithOrigins(Configuration["Addresses:Frontend:OfficeMapUI"])
+      .AllowAnyMethod()
+      .AllowAnyHeader()));
 
       //Adds services for controllers for an API
       services.AddControllersWithViews();

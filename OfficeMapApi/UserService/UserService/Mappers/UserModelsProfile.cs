@@ -1,19 +1,21 @@
 ﻿using AutoMapper;
+using Common.RabbitMQ.Models;
+using Common.Response;
 using UserService.Database.Entities;
 using UserService.Models;
 
-namespace UserService
+namespace UserService.Mappers
 {
     public class UserModelsProfile : Profile
     {
         public UserModelsProfile()
         {
-            CreateMap<DbUser, User>()
+            CreateMap<DbUser, UserResponse>()
                 .ForPath(user => user.UserGuid, opt => opt.MapFrom(src => src.Id));
 
             CreateMap<User, DbUser>();
 
-            CreateMap<DbEmployee, Employee>();
+            CreateMap<DbEmployee, EmployeeResponse>();
 
             CreateMap<Employee, DbEmployee>();
 
@@ -24,6 +26,12 @@ namespace UserService
                 })
                 .ForPath(user => user.Employee.FirstName, opt => opt.MapFrom(src => src.FirstName))
                 .ForPath(user => user.Employee.SecondName, opt => opt.MapFrom(src => src.SecondName));
+
+            CreateMap<Response<UserResponse>, Response<GetUserResponse>>();
+
+            CreateMap<UserResponse, GetUserResponse>();
+
+            CreateMap<EmployeeResponse, GetEmployeeResponse>();
         }
     }
 }

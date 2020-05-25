@@ -70,8 +70,7 @@ namespace SpaceService.Servers
 
       channel.BasicAck(deliveryTag: ea.DeliveryTag,
                          multiple: false);
-      logger.LogInformation("Response is sent via " + routingKey + " BindingKey");
-
+      logger.LogInformation("Response is sent via '{routingKey}' BindingKey", routingKey);
     }
     #endregion
 

@@ -38,6 +38,11 @@ namespace SpaceService.Mappers
 
       CreateMap<Response<SpaceResponse>, Response<GetSpaceResponse>>();
       CreateMap<SpaceResponse, GetSpaceResponse>();
+      CreateMap<WorkplaceResponse, GetWorkplaceResponse>();
+      CreateMap<MapResponse, GetMapFileResponse>();
+
+      CreateMap<GetWorkplaceResponse, WorkplaceResponse>();
+      CreateMap<GetMapFileResponse, MapResponse>();
 
     }
   }

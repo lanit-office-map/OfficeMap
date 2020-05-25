@@ -21,17 +21,14 @@ namespace SpaceService.Controllers
   {
     private readonly ISpacesService spaceService;
     private readonly IOfficeServiceClient officeServiceClient;
-    private readonly IWorkplaceServiceClient workplaceServiceClient;
     private Response<GetOfficeResponse> officeResponse;
 
     public SpaceController(
         [FromServices] ISpacesService spaceService,
-        [FromServices] IOfficeServiceClient officeServiceClient,
-        [FromServices] IWorkplaceServiceClient workplaceServiceClient)
+        [FromServices] IOfficeServiceClient officeServiceClient)
     {
       this.spaceService = spaceService;
       this.officeServiceClient = officeServiceClient;
-      this.workplaceServiceClient = workplaceServiceClient;
     }
 
     public override async Task OnActionExecutionAsync(
@@ -80,11 +77,6 @@ namespace SpaceService.Controllers
         [FromRoute] Guid officeGuid,
         [FromRoute] Guid spaceGuid)
     {
-      // TODO
-      // If browser sends a request, then we'll use officeServiceClient and workplaceServiceClient;
-      // If another service sends a request (e.g. WorkplaceService needs a SpaceID)
-      // then we'll use only officeServiceClient (since we don't need to get any workplaces);
-
       var response = await spaceService.GetAsync(spaceGuid);
       return response.Status == ResponseResult.Success
         ? Ok(response.Result)
