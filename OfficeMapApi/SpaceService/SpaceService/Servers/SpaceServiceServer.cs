@@ -22,7 +22,7 @@ namespace SpaceService.Servers
   {
     #region private constants
     private const string ResponseExchange = "replies";
-    private const string ReplyQueueName = "SpaceService_ReplyQueue";
+    private const string ResponseQueueName = "SpaceService_ReplyQueue";
 
     private const string RequestQueueName = "SpaceService_RequestQueue";
     private const string RequestExchange = "requests";

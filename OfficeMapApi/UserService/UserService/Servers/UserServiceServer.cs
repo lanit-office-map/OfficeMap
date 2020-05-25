@@ -6,9 +6,11 @@ using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 using System.Collections.Specialized;
 using System.Text;
+using Common.RabbitMQ.Models;
+using Common.Response;
 using UserService.Models.RabbitMQ_Models;
 
-namespace UserService.RabbitMQ.Servers
+namespace UserService.Servers
 {
     public class UserServiceServer
     {
@@ -18,12 +20,12 @@ namespace UserService.RabbitMQ.Servers
         // private readonly IUserService userService;
         #endregion
         private readonly ILogger<UserServiceServer> logger;
-        private readonly StringCollection ReplyBindingKeys = new StringCollection()
+        private readonly StringCollection ResponseBindingKeys = new StringCollection()
         {
             "user_data", "user_error"
         };
-        private const string ReplyExchange = "replies";
-        private const string ReplyQueueName = "UserService_ReplyQueue";
+        private const string ResponseExchange = "replies";
+        private const string ResponseQueueName = "UserService_ReplyQueue";
         private const string RequestQueueName = "UserService_RequestQueue";
         private const string RequestExchange = "requests";
         private const string RequestBindingKey = "UserRequest";
@@ -31,28 +33,23 @@ namespace UserService.RabbitMQ.Servers
         #region Private Methods
         private void MessageReceived(object model, BasicDeliverEventArgs ea, IModel channel)
         {
-            var InboundMessage = ea.Body;
-            var InboundProperties = ea.BasicProperties;
+            var inboundMessage = ea.Body;
+            var inboundProperties = ea.BasicProperties;
 
-            var ReplyProperties = channel.CreateBasicProperties();
-            ReplyProperties.CorrelationId = InboundProperties.CorrelationId;
-            ReplyProperties.ReplyTo = InboundProperties.ReplyTo;
+            var responseProperties = channel.CreateBasicProperties();
+            responseProperties.CorrelationId = inboundProperties.CorrelationId;
+            responseProperties.ReplyTo = inboundProperties.ReplyTo;
 
-            var message = Encoding.UTF8.GetString(InboundMessage.ToArray());
-            var EmployeeMessage = JsonConvert.DeserializeObject<Employee>(message);
-            if (EmployeeMessage.EmployeeId != 0)
-            {
-                logger.LogInformation($"EmployeeID received: {EmployeeMessage.EmployeeId}");
-            }
-            if (EmployeeMessage.EmployeeGuid != null)
-            {
-                logger.LogInformation($"EmployeeGUID received: {EmployeeMessage.EmployeeGuid}");
-            }
-            // Заглушка 
+            var message = Encoding.UTF8.GetString(inboundMessage.ToArray());
+            var userRequest = JsonConvert.DeserializeObject<Response<GetUserRequest>>(message);
+
+            logger.LogInformation("User with guid '{userGuid}' is received", userRequest.Result.UserGuid);
+
+            // Заглушка
             // TODO заменить на получение модели Employee из БД
             // e.g.
             // var Employee = await userService.GetEmployeeAsync(employee).Result;
-            
+
             Employee employee = new Employee()
             {
                 EmployeeId = 1
@@ -62,29 +59,29 @@ namespace UserService.RabbitMQ.Servers
 
             if (EmployeeMessage != null)
             {
-                channel.BasicPublish(exchange: ReplyExchange,
-                                     routingKey: ReplyBindingKeys[0],
-                                     basicProperties: ReplyProperties,
+                channel.BasicPublish(exchange: ResponseExchange,
+                                     routingKey: ResponseBindingKeys[0],
+                                     basicProperties: responseProperties,
                                      body: responseBytes);
 
                 channel.BasicAck(deliveryTag: ea.DeliveryTag,
                                  multiple: false);
-                logger.LogInformation("Reply is sent via " + ReplyBindingKeys[0] + " BindingKey");
+                logger.LogInformation("Reply is sent via " + ResponseBindingKeys[0] + " BindingKey");
             }
             if (EmployeeMessage == null)
             {
-                channel.BasicPublish(exchange: ReplyExchange,
-                                    routingKey: ReplyBindingKeys[1],
-                                    basicProperties: ReplyProperties,
+                channel.BasicPublish(exchange: ResponseExchange,
+                                    routingKey: ResponseBindingKeys[1],
+                                    basicProperties: responseProperties,
                                     body: responseBytes);
 
                 channel.BasicAck(deliveryTag: ea.DeliveryTag,
                                  multiple: false);
-                logger.LogInformation("Reply is sent via " + ReplyBindingKeys[1] + " BindingKey");
+                logger.LogInformation("Reply is sent via " + ResponseBindingKeys[1] + " BindingKey");
             }
         }
         #endregion
-        
+
         #region Constructor
         // TODO добавить [FromServices] рабочий сервис для получения данных и присвоить его полю класса
         public UserServiceServer(

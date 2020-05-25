@@ -10,6 +10,7 @@ namespace WorkplaceService.Database
     {
     }
 
+
     public virtual DbSet<DbWorkplace> Workplaces { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)

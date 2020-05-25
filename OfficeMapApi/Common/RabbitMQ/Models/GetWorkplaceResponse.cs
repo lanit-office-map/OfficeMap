@@ -7,6 +7,6 @@ namespace Common.RabbitMQ.Models
     public Guid WorkplaceGuid { get; set; }
     public string Name { get; set; }
 
-    public GetMapFileResponse MapFile { get; set; }
+    public GetMapFileResponse Map { get; set; }
   }
 }

@@ -33,7 +33,11 @@ namespace OfficeService
     {
       var connectionString = Configuration["ConnectionString:DefaultConnection"];
       services.AddDbContext<OfficeServiceDbContext>(options => options.UseSqlServer(connectionString));
-      services.AddAutoMapper(typeof(OfficeModelsProfile));
+      services.AddAutoMapper(options =>
+        {
+          options.ShouldMapProperty = p => p.GetMethod.IsPublic || p.GetMethod.IsAssembly;
+        },
+        typeof(OfficeModelsProfile));
       services.AddScoped<IOfficeRepository, OfficeRepository>();
       services.AddScoped<IOfficeService, OfficesService>();
       services.AddScoped<OfficeServiceServer>();

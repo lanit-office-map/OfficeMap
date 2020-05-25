@@ -33,7 +33,11 @@ namespace WorkplaceService
         {
             var connectionString = Configuration.GetConnectionString("DefaultConnection");
             services.AddDbContext<WorkplaceServiceDbContext>(options => options.UseSqlServer(connectionString));
-            services.AddAutoMapper(typeof(WorkplaceModelsProfile));
+            services.AddAutoMapper(options =>
+              {
+                options.ShouldMapProperty = p => p.GetMethod.IsPublic || p.GetMethod.IsAssembly;
+              },
+              typeof(WorkplaceModelsProfile));
             services.AddScoped<IWorkplaceRepository, WorkplaceRepository>();
             services.AddScoped<IWorkplaceService, Services.WorkplaceService>();
             services.AddScoped<ISpaceServiceClient, SpaceServiceClient>();
@@ -51,7 +55,7 @@ namespace WorkplaceService
                     Password = Configuration["RabbitMQPassword"]
                 };
             });
-            services.AddSingleton<IRabbitMQPersistentConnection, RabbitMQPersistentConnection>();
+            services.AddScoped<IRabbitMQPersistentConnection, RabbitMQPersistentConnection>();
             services.AddHostedService<ConsumeScopedWorkplaceServiceHostedService>();
 
             services.AddControllers();

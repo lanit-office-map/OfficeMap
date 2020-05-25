@@ -37,7 +37,13 @@ namespace SpaceService
     {
       var connectionString = Configuration["ConnectionString:DefaultConnection"];
       services.AddDbContext<SpaceServiceDbContext>(options => options.UseSqlServer(connectionString));
-      services.AddAutoMapper(typeof(SpaceModelsProfile));
+
+      services.AddAutoMapper(options =>
+        {
+          options.ShouldMapProperty = p => p.GetMethod.IsPublic || p.GetMethod.IsAssembly;
+        },
+        typeof(SpaceModelsProfile));
+
       services.AddScoped<ISpaceTypeRepository, SpaceTypeRepository>();
       services.AddScoped<ISpaceRepository, SpaceRepository>();
       services.AddScoped<ISpacesService, SpacesService>();

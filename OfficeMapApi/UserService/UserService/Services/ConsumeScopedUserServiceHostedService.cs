@@ -4,8 +4,9 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Threading;
 using System.Threading.Tasks;
+using UserService.Servers;
 
-namespace UserService.RabbitMQ.Servers
+namespace UserService.Services
 {
     public class ConsumeScopedUserServiceHostedService : IHostedService
     {
