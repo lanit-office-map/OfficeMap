@@ -1,0 +1,87 @@
+@import "../../../../colors";
+
+.sidebar {
+  display: flex;
+  width: 257px;
+  background: white;
+  box-shadow: 0px 0px 10px $grey;
+}
+
+.sidebar-container {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+}
+
+.logo-image {
+  &__lanit-tercom {
+    position: absolute;
+    display: block;
+    margin: auto;
+    width: 110px;
+    left: 73px;
+    bottom: 30px;
+  }
+  &__user-icon
+  {
+    position: absolute;
+    display: block;
+    margin: auto;
+    width: 42px;
+    top: 12px;
+    left: 30px;
+  }
+  &__map-icon
+  {
+    width: 20px;
+  }
+}
+
+.user {
+  position: absolute;
+  width: 256px;
+  height: 65px;
+  background: $blue-main;
+
+  &__name {
+    position: absolute;
+    left: 90px;
+    font-weight: 600;
+    font-size: 14px;
+    line-height: 20px;
+    color: white;
+  }
+  &__position {
+    position: absolute;
+    left: 90px;
+    top: 22px;
+    font-weight: 600;
+    font-size: 13px;
+    color: rgba(255, 255, 255, 0.7);
+  }
+}
+
+.map-list {
+  position: absolute;
+  width: 256px;
+  top: 65px;
+  background: white;
+
+  &__location {
+    position: relative;
+    left: 25px;
+    font-weight: 500;
+    font-size: 15px;
+  }
+  &__place-button {
+    text-align: left;
+    font-weight: 400;
+    padding-left: 45px;
+    width: 100%;
+  }
+}
+
+.mat-button:hover {
+  background: $light-grey;
+  color: $blue-main;
+}

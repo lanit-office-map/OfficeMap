@@ -1,0 +1,24 @@
+<mat-toolbar>
+  <mat-toolbar-row class="toolbar">
+    <a class="link" routerLink="#exit" routerLinkActive="active">Выход</a>
+    <a class="link" routerLink="settings" routerLinkActive="active">Настройки</a>
+  </mat-toolbar-row>
+
+  <mat-toolbar-row class="map-search-bar">
+    <form [formGroup]="searchForm" class="search-form">
+      <div class="search-form__input">
+        <label>
+          <input class=search-form__input-field [ngClass]="{'required': isControlInvalid('searchInput')}" type="text" formControlName="searchInput"/>
+        </label>
+      </div>
+
+      <div class="submit">
+        <button mat-button class="submit__submit-button" (click)="searchClick(searchInput)" type="submit" [disabled]="isControlInvalid('searchInput')">
+          <img class="search-icon" src="../../../../assets/search-icon.svg" alt="search-icon">
+        </button>
+      </div>
+    </form>
+
+    <p class="map-search-bar__map-name">{{mapName}}</p>
+  </mat-toolbar-row>
+</mat-toolbar>

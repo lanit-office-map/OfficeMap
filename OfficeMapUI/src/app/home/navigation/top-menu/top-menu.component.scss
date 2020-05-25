@@ -1,0 +1,76 @@
+@import "../../../../colors";
+
+.toolbar {
+  display: inline-flex;
+  flex-direction: row-reverse;
+  position: absolute;
+  height: 65px;
+  background: $blue-main;
+
+  :hover {
+    background: $light-grey;
+    color: black;
+  }
+}
+
+.link {
+  text-align: center;
+  padding: 30px;
+  font-weight: 500;
+  font-size: 14px;
+  text-decoration: none;
+  width: 80px;
+  color: white;
+}
+
+.map-search-bar {
+  display: inline-flex;
+  flex-direction: row-reverse;
+  position: absolute;
+  height: 90px;
+  top: 65px;
+  background-color: white;
+
+  &__map-name {
+    position: absolute;
+    left: 300px;
+    top: 10px;
+  }
+}
+
+.search-form {
+  &__input-field {
+    display: block;
+    width: 400px;
+    padding: 10px 20px 10px;
+    margin: 20px auto;
+    box-sizing: border-box;
+    border: none;
+    border-radius: 20px;
+    background-color: $light-grey;
+    color: $dark-grey;
+    font-size: 17px;
+    outline: none;
+  }
+}
+
+.submit__submit-button {
+  position: absolute;
+  top: 25px;
+  right: 15px;
+  border: none;
+  border-radius: 20px;
+  height: 40px;
+  outline: none;
+  margin: auto;
+  padding: 2px;
+  background-color: transparent;
+
+  :hover {
+    cursor: pointer;
+  }
+}
+
+.search-icon {
+  width: 20px;
+}

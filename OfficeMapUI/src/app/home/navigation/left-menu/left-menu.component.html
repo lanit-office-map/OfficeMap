@@ -1,0 +1,26 @@
+<mat-sidenav-container class="sidebar-container">
+  <mat-sidenav class="sidebar" mode="side" opened>
+    <div class="user">
+      <img class="logo-image__user-icon" src="../../../../assets/user-icon-light.png" alt="user-icon">
+      <p class="user__name">Имя Фамилия</p>
+      <p class="user__position">Должность</p>
+    </div>
+
+    <mat-accordion class="map-list" multi="true">
+      <mat-expansion-panel *ngFor="let office of offices">
+        <mat-expansion-panel-header collapsedHeight="65px">
+          <img class="logo-image__map-icon" src="../../../../assets/map-icon.svg" alt="map-icon">
+          <div class="map-list__location">
+            {{office.street}}
+          </div>
+        </mat-expansion-panel-header>
+
+        <div class="map-list__expanded-list">
+          <button mat-button class="map-list__place-button" (click)="onClick(office.street + ': ' + space.spaceName)" *ngFor="let space of office.spaces">{{space.spaceName}}</button>
+        </div>
+      </mat-expansion-panel>
+    </mat-accordion>
+
+    <img class="logo-image__lanit-tercom" src="../../../../assets/logo-lanit-tercom.png" alt="lanit-tercom">
+  </mat-sidenav>
+</mat-sidenav-container>
