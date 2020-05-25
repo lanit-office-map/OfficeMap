@@ -1,5 +1,7 @@
-﻿using AutoMapper;
-using System.Text;
+﻿using System.Collections.Generic;
+using AutoMapper;
+using Common.RabbitMQ.Models;
+using Common.Response;
 using WorkplaceService.Database.Entities;
 using WorkplaceService.Models;
 
@@ -10,18 +12,23 @@ namespace WorkplaceService.Mappers
         public WorkplaceModelsProfile()
         {
             #region Map
-            CreateMap<DbMapFile, MapResponse>()
-                .ForMember(m => m.Content, opt => opt.MapFrom(src => Encoding.UTF8.GetString(src.Content)));
-            CreateMap<Map, DbMapFile>()
-                .ForMember(m => m.Content, opt => opt.MapFrom(src => Encoding.UTF8.GetBytes(src.Content)));
+            CreateMap<DbMapFile, MapResponse>();
+            CreateMap<Map, DbMapFile>();
+            CreateMap<MapResponse, GetMapFileResponse>();
             #endregion
 
             #region Workplace
-            CreateMap<DbWorkplace, WorkplaceResponse>(); //TODO: SpaceId ?-> SpaceGUID, EmployeeId ?-> EmployeeGUID
-            CreateMap<DbWorkplace, Workplace>(); //TODO: EmployeeId ?-> EmployeeGUID
+            CreateMap<DbWorkplace, WorkplaceResponse>()
+              .ForMember(
+                dest => dest.SpaceGuid,
+                opt => opt.MapFrom(s => s.Space.SpaceGuid));
 
-            CreateMap<Workplace, DbWorkplace>(); //TODO: EmployeeGUID ?-> EmployeeId
+            CreateMap<Workplace, DbWorkplace>();
             #endregion
+
+            CreateMap<Response<IEnumerable<WorkplaceResponse>>,
+              Response<IEnumerable<GetWorkplaceResponse>>>();
+            CreateMap<WorkplaceResponse, GetWorkplaceResponse>();
         }
     }
 }

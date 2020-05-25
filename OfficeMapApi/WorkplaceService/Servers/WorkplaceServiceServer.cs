@@ -1,83 +1,121 @@
-﻿using Newtonsoft.Json;
+﻿using System;
 using RabbitMQ.Client;
 using RabbitMQ.Client.Events;
 using System.Text;
-using WorkplaceService.Services;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
+using System.Collections.Specialized;
 using Common.RabbitMQ.Interface;
-using WorkplaceService.Controllers;
-using WorkplaceService.Models.RabbitMQ;
+using WorkplaceService.Services;
+using System.Collections.Generic;
+using WorkplaceService.Models;
+using System.Collections.ObjectModel;
+using System.Threading.Tasks;
+using AutoMapper;
+using Common.RabbitMQ.Models;
+using Common.Response;
+using Microsoft.Extensions.Logging;
+using WorkplaceService.Filters;
+using WorkplaceService.Services.Interfaces;
 
 namespace WorkplaceService.Servers
 {
-    public class WorkplaceServiceServer
+  public class WorkplaceServiceServer
+  {
+    #region private constants
+    private const string ResponseExchange = "replies";
+    private const string ResponseQueueName = "WorkplaceService_ReplyQueue";
+
+    private const string RequestQueueName = "WorkplaceService_RequestQueue";
+    private const string RequestExchange = "requests";
+    private const string RequestBindingKey = "WorkplacesRequest";
+    #endregion
+
+    #region private fields
+    private readonly IRabbitMQPersistentConnection persistentConnection;
+    private readonly IWorkplaceService workplaceService;
+    private readonly StringCollection ResponseBindingKeys = new StringCollection()
+        {
+          "workplaces_data", "workplaces_error"
+        };
+
+    private readonly ILogger<WorkplaceServiceServer> logger;
+    private readonly IMapper autoMapper;
+    #endregion
+
+    #region private methods
+    private async Task MessageReceived(object model, BasicDeliverEventArgs ea, IModel channel)
     {
-        private readonly IRabbitMQPersistentConnection persistentConnection;
-        private readonly IWorkplaceService workplaceService;
-        private readonly ILogger<WorkplaceServiceServer> logger;
-        private readonly WorkplaceController workplaceController;
-        private const string queue = "workplaceguid_queue";
+      var inboundMessage = ea.Body;
+      var inboundProperties = ea.BasicProperties;
 
-        public WorkplaceServiceServer(
-            [FromServices] IRabbitMQPersistentConnection persistentConnection,
-            [FromServices] ILogger<WorkplaceServiceServer> logger,
-            [FromServices] WorkplaceController workplaceController)
-        {
-            this.persistentConnection = persistentConnection;
-            this.logger = logger;
-            this.workplaceController = workplaceController;
-            CreateConsumerChannel(queue);
-            logger.LogInformation("WorkplaceService: created an " + queue);
-        }
+      var responseProperties = channel.CreateBasicProperties();
+      responseProperties.CorrelationId = inboundProperties.CorrelationId;
+      responseProperties.ReplyTo = inboundProperties.ReplyTo;
 
-        public void CreateConsumerChannel(string queueName)
-        {
-            if (!persistentConnection.IsConnected)
-            {
-                persistentConnection.TryConnect();
-            }
+      var message = Encoding.UTF8.GetString(inboundMessage.ToArray());
+      var workplacesRequest = JsonConvert.DeserializeObject<GetWorkplacesRequest>(message);
+      logger.LogInformation("SpaceID received: " + message);
 
-            var channel = persistentConnection.CreateModel();
-            channel.QueueDeclare(queue: queueName,
-                                 durable: false,
-                                 exclusive: false,
-                                 autoDelete: false,
-                                 arguments: null);
-            channel.BasicQos(0, 1, false);
-            var consumer = new EventingBasicConsumer(channel);
-            channel.BasicConsume(queue: queueName,
-                                 autoAck: false,
-                                 consumer: consumer);
+      var workplaces = await workplaceService.FindAllAsync(
+        new WorkplaceFilter(workplacesRequest.SpaceId));
 
-            consumer.Received += (model, ea) =>
-            {
-                ReceivedEvent(model, ea, channel);
-            };
-        }
+      var response = JsonConvert.SerializeObject(
+        autoMapper.Map<Response<IEnumerable<GetWorkplaceResponse>>>(workplaces));
+      var responseBytes = Encoding.UTF8.GetBytes(response);
+      string routingKey = ResponseBindingKeys[0];
 
-        private async void ReceivedEvent(object? model, BasicDeliverEventArgs ea, IModel channel)
-        {
-            var body = ea.Body;
-            var props = ea.BasicProperties;
-            var replyProps = channel.CreateBasicProperties();
-            replyProps.CorrelationId = props.CorrelationId;
+      channel.BasicPublish(exchange: ResponseExchange,
+        routingKey: routingKey,
+        basicProperties: responseProperties,
+        body: responseBytes);
 
-            var message = Encoding.UTF8.GetString(body.ToArray());
-            var request = JsonConvert.DeserializeObject<WorkplacesResponse>(message);
-            logger.LogInformation("OfficeGUID: " + message);
-            var workplaces = (await workplaceController.GetWorkplaces(request.OfficeGuid, request.SpaceGuid)).Value;
-
-            var response = JsonConvert.SerializeObject(workplaces);
-            var responseBytes = Encoding.UTF8.GetBytes(response);
-
-            channel.BasicPublish(exchange: "",
-                                 routingKey: props.ReplyTo,
-                                 basicProperties: replyProps,
-                                 body: responseBytes);
-
-            channel.BasicAck(deliveryTag: ea.DeliveryTag,
-                             multiple: false);
-        }
+      channel.BasicAck(deliveryTag: ea.DeliveryTag,
+        multiple: false);
+      logger.LogInformation("Reply is sent via " + routingKey + " BindingKey");
     }
+    #endregion
+
+    #region Constructor
+    public WorkplaceServiceServer(
+        [FromServices] IRabbitMQPersistentConnection persistentConnection,
+        [FromServices] IWorkplaceService workplaceService,
+        [FromServices] ILogger<WorkplaceServiceServer> logger,
+        [FromServices] IMapper autoMapper)
+    {
+      this.persistentConnection = persistentConnection;
+      this.workplaceService = workplaceService;
+      this.logger = logger;
+      this.autoMapper = autoMapper;
+      CreateConsumerChannel(RequestQueueName);
+      logger.LogInformation("WorkplaceService: created a queue called [" + RequestQueueName + "]");
+    }
+    #endregion
+
+    public void CreateConsumerChannel(string queueName)
+    {
+      if (!persistentConnection.IsConnected)
+      {
+        persistentConnection.TryConnect();
+      }
+
+      #region Channel Settings
+      var channel = persistentConnection.CreateModel();
+      channel.ExchangeDeclare(RequestExchange, ExchangeType.Direct);
+      channel.QueueDeclare(RequestQueueName, false, false, true);
+      channel.QueueBind(RequestQueueName, RequestExchange, RequestBindingKey);
+      channel.BasicQos(0, 1, false);
+
+      var consumer = new EventingBasicConsumer(channel);
+      channel.BasicConsume(queue: queueName,
+                           autoAck: false,
+                           consumer: consumer);
+      #endregion
+
+      consumer.Received += async (model, ea) =>
+      {
+        await MessageReceived(model, ea, channel);
+      };
+    }
+  }
 }

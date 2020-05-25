@@ -1,13 +1,12 @@
-﻿using Common.Repositories;
-using System;
+﻿using System;
 using System.ComponentModel.DataAnnotations;
 
 namespace WorkplaceService.Database.Entities
 {
-    public partial class DbMapFile : IEntity<Guid>
+    public partial class DbMapFile
     {
         [Key]
-        public Guid Guid { get; set; }
+        public Guid MapGuid { get; set; }
         public int MapId { get; set; }
         public byte[] Content { get; set; }
         public bool Obsolete { get; set; }

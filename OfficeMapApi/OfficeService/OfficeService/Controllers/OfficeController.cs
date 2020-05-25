@@ -3,11 +3,13 @@ using Microsoft.AspNetCore.Mvc;
 using OfficeService.Models;
 using OfficeService.Services.Interface;
 using System;
+using System.Collections.Generic;
+using Microsoft.AspNetCore.Authorization;
 using Common.Response;
 
 namespace OfficeService.Controllers
 {
-    [Route("OfficeService/[controller]")]
+    [Route("[controller]")]
     [ApiController]
 
     public class OfficeController : ControllerBase
@@ -24,7 +26,7 @@ namespace OfficeService.Controllers
         }
 
         [HttpGet("offices")]
-        public async Task<ActionResult> GetOffices()
+        public async Task<ActionResult<IEnumerable<OfficeResponse>>> GetOffices()
         {
             var response = await officeService.FindAllAsync();
 
@@ -34,7 +36,7 @@ namespace OfficeService.Controllers
         }
 
         [HttpPost("offices")]
-        public async Task<ActionResult<Office>> PostOffices([FromBody] Office office)
+        public async Task<ActionResult<OfficeResponse>> PostOffice([FromBody] Office office)
         {
             var response = await officeService.CreateAsync(office);
 
@@ -44,7 +46,7 @@ namespace OfficeService.Controllers
         }
 
         [HttpGet("offices/{officeGuid}")]
-        public async Task<ActionResult<Office>> GetOffice([FromRoute] Guid officeGuid)
+        public async Task<ActionResult<OfficeResponse>> GetOffice([FromRoute] Guid officeGuid)
         {
             var response = await officeService.GetAsync(officeGuid);
 
@@ -54,12 +56,12 @@ namespace OfficeService.Controllers
         }
 
         [HttpPut("offices/{officeGuid}")]
-        public async Task<ActionResult<Office>> PutOffice(
+        public async Task<ActionResult<OfficeResponse>> PutOffice(
             [FromRoute] Guid officeGuid,
             [FromBody] Office target)
 
         {
-            target.Guid = officeGuid;
+            target.OfficeGuid = officeGuid;
             var response = await officeService.UpdateAsync(target);
 
             return response.Status == ResponseResult.Success
@@ -70,11 +72,8 @@ namespace OfficeService.Controllers
         [HttpDelete("offices/{officeGuid}")]
         public async Task<ActionResult> DeleteOffice([FromRoute] Guid officeGuid)
         {
-            var response = await officeService.DeleteAsync(officeGuid);
-
-            return response.Status == ResponseResult.Success
-            ? Ok(response.Result)
-            : StatusCode((int)response.Error.StatusCode, response.Error.Message);
+            await officeService.DeleteAsync(officeGuid);
+            return NoContent(); ;
         }
         #endregion
     }

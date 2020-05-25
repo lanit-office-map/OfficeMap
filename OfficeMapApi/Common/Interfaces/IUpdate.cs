@@ -7,6 +7,6 @@ namespace Common.Interfaces
         where TInput : class
         where TOutput : class
     {
-        Task<Response<TOutput>> UpdateAsync(TInput input);
+        Task<TOutput> UpdateAsync(TInput input);
     }
 }

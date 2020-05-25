@@ -4,7 +4,7 @@ namespace WorkplaceService.Models
 {
     public class MapResponse
     {
-        public Guid Guid { get; set; }
+        public Guid MapGuid { get; set; }
         public string Content { get; set; }
     }
 }

@@ -1,17 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq.Expressions;
-using System.Threading.Tasks;
+using Common.Interfaces;
 using WorkplaceService.Database.Entities;
+using WorkplaceService.Filters;
 
 namespace WorkplaceService.Repository.Interfaces
 {
-    public interface IWorkplaceRepository
-    {
-        public Task<IEnumerable<DbWorkplace>> FindAllAsync(Expression<Func<DbWorkplace, bool>> expression);
-        public Task<DbWorkplace> GetAsync(Guid workplaceGuid);
-        public Task<DbWorkplace> CreateAsync(DbWorkplace workplace);
-        public Task<DbWorkplace> UpdateAsync(DbWorkplace workplace);
-        public Task DeleteAsync(DbWorkplace workplace);
-    }
+  public interface IWorkplaceRepository :
+    IGet<Guid, DbWorkplace>,
+    IFindAll<WorkplaceFilter, IEnumerable<DbWorkplace>>,
+    IUpdate<DbWorkplace, DbWorkplace>,
+    ICreate<DbWorkplace, DbWorkplace>,
+    IDelete<DbWorkplace>
+  {
+  }
 }

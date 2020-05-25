@@ -36,7 +36,7 @@ namespace UserService
       };
 
       var redirectUri =
-        $"{configuration["Addresses:Frontend:OfficeMapUI"]}/auth-callback";
+        $"{configuration["Addresses:Frontend:OfficeMapUI"]}/auth";
       var postLogoutRedirectUri =
         $"{configuration["Addresses:Frontend:OfficeMapUI"]}/home";
 
@@ -67,7 +67,7 @@ namespace UserService
           AllowedCorsOrigins =
             {configuration["Addresses:Frontend:OfficeMapUI"]},
           AllowAccessTokensViaBrowser = true,
-          //AlwaysIncludeUserClaimsInIdToken = true,
+          AlwaysIncludeUserClaimsInIdToken = true,
           RequireConsent = false,
         },
         new Client
@@ -79,8 +79,7 @@ namespace UserService
             new Secret("secret".Sha256())
           },
           AllowOfflineAccess = true,
-          AccessTokenLifetime =
-            (int)TimeSpan.FromDays(1).TotalSeconds,
+          AccessTokenLifetime = (int)TimeSpan.FromDays(1).TotalSeconds,
           AllowedScopes =
           {
             "UserService",

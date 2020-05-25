@@ -7,6 +7,6 @@ namespace Common.Interfaces
         where TInput : class
         where TOutput : class
     {
-        Task<Response<TOutput>> CreateAsync(TInput entity);
+        Task<TOutput> CreateAsync(TInput entity);
     }
 }

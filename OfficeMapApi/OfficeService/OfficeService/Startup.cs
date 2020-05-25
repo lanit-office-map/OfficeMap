@@ -1,6 +1,5 @@
 using System;
-using Common.RabbitMQ.Interface;
-using Common.RabbitMQ;
+using System.Security.Policy;
 using AutoMapper;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
@@ -11,13 +10,14 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using OfficeService.Database;
 using OfficeService.Mappers;
-using OfficeService.Messaging.RabbitMQ;
+using Common.RabbitMQ.Interface;
+using Common.RabbitMQ;
+using OfficeService.Servers;
 using OfficeService.Repository;
 using OfficeService.Repository.Interfaces;
 using OfficeService.Services;
 using OfficeService.Services.Interface;
 using RabbitMQ.Client;
-using Microsoft.Extensions.Logging;
 
 namespace OfficeService
 {
@@ -33,22 +33,31 @@ namespace OfficeService
     {
       var connectionString = Configuration["ConnectionString:DefaultConnection"];
       services.AddDbContext<OfficeServiceDbContext>(options => options.UseSqlServer(connectionString));
-      services.AddAutoMapper(typeof(OfficeModelsProfile));
+      services.AddAutoMapper(options =>
+        {
+          options.ShouldMapProperty = p => p.GetMethod.IsPublic || p.GetMethod.IsAssembly;
+        },
+        typeof(OfficeModelsProfile));
       services.AddScoped<IOfficeRepository, OfficeRepository>();
       services.AddScoped<IOfficeService, OfficesService>();
       services.AddScoped<OfficeServiceServer>();
-
       services.AddSingleton<IConnectionFactory, ConnectionFactory>(sp =>
       {
-        return new ConnectionFactory()
+        var connectionFactory = new ConnectionFactory
         {
-          Uri = new Uri(Configuration["RabbitMQ:Cloud_AMQP_URL"]),
           HostName = Configuration["RabbitMQ:Connection"],
           UserName = Configuration["RabbitMQ:Username"],
           Password = Configuration["RabbitMQ:Password"]
         };
+        if (Configuration["RabbitMQ:Cloud_AMQP_URL"] != null)
+        {
+          connectionFactory.Uri =
+            new Uri(Configuration["RabbitMQ:Cloud_AMQP_URL"]);
+        }
+
+        return connectionFactory;
       });
-      services.AddSingleton<IRabbitMQPersistentConnection, RabbitMQPersistentConnection>();
+      services.AddScoped<IRabbitMQPersistentConnection, RabbitMQPersistentConnection>();
       services.AddHostedService<ConsumeScopedServiceHostedService>();
 
       services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)

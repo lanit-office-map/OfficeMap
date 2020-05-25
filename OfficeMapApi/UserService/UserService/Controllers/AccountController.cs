@@ -52,13 +52,17 @@ namespace UserService.Controllers
       }
 
       var user = await _userManager.FindByEmailAsync(model.Email);
-      var result = await _signInManager.PasswordSignInAsync(
-       user, model.Password, false, false);
-
-      if (result.Succeeded)
+      if (user != null)
       {
-        return Redirect(model.ReturnUrl);
+        var result = await _signInManager.PasswordSignInAsync(
+          user, model.Password, false, false);
+
+        if (result.Succeeded)
+        {
+          return Redirect(model.ReturnUrl);
+        }
       }
+
       ModelState.AddModelError(string.Empty, "Invalid email or password");
       return View(model);
     }
