@@ -1,3 +1,4 @@
+using System;
 using System.Reflection;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Builder;
@@ -106,13 +107,19 @@ namespace UserService
       services.AddScoped<UserServiceServer>();
       services.AddSingleton<IConnectionFactory, ConnectionFactory>(sp =>
       {
-        return new ConnectionFactory()
+        var connectionFactory = new ConnectionFactory
         {
-          Uri = new System.Uri(Configuration["RabbitMQ:CLOUD_AMQP_URL"]),
           HostName = Configuration["RabbitMQ:Connection"],
           UserName = Configuration["RabbitMQ:Username"],
           Password = Configuration["RabbitMQ:Password"]
         };
+        if (Configuration["RabbitMQ:Cloud_AMQP_URL"] != null)
+        {
+          connectionFactory.Uri =
+            new Uri(Configuration["RabbitMQ:Cloud_AMQP_URL"]);
+        }
+
+        return connectionFactory;
       });
       services.AddScoped<IRabbitMQPersistentConnection, RabbitMQPersistentConnection>();
       services.AddHostedService<ConsumeScopedUserServiceHostedService>();

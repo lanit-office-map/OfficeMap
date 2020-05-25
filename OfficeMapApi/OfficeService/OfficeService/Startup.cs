@@ -43,13 +43,19 @@ namespace OfficeService
       services.AddScoped<OfficeServiceServer>();
       services.AddSingleton<IConnectionFactory, ConnectionFactory>(sp =>
       {
-        return new ConnectionFactory()
+        var connectionFactory = new ConnectionFactory
         {
-          Uri = new Uri(Configuration["RabbitMQ:Cloud_AMQP_URL"]),
           HostName = Configuration["RabbitMQ:Connection"],
           UserName = Configuration["RabbitMQ:Username"],
           Password = Configuration["RabbitMQ:Password"]
         };
+        if (Configuration["RabbitMQ:Cloud_AMQP_URL"] != null)
+        {
+          connectionFactory.Uri =
+            new Uri(Configuration["RabbitMQ:Cloud_AMQP_URL"]);
+        }
+
+        return connectionFactory;
       });
       services.AddScoped<IRabbitMQPersistentConnection, RabbitMQPersistentConnection>();
       services.AddHostedService<ConsumeScopedServiceHostedService>();

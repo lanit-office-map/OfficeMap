@@ -10,7 +10,6 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using RabbitMQ.Client;
-using SpaceService.Clients;
 using WorkplaceService.Clients;
 using WorkplaceService.Clients.Interfaces;
 using WorkplaceService.Database;
@@ -51,13 +50,19 @@ namespace WorkplaceService
             services.AddScoped<WorkplaceServiceServer>();
             services.AddSingleton<IConnectionFactory, ConnectionFactory>(sp =>
             {
-                return new ConnectionFactory()
-                {
-                  Uri = new Uri(Configuration["RabbitMQ:Cloud_AMQP_URL"]),
-                  HostName = Configuration["RabbitMQ:Connection"],
-                  UserName = Configuration["RabbitMQ:Username"],
-                  Password = Configuration["RabbitMQ:Password"]
-                };
+              var connectionFactory = new ConnectionFactory
+              {
+                HostName = Configuration["RabbitMQ:Connection"],
+                UserName = Configuration["RabbitMQ:Username"],
+                Password = Configuration["RabbitMQ:Password"]
+              };
+              if (Configuration["RabbitMQ:Cloud_AMQP_URL"] != null)
+              {
+                connectionFactory.Uri =
+                  new Uri(Configuration["RabbitMQ:Cloud_AMQP_URL"]);
+              }
+
+              return connectionFactory;
             });
             services.AddScoped<IRabbitMQPersistentConnection, RabbitMQPersistentConnection>();
             services.AddHostedService<ConsumeScopedWorkplaceServiceHostedService>();
@@ -71,6 +76,12 @@ namespace WorkplaceService
                 options.SaveToken = true;
               });
 
+            services.AddCors(confg =>
+              confg.AddPolicy("AllowAngularClient",
+                p => p.WithOrigins(Configuration["Addresses:Frontend:OfficeMapUI"])
+                  .AllowAnyMethod()
+                  .AllowAnyHeader()));
+
             services.AddControllers();
         }
 
@@ -82,6 +93,7 @@ namespace WorkplaceService
             }
 
             app.UseRouting();
+            app.UseCors("AllowAngularClient");
 
             app.UseAuthorization();
             app.UseAuthorization();

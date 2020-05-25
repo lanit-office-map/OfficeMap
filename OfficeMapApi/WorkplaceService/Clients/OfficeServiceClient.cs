@@ -13,7 +13,7 @@ using Common.RabbitMQ.Models;
 using Common.Response;
 using Microsoft.Extensions.Logging;
 
-namespace SpaceService.Clients
+namespace WorkplaceService.Clients
 {
   public class OfficeServiceClient : IOfficeServiceClient
   {
