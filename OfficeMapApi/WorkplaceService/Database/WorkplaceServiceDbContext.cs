@@ -48,8 +48,23 @@ namespace WorkplaceService.Database
           .WithOne(p => p.Workplace)
           .HasForeignKey<DbWorkplace>(w => w.MapId)
           .HasConstraintName("FK_Workplaces_MapFiles");
+
+        entity.HasOne(d => d.Space)
+          .WithOne()
+          .HasForeignKey<DbWorkplace>(w => w.SpaceId)
+          .HasConstraintName("FK_Workplaces_Spaces_SpaceId");
+
         entity.HasQueryFilter(e => e.Obsolete == false);
       });
+
+      modelBuilder.Entity<DbSpace>(
+        entity =>
+        {
+          entity.ToTable("Spaces", "dbo");
+
+          entity.HasKey(e => e.SpaceId)
+            .HasName("PK_Spaces");
+        });
     }
   }
 }

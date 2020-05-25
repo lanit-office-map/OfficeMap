@@ -18,7 +18,11 @@ namespace WorkplaceService.Mappers
             #endregion
 
             #region Workplace
-            CreateMap<DbWorkplace, WorkplaceResponse>();
+            CreateMap<DbWorkplace, WorkplaceResponse>()
+              .ForMember(
+                dest => dest.SpaceGuid,
+                opt => opt.MapFrom(s => s.Space.SpaceGuid));
+
             CreateMap<Workplace, DbWorkplace>();
             #endregion
 

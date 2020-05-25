@@ -36,6 +36,7 @@ namespace WorkplaceService.Repository
     {
       return await dbContext.Workplaces
         .Include(w => w.Map)
+        .Include(w => w.Space)
         .Where(w => filter == null ||
                    (filter.SpaceId.HasValue && w.SpaceId == filter.SpaceId) ||
                    (filter.EmployeeId.HasValue && w.EmployeeId == filter.EmployeeId))
@@ -47,6 +48,7 @@ namespace WorkplaceService.Repository
     {
       return await dbContext.Workplaces
         .Include(w => w.Map)
+        .Include(w => w.Space)
         .FirstOrDefaultAsync(
         w => w.WorkplaceGuid == key);
     }

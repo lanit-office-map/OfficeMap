@@ -20,6 +20,7 @@ using SpaceService.Services;
 using SpaceService.Services.Interfaces;
 using SpaceService.Controllers;
 using SpaceService.Servers;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 namespace SpaceService
 {
@@ -64,6 +65,15 @@ namespace SpaceService
       services.AddScoped<SpaceServiceServer>();
       services.AddHostedService<ConsumeScopedServiceHostedService>();
 
+      services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+        .AddJwtBearer(options =>
+        {
+          options.Authority = Configuration["Addresses:Backend:UserService"];
+          options.Audience = "SpaceService";
+          options.RequireHttpsMetadata = false;
+          options.SaveToken = true;
+        });
+
       services.AddControllers();
     }
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -74,6 +84,9 @@ namespace SpaceService
       }
 
       app.UseRouting();
+
+      app.UseAuthorization();
+      app.UseAuthorization();
 
       app.UseEndpoints(endpoints =>
       {

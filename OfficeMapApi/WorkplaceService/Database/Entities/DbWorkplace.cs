@@ -12,5 +12,7 @@ namespace WorkplaceService.Database.Entities
     public bool Obsolete { get; set; }
     public int MapId { get; set; }
     public virtual DbMapFile Map { get; set; }
+
+    public virtual DbSpace Space { get; set; }
   }
 }

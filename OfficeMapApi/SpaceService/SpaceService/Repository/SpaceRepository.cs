@@ -78,8 +78,8 @@ namespace SpaceService.Repository
           .Include(s => s.MapFile)
           .Include(s => s.SpaceType)
           .Where(s => s.Parent == null &&
-                      filter == null ||
-                      s.OfficeId == filter.OfficeId)
+                      (filter == null ||
+                      s.OfficeId == filter.OfficeId))
       .ToListAsync();
 
       Parallel.ForEach(

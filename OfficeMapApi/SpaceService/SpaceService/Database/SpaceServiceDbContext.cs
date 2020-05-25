@@ -91,10 +91,6 @@ namespace SpaceService.Database.Entities
 
                 entity.HasQueryFilter(s => s.Obsolete == false);
             });
-
-            OnModelCreatingPartial(modelBuilder);
         }
-
-        partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
     }
 }

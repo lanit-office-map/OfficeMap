@@ -1,6 +1,8 @@
+using System;
 using AutoMapper;
 using Common.RabbitMQ;
 using Common.RabbitMQ.Interface;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -32,7 +34,7 @@ namespace WorkplaceService
 
         public void ConfigureServices(IServiceCollection services)
         {
-            var connectionString = Configuration.GetConnectionString("DefaultConnection");
+            var connectionString = Configuration["ConnectionString:DefaultConnection"];
             services.AddDbContext<WorkplaceServiceDbContext>(options => options.UseSqlServer(connectionString));
             services.AddAutoMapper(options =>
               {
@@ -51,14 +53,23 @@ namespace WorkplaceService
             {
                 return new ConnectionFactory()
                 {
-                    Uri = new System.Uri(Configuration["CLOUDAMQP_URL"]),
-                    HostName = Configuration["RabbitMQConnection"],
-                    UserName = Configuration["RabbitMQUsername"],
-                    Password = Configuration["RabbitMQPassword"]
+                  Uri = new Uri(Configuration["RabbitMQ:Cloud_AMQP_URL"]),
+                  HostName = Configuration["RabbitMQ:Connection"],
+                  UserName = Configuration["RabbitMQ:Username"],
+                  Password = Configuration["RabbitMQ:Password"]
                 };
             });
             services.AddScoped<IRabbitMQPersistentConnection, RabbitMQPersistentConnection>();
             services.AddHostedService<ConsumeScopedWorkplaceServiceHostedService>();
+
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+              .AddJwtBearer(options =>
+              {
+                options.Authority = Configuration["Addresses:Backend:UserService"];
+                options.Audience = "WorkplaceService";
+                options.RequireHttpsMetadata = false;
+                options.SaveToken = true;
+              });
 
             services.AddControllers();
         }
@@ -71,6 +82,9 @@ namespace WorkplaceService
             }
 
             app.UseRouting();
+
+            app.UseAuthorization();
+            app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {
