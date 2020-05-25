@@ -86,9 +86,13 @@ namespace UserService
         });
       services.AddAuthorization();
 
-      //Add automapping
-      services.AddAutoMapper(typeof(UserModelsProfile));
-            
+            //Add automapping
+      services.AddAutoMapper(options =>
+            {
+                options.ShouldMapProperty = p => p.GetMethod.IsPublic || p.GetMethod.IsAssembly;
+            },
+              typeof(UserModelsProfile));
+
             // RabbitMQ
             services.AddScoped<UserServiceServer>();
             services.AddSingleton<IConnectionFactory, ConnectionFactory>(sp =>

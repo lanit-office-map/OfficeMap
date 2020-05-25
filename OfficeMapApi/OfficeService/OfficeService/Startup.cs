@@ -51,7 +51,7 @@ namespace OfficeService
           Password = Configuration["RabbitMQ:Password"]
         };
       });
-      services.AddSingleton<IRabbitMQPersistentConnection, RabbitMQPersistentConnection>();
+      services.AddScoped<IRabbitMQPersistentConnection, RabbitMQPersistentConnection>();
       services.AddHostedService<ConsumeScopedServiceHostedService>();
 
       services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)

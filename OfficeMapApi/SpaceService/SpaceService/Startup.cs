@@ -58,7 +58,7 @@ namespace SpaceService
           Password = Configuration["RabbitMQ:Password"]
         };
       });
-      services.AddSingleton<IRabbitMQPersistentConnection, RabbitMQPersistentConnection>();
+      services.AddScoped<IRabbitMQPersistentConnection, RabbitMQPersistentConnection>();
       services.AddScoped<IOfficeServiceClient, OfficeServiceClient>();
       services.AddScoped<IWorkplaceServiceClient, WorkplaceServiceClient>();
       services.AddScoped<SpaceServiceServer>();

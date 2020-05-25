@@ -14,6 +14,7 @@ namespace WorkplaceService.Mappers
             #region Map
             CreateMap<DbMapFile, MapResponse>();
             CreateMap<Map, DbMapFile>();
+            CreateMap<MapResponse, GetMapFileResponse>();
             #endregion
 
             #region Workplace
