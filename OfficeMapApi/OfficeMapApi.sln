@@ -6,10 +6,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UserService", "UserService\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OfficeService", "OfficeService\OfficeService\OfficeService.csproj", "{9B055CA8-E2B9-48F2-9A0C-137568CD4403}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WorkplaceService", "WorkplaceService\WorkplaceService.csproj", "{F163C8E7-F3E8-4725-8F91-1268BD6BD846}"
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common", "Common\Common.csproj", "{BDA88B56-2CB2-4C73-AB44-44339A7D27D0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WorkplaceService", "WorkplaceService\WorkplaceService.csproj", "{F163C8E7-F3E8-4725-8F91-1268BD6BD846}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Common", "Common\Common.csproj", "{BDA88B56-2CB2-4C73-AB44-44339A7D27D0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SpaceService", "SpaceService\SpaceService\SpaceService.csproj", "{F343A3A7-7B50-42D4-896E-329F4E6E63F5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SpaceService", "SpaceService\SpaceService\SpaceService.csproj", "{F343A3A7-7B50-42D4-896E-329F4E6E63F5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
