@@ -1,0 +1,46 @@
+# Node.js with Angular
+# Build a Node.js project that uses Angular.
+# Add steps that analyze code, save build artifacts, deploy, and more:
+# https://docs.microsoft.com/azure/devops/pipelines/languages/javascript
+
+trigger:
+- master
+- develop
+
+pool:
+  vmImage: 'vs2017-win2016'
+
+steps:
+- task: NodeTool@0
+  inputs:
+    versionSpec: '10.x'
+  displayName: 'Install Node.js'
+- task: Npm@1
+  inputs:
+    command: 'custom'
+    workingDir: '$(System.DefaultWorkingDirectory)/OfficeMapUI/'
+    customCommand: 'install -g @angular/cli'
+  displayName: 'npm install -g @angular/cli'
+- task: Npm@1
+  inputs:
+    command: 'install'
+    workingDir: '$(System.DefaultWorkingDirectory)/OfficeMapUI/'
+  displayName: 'npm install'
+- task: Npm@1
+  inputs:
+    command: 'custom'
+    workingDir: '$(System.DefaultWorkingDirectory)/OfficeMapUI/'
+    customCommand: 'run build'
+  displayName: 'npm build'
+    
+- task: CopyFiles@2
+  inputs:
+    Contents: '$(System.DefaultWorkingDirectory)/OfficeMapApi/OfficeMapApi/wwwroot/**' # Pull the build directory 
+    TargetFolder: '$(Build.ArtifactStagingDirectory)'
+
+
+- task: PublishBuildArtifacts@1
+  displayName: 'Publish artifacts.'
+  inputs:
+   pathtoPublish: $(Build.ArtifactStagingDirectory)
+   artifactName: 'OfficeMap.DropFront'
