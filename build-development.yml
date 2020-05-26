@@ -26,7 +26,8 @@ steps:
     displayName: 'Restore'
     inputs:
       command: restore
-      projects: '**/*.csproj'
+      projects: '**/Common.csproj'
+
 
   - task: DotNetCoreCLI@2
     displayName: 'Build project'
@@ -41,7 +42,6 @@ steps:
       command: 'publish'
       projects: '**/*.csproj'
       zipAfterPublish: true
-      publishWebProjects: true
       arguments: '--no-build --configuration $(buildConfiguration) --output $(Build.ArtifactStagingDirectory)/$(buildConfiguration)'
 
   - task: PublishBuildArtifacts@1
