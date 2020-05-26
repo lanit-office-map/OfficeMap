@@ -9,6 +9,7 @@ using SpaceService.Repository.Interfaces;
 using System.Collections.Generic;
 using Common.RabbitMQ.Models;
 using Common.Response;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.Server.IIS;
 using SpaceService.Clients.Interfaces;
@@ -17,6 +18,7 @@ namespace SpaceService.Controllers
 {
   [Route("[controller]/offices/{officeGuid}")]
   [ApiController]
+  [Authorize]
   public class SpaceController : Controller
   {
     private readonly ISpacesService spaceService;

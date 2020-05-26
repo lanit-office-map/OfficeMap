@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Threading.Tasks;
 using Common.RabbitMQ.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.Filters;
 using WorkplaceService.Clients.Interfaces;
 using WorkplaceService.Filters;
@@ -13,6 +14,7 @@ namespace WorkplaceService.Controllers
 {
   [Route("[controller]/offices/{officeGuid}/spaces/{spaceGuid}")]
   [ApiController]
+  [Authorize]
   public class WorkplaceController : Controller
   {
     #region private fields

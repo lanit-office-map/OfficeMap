@@ -1,6 +1,7 @@
 ﻿using System.Threading.Tasks;
 using System;
 using Common.Response;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SpaceService.Models;
 using SpaceService.Services.Interfaces;
@@ -9,6 +10,7 @@ namespace SpaceService.Controllers
 {
   [Route("[controller]")]
   [ApiController]
+  [Authorize]
   public class SpaceTypeController : Controller
   {
     private readonly ISpaceTypeService spacetypeService;

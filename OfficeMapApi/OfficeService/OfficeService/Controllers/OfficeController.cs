@@ -11,8 +11,9 @@ namespace OfficeService.Controllers
 {
     [Route("[controller]")]
     [ApiController]
+    [Authorize]
 
-    public class OfficeController : ControllerBase
+  public class OfficeController : ControllerBase
     {
         #region private fields
         private readonly IOfficeService officeService;
